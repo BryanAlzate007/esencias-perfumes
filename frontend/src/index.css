@@ -1,0 +1,26 @@
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  min-height: 100vh;
+}
+
+.auth-card {
+  max-width: 28rem;
+}
+
+.perfume-card-image,
+.perfume-detail-image {
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  width: 100%;
+}
+
+.perfume-card-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 4.5rem;
+}

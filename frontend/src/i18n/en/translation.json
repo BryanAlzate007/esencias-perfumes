@@ -1,0 +1,116 @@
+{
+  "app": {
+    "name": "Esencias",
+    "tagline": "Discover, track and share your fragrances."
+  },
+  "nav": {
+    "home": "Home",
+    "yourPerfumes": "Your perfumes",
+    "orders": "Orders",
+    "comments": "Comments",
+    "catalog": "Catalog",
+    "users": "Users",
+    "settings": "Settings",
+    "login": "Log in",
+    "register": "Create account",
+    "logout": "Log out",
+    "cart": "Cart"
+  },
+  "auth": {
+    "loginTitle": "Log in",
+    "registerTitle": "Create account",
+    "forgotTitle": "Reset password",
+    "resetTitle": "New password",
+    "username": "Username",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "country": "Country",
+    "submitLogin": "Log in",
+    "submitRegister": "Sign up",
+    "submitForgot": "Send link",
+    "submitReset": "Save password",
+    "forgotLink": "Forgot your password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "forgotSent": "If the email exists, you will receive a reset link.",
+    "resetDone": "Your password was updated. You can log in now.",
+    "required": "Please fill in the required fields."
+  },
+  "home": {
+    "title": "Catalog",
+    "subtitle": "Browse fragrances, read reviews and build your order.",
+    "empty": "There are no perfumes in the catalog yet.",
+    "lastReview": "Latest review",
+    "noReviews": "No reviews yet",
+    "addToCart": "Add to cart",
+    "added": "Added to cart"
+  },
+  "perfume": {
+    "reviews": "Comments and reviews",
+    "writeReview": "Write a review",
+    "sendReview": "Publish",
+    "ratings": "How do you feel about it?",
+    "occasions": "When to wear it?",
+    "loginToParticipate": "Log in to rate, vote and comment.",
+    "people": "{{count}} people"
+  },
+  "sentiment": {
+    "love": "Love it",
+    "like": "Like it",
+    "neutral": "Indifferent",
+    "dislike": "Don't like it",
+    "hate": "Hate it"
+  },
+  "occasion": {
+    "winter": "Winter",
+    "spring": "Spring",
+    "summer": "Summer",
+    "autumn": "Autumn",
+    "day": "Day",
+    "night": "Night"
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty.",
+    "checkout": "Place order",
+    "total": "Total",
+    "loginRequired": "Log in to add perfumes to your cart."
+  },
+  "orders": {
+    "title": "Orders",
+    "empty": "There are no orders yet.",
+    "status": "Status",
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "cancelled": "Cancelled"
+  },
+  "myPerfumes": {
+    "title": "Your perfumes",
+    "empty": "When you confirm an order, your fragrances will show up here."
+  },
+  "comments": {
+    "title": "Comments",
+    "empty": "You have not posted any comments yet."
+  },
+  "admin": {
+    "catalogTitle": "Catalog",
+    "newPerfume": "New perfume",
+    "save": "Save",
+    "usersTitle": "Users",
+    "settingsTitle": "Settings",
+    "settingsHelp": "Language and theme come from the visitor's browser and system. You can update your admin profile here.",
+    "role": "Role",
+    "customer": "Customer",
+    "admin": "Admin"
+  },
+  "profile": {
+    "saved": "Profile updated."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "The action could not be completed.",
+    "delete": "Delete",
+    "price": "{{value}}"
+  }
+}

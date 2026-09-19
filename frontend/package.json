@@ -1,0 +1,26 @@
+{
+  "name": "perfume-platform",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "axios": "^1.8.4",
+    "bootstrap": "^5.3.5",
+    "i18next": "^24.2.3",
+    "i18next-browser-languagedetector": "^8.0.4",
+    "react": "^19.1.0",
+    "react-bootstrap": "^2.10.9",
+    "react-dom": "^19.1.0",
+    "react-i18next": "^15.4.1",
+    "react-router-dom": "^7.5.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.4.1",
+    "vite": "^6.3.2"
+  }
+}
