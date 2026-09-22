@@ -1,6 +1,18 @@
+import { useEffect } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import { useAuth } from "../hooks/useAuth";
+import { useAuthModal } from "../hooks/useAuthModal";
+
+function LoginRequired({ from }) {
+  const { openLogin } = useAuthModal();
+
+  useEffect(() => {
+    openLogin(from);
+  }, [from, openLogin]);
+
+  return <Navigate to="/" replace />;
+}
 
 export function ProtectedRoute({ adminOnly = false }) {
   const { ready, isAuthenticated, isAdmin } = useAuth();
@@ -15,7 +27,7 @@ export function ProtectedRoute({ adminOnly = false }) {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+    return <LoginRequired from={location.pathname} />;
   }
 
   if (adminOnly && !isAdmin) {

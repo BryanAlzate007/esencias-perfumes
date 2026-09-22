@@ -1,0 +1,123 @@
+.essence-card {
+  background: #0d0c0a;
+  border: 1px solid rgba(212, 180, 131, 0.28);
+  color: #f4ead7;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.essence-card-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.essence-card-media {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: #16130f;
+}
+
+.essence-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  color: transparent;
+}
+
+.essence-card-index {
+  position: absolute;
+  top: 0.55rem;
+  left: 0.6rem;
+  font-size: 0.55rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #ead7b3;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
+}
+
+.essence-card-body {
+  padding: 0.75rem 0.7rem 0.2rem;
+}
+
+.essence-card-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.essence-card-name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  margin: 0;
+  line-height: 1.15;
+}
+
+.essence-card-price {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 0.98rem;
+  color: #d4b483;
+  white-space: nowrap;
+}
+
+.essence-card-notes {
+  margin: 0.4rem 0 0;
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #cbb892;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.essence-card-button {
+  margin: 0.55rem 0.7rem 0.8rem;
+  border: 1px solid #d4b483;
+  background: transparent;
+  color: #ead7b3;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.55rem;
+  padding: 0.58rem 0.4rem;
+}
+
+.essence-card-button:hover {
+  background: #d4b483;
+  color: #1a140c;
+}
+
+[data-bs-theme="light"] .essence-card {
+  background: #ffffff;
+  border-color: rgba(212, 180, 131, 0.55);
+  color: #1a140c;
+}
+
+[data-bs-theme="light"] .essence-card-notes {
+  color: #6b5e4a;
+}
+
+[data-bs-theme="light"] .essence-card-button {
+  color: #1a140c;
+}
+
+@media (min-width: 768px) {
+  .essence-card-name {
+    font-size: 1.18rem;
+  }
+
+  .essence-card-body {
+    padding: 0.85rem 0.8rem 0.25rem;
+  }
+
+  .essence-card-button {
+    margin: 0.65rem 0.8rem 0.9rem;
+  }
+}

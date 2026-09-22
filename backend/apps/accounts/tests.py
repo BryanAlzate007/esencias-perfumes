@@ -25,6 +25,8 @@ class AllauthAuthTests(TestCase):
                     "password": "StrongPass123!",
                     "first_name": "Bryan",
                     "country": "Colombia",
+                    "phone": "+573001112233",
+                    "whatsapp": "+573001112233",
                 }
             ),
             content_type="application/json",
@@ -35,6 +37,8 @@ class AllauthAuthTests(TestCase):
 
         user = User.objects.get(username="bryan")
         self.assertEqual(user.profile.country, "Colombia")
+        self.assertEqual(user.profile.phone, "+573001112233")
+        self.assertEqual(user.profile.whatsapp, "+573001112233")
         self.assertEqual(user.profile.role, Profile.Role.CUSTOMER)
 
         self.client.logout()

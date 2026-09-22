@@ -1,26 +1,47 @@
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
+}
+
+html[data-bs-theme="light"] {
+  color-scheme: light;
+  --bs-body-bg: #ffffff;
+  --bs-body-bg-rgb: 255, 255, 255;
+  --bs-body-color: #1a140c;
+  --bs-body-color-rgb: 26, 20, 12;
+  --bs-secondary-color: #6b5e4a;
+  --bs-tertiary-bg: #f7f3ea;
+  --bs-border-color: rgba(26, 20, 12, 0.12);
+}
+
+html[data-bs-theme="dark"] {
+  color-scheme: dark;
+  --bs-body-bg: #070605;
+  --bs-body-bg-rgb: 7, 6, 5;
+  --bs-body-color: #f4ead7;
+  --bs-body-color-rgb: 244, 234, 215;
+  --bs-secondary-color: #cbb892;
+  --bs-tertiary-bg: #11100e;
+  --bs-border-color: rgba(212, 180, 131, 0.22);
+}
+
+html,
+body,
+#root {
+  min-height: 100vh;
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
 }
 
 body {
-  min-height: 100vh;
+  font-family: "Outfit", system-ui, sans-serif;
 }
 
 .auth-card {
   max-width: 28rem;
 }
 
-.perfume-card-image,
 .perfume-detail-image {
   aspect-ratio: 4 / 5;
   object-fit: cover;
   width: 100%;
-}
-
-.perfume-card-text {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  min-height: 4.5rem;
 }

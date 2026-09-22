@@ -14,6 +14,8 @@ class Profile(models.Model):
     )
     role = models.CharField(max_length=20, choices=Role.choices, default=Role.CUSTOMER)
     country = models.CharField(max_length=80, blank=True)
+    phone = models.CharField(max_length=30, blank=True)
+    whatsapp = models.CharField(max_length=30, blank=True)
     preferred_language = models.CharField(max_length=8, blank=True)
 
     def __str__(self):

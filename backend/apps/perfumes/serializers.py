@@ -14,6 +14,7 @@ class PerfumeSerializer(serializers.ModelSerializer):
             "name",
             "brand",
             "description",
+            "notes",
             "image_url",
             "price",
             "is_active",
@@ -27,7 +28,7 @@ class PerfumeSerializer(serializers.ModelSerializer):
 class PerfumeWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Perfume
-        fields = ("id", "name", "brand", "description", "image_url", "price", "is_active")
+        fields = ("id", "name", "brand", "description", "notes", "image_url", "price", "is_active")
 
 
 def with_last_review(queryset):

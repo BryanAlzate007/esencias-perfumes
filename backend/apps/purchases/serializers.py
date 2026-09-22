@@ -61,4 +61,4 @@ class OrderSerializer(serializers.ModelSerializer):
 class OwnedPerfumeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Perfume
-        fields = ("id", "name", "brand", "description", "image_url", "price")
+        fields = ("id", "name", "brand", "description", "notes", "image_url", "price")

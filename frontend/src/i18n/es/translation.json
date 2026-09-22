@@ -14,7 +14,13 @@
     "login": "Entrar",
     "register": "Crear cuenta",
     "logout": "Salir",
-    "cart": "Carrito"
+    "cart": "Carrito",
+    "language": "Idioma",
+    "theme": "Tema"
+  },
+  "theme": {
+    "light": "Claro",
+    "dark": "Oscuro"
   },
   "auth": {
     "loginTitle": "Iniciar sesión",
@@ -26,6 +32,8 @@
     "email": "Correo electrónico",
     "password": "Contraseña",
     "country": "País",
+    "phone": "Teléfono",
+    "whatsapp": "WhatsApp",
     "submitLogin": "Entrar",
     "submitRegister": "Registrarme",
     "submitForgot": "Enviar enlace",
@@ -33,6 +41,8 @@
     "forgotLink": "¿Olvidaste tu contraseña?",
     "noAccount": "¿No tienes cuenta?",
     "hasAccount": "¿Ya tienes cuenta?",
+    "orEmail": "O con tu correo",
+    "socialError": "No se pudo iniciar sesión con esa red. Intenta de nuevo o regístrate.",
     "forgotSent": "Si el correo existe, recibirás un enlace para restablecer la contraseña.",
     "resetDone": "Tu contraseña se actualizó. Ya puedes iniciar sesión.",
     "required": "Completa los campos obligatorios."
@@ -44,14 +54,29 @@
     "lastReview": "Última reseña",
     "noReviews": "Sin reseñas todavía",
     "addToCart": "Añadir al carrito",
-    "added": "Añadido al carrito"
+    "added": "Añadido al carrito",
+    "heroPhrase": "Cada esencia cuenta una historia.",
+    "collectionCta": "Colección",
+    "storyCta": "Historia",
+    "collectionKicker": "Fragancias",
+    "collectionTitle": "The collection",
+    "storyKicker": "Maison",
+    "storyTitle": "Nuestra historia",
+    "storyLead": "Somos quienes transformamos tu esencia en una fragancia.",
+    "storyBody": "Componemos memorias olfativas: notas que se quedan, estelas que se recuerdan y piezas pensadas para acompañarte de día y de noche.",
+    "contactKicker": "Atelier",
+    "contactTitle": "Contáctanos",
+    "contactLead": "Cuéntanos qué buscas y te ayudamos a encontrar la fragancia que cuenta tu historia.",
+    "contactMessage": "Mensaje",
+    "contactSend": "Enviar",
+    "contactSent": "Recibimos tu mensaje. Te escribiremos pronto."
   },
   "perfume": {
     "reviews": "Comentarios y reseñas",
     "writeReview": "Escribe una reseña",
     "sendReview": "Publicar",
-    "ratings": "¿Qué te parece?",
-    "occasions": "¿Cuándo usarlo?",
+    "ratings": "Puntuación",
+    "occasions": "Cuándo usarlo",
     "loginToParticipate": "Inicia sesión para calificar, votar y comentar.",
     "people": "{{count}} personas"
   },
@@ -60,7 +85,7 @@
     "like": "Me gusta",
     "neutral": "Me es indiferente",
     "dislike": "No me gusta",
-    "hate": "Lo odio"
+    "hate": "La odio"
   },
   "occasion": {
     "winter": "Invierno",
@@ -99,7 +124,7 @@
     "save": "Guardar",
     "usersTitle": "Usuarios",
     "settingsTitle": "Configuraciones",
-    "settingsHelp": "El idioma y el tema se toman del navegador y del sistema de quien visita el sitio. Aquí puedes actualizar tu perfil de administración.",
+    "settingsHelp": "El idioma y el tema se cambian desde la barra superior. Aquí puedes actualizar tu perfil de administración.",
     "role": "Rol",
     "customer": "Usuario",
     "admin": "Admin"

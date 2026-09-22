@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Alert, Badge, Button, Col, Form, Image, Row, Spinner } from "react-bootstrap";
+import { Alert, Button, Col, Form, Image, Row, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
+import VotePanels from "../../components/VotePanels/VotePanels";
 import { useAuth } from "../../hooks/useAuth";
 import { useCart } from "../../hooks/useCart";
 import { getPerfume } from "../../services/perfumes";
@@ -12,9 +13,6 @@ import {
   setOccasion,
   setRating,
 } from "../../services/reviews";
-
-const SENTIMENTS = ["love", "like", "neutral", "dislike", "hate"];
-const OCCASIONS = ["winter", "spring", "summer", "autumn", "day", "night"];
 
 function formatDate(value, language) {
   if (!value) {
@@ -97,40 +95,13 @@ export default function PerfumeDetail() {
         </Col>
       </Row>
 
-      <section className="mb-5">
-        <h2 className="h4 mb-3">{t("perfume.ratings")}</h2>
-        {!isAuthenticated && <p className="text-body-secondary">{t("perfume.loginToParticipate")}</p>}
-        <div className="d-flex flex-wrap gap-2">
-          {SENTIMENTS.map((sentiment) => (
-            <Button
-              key={sentiment}
-              variant={community?.my_sentiment === sentiment ? "dark" : "outline-secondary"}
-              onClick={() => isAuthenticated && handleRating(sentiment)}
-              disabled={!isAuthenticated}
-            >
-              {t(`sentiment.${sentiment}`)}{" "}
-              <Badge bg="secondary">{community?.rating_counts?.[sentiment] || 0}</Badge>
-            </Button>
-          ))}
-        </div>
-      </section>
+      <VotePanels
+        community={community}
+        onRate={handleRating}
+        onOccasion={handleOccasion}
+      />
 
-      <section className="mb-5">
-        <h2 className="h4 mb-3">{t("perfume.occasions")}</h2>
-        <div className="d-flex flex-wrap gap-2">
-          {OCCASIONS.map((occasion) => (
-            <Button
-              key={occasion}
-              variant={community?.my_occasions?.includes(occasion) ? "dark" : "outline-secondary"}
-              onClick={() => isAuthenticated && handleOccasion(occasion)}
-              disabled={!isAuthenticated}
-            >
-              {t(`occasion.${occasion}`)}{" "}
-              <Badge bg="secondary">{community?.occasion_counts?.[occasion] || 0}</Badge>
-            </Button>
-          ))}
-        </div>
-      </section>
+      {!isAuthenticated && <p className="text-body-secondary mb-4">{t("perfume.loginToParticipate")}</p>}
 
       <section>
         <h2 className="h4 mb-3">{t("perfume.reviews")}</h2>

@@ -1,15 +1,22 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import AppNavbar from "../components/Navbar/Navbar";
 import CartDrawer from "../components/CartDrawer/CartDrawer";
 
 export default function MainLayout() {
+  const { pathname } = useLocation();
+  const isHome = pathname === "/";
+
   return (
     <>
       <AppNavbar />
-      <Container as="main" className="py-4 py-md-5">
+      {isHome ? (
         <Outlet />
-      </Container>
+      ) : (
+        <Container as="main" className="py-4 py-md-5">
+          <Outlet />
+        </Container>
+      )}
       <CartDrawer />
     </>
   );

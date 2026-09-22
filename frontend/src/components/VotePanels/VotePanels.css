@@ -1,0 +1,164 @@
+.vote-panels {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.vote-card {
+  background: #2a2a2e;
+  color: #f3f3f5;
+  border-radius: 1.15rem;
+  padding: 1rem 0.85rem 1.1rem;
+  min-width: 0;
+}
+
+.vote-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 0.85rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #d8d8de;
+}
+
+.vote-card-title-icon {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.vote-card-title-icon-heart {
+  color: #ff6b8a;
+}
+
+.vote-card-title-icon-clock {
+  color: #f0b429;
+}
+
+.vote-options {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.vote-card:last-child .vote-options {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.vote-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.28rem;
+  padding: 0.2rem 0.1rem;
+  border: 0;
+  background: transparent;
+  color: #8d8d96;
+  min-width: 0;
+}
+
+.vote-option-icon {
+  display: block;
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.7rem;
+  line-height: 1;
+  text-align: center;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+
+.vote-option-label {
+  font-size: 0.62rem;
+  line-height: 1.2;
+  text-align: center;
+  min-height: 1.5rem;
+}
+
+.vote-meter {
+  display: block;
+  width: 2.35rem;
+  height: 0.28rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.vote-meter-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--vote-color);
+}
+
+.vote-option-count {
+  font-size: 0.78rem;
+  font-weight: 650;
+  color: #8d8d96;
+  line-height: 1;
+}
+
+.vote-option.is-active,
+.vote-option.is-selected {
+  color: var(--vote-color);
+}
+
+.vote-option.is-active .vote-option-icon,
+.vote-option.is-selected .vote-option-icon {
+  filter: none;
+  opacity: 1;
+}
+
+.vote-option.is-active .vote-option-count,
+.vote-option.is-selected .vote-option-count {
+  color: var(--vote-color);
+}
+
+.vote-option.is-selected {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 0.75rem;
+}
+
+html[data-bs-theme="light"] .vote-card {
+  background: #f4f2ee;
+  color: #1a140c;
+}
+
+html[data-bs-theme="light"] .vote-card-title {
+  color: #6b5e4a;
+}
+
+html[data-bs-theme="light"] .vote-option {
+  color: #8a8174;
+}
+
+html[data-bs-theme="light"] .vote-meter {
+  background: rgba(26, 20, 12, 0.1);
+}
+
+html[data-bs-theme="light"] .vote-option.is-selected {
+  background: rgba(26, 20, 12, 0.05);
+}
+
+@media (min-width: 992px) {
+  .vote-panels {
+    grid-template-columns: 1fr 1.15fr;
+  }
+
+  .vote-option-icon {
+    width: 2.2rem;
+    height: 2.2rem;
+    font-size: 1.9rem;
+  }
+}
+
+@media (max-width: 575px) {
+  .vote-options,
+  .vote-card:last-child .vote-options {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.7rem 0.4rem;
+  }
+}

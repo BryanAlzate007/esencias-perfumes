@@ -33,6 +33,7 @@ DJANGO_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "django.contrib.sites",
     "django.contrib.staticfiles",
 ]
 
@@ -41,6 +42,10 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "allauth",
     "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.facebook",
+    "allauth.socialaccount.providers.apple",
     "allauth.headless",
 ]
 
@@ -125,6 +130,7 @@ MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+SITE_ID = 1
 
 CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS")
 CORS_ALLOW_CREDENTIALS = True
@@ -155,6 +161,40 @@ HEADLESS_FRONTEND_URLS = {
     "account_reset_password": f"{FRONTEND_URL}/recuperar-contrasena",
     "account_reset_password_from_key": f"{FRONTEND_URL}/recuperar-contrasena/key/{{key}}",
     "account_signup": f"{FRONTEND_URL}/registro",
+    "socialaccount_login_error": f"{FRONTEND_URL}/auth/callback",
+}
+
+SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE": ["profile", "email"],
+        "AUTH_PARAMS": {"access_type": "online"},
+        "APP": {
+            "client_id": env("GOOGLE_CLIENT_ID", default=""),
+            "secret": env("GOOGLE_CLIENT_SECRET", default=""),
+        },
+    },
+    "facebook": {
+        "METHOD": "oauth2",
+        "SCOPE": ["email", "public_profile"],
+        "APP": {
+            "client_id": env("FACEBOOK_CLIENT_ID", default=""),
+            "secret": env("FACEBOOK_CLIENT_SECRET", default=""),
+        },
+    },
+    "apple": {
+        "APP": {
+            "client_id": env("APPLE_CLIENT_ID", default=""),
+            "secret": env("APPLE_KEY_ID", default=""),
+            "key": env("APPLE_CERTIFICATE_KEY", default=""),
+            "settings": {
+                "certificate_key": env("APPLE_CERTIFICATE_KEY", default=""),
+            },
+        }
+    },
 }
 
 EMAIL_HOST = env("EMAIL_HOST", default="")

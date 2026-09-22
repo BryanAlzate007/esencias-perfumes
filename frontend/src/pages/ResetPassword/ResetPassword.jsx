@@ -3,11 +3,13 @@ import { Alert, Button, Card, Form } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { allauthErrors, getPasswordReset, resetPassword } from "../../lib/allauth";
+import { useAuthModal } from "../../hooks/useAuthModal";
 
 export default function ResetPassword() {
   const { t } = useTranslation();
   const { key } = useParams();
   const navigate = useNavigate();
+  const { openLogin } = useAuthModal();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [valid, setValid] = useState(false);
@@ -29,7 +31,8 @@ export default function ResetPassword() {
       setError(allauthErrors(result) || t("common.error"));
       return;
     }
-    navigate("/login", { replace: true, state: { reset: true } });
+    navigate("/", { replace: true });
+    openLogin("/");
   }
 
   return (

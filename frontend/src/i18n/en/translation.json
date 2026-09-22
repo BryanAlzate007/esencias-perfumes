@@ -14,7 +14,13 @@
     "login": "Log in",
     "register": "Create account",
     "logout": "Log out",
-    "cart": "Cart"
+    "cart": "Cart",
+    "language": "Language",
+    "theme": "Theme"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark"
   },
   "auth": {
     "loginTitle": "Log in",
@@ -26,6 +32,8 @@
     "email": "Email",
     "password": "Password",
     "country": "Country",
+    "phone": "Phone",
+    "whatsapp": "WhatsApp",
     "submitLogin": "Log in",
     "submitRegister": "Sign up",
     "submitForgot": "Send link",
@@ -33,6 +41,8 @@
     "forgotLink": "Forgot your password?",
     "noAccount": "Don't have an account?",
     "hasAccount": "Already have an account?",
+    "orEmail": "Or continue with email",
+    "socialError": "That social login could not be completed. Try again or create an account.",
     "forgotSent": "If the email exists, you will receive a reset link.",
     "resetDone": "Your password was updated. You can log in now.",
     "required": "Please fill in the required fields."
@@ -44,14 +54,29 @@
     "lastReview": "Latest review",
     "noReviews": "No reviews yet",
     "addToCart": "Add to cart",
-    "added": "Added to cart"
+    "added": "Added to cart",
+    "heroPhrase": "Every essence tells a story.",
+    "collectionCta": "Collection",
+    "storyCta": "History",
+    "collectionKicker": "Fragrances",
+    "collectionTitle": "The collection",
+    "storyKicker": "Maison",
+    "storyTitle": "Our story",
+    "storyLead": "We are the ones who turn your essence into a fragrance.",
+    "storyBody": "We compose olfactory memories: notes that linger, trails that are remembered, and pieces meant to stay with you from day into night.",
+    "contactKicker": "Atelier",
+    "contactTitle": "Contact us",
+    "contactLead": "Tell us what you are looking for and we will help you find the fragrance that tells your story.",
+    "contactMessage": "Message",
+    "contactSend": "Send",
+    "contactSent": "We received your message. We will write back soon."
   },
   "perfume": {
     "reviews": "Comments and reviews",
     "writeReview": "Write a review",
     "sendReview": "Publish",
-    "ratings": "How do you feel about it?",
-    "occasions": "When to wear it?",
+    "ratings": "Score",
+    "occasions": "When to wear it",
     "loginToParticipate": "Log in to rate, vote and comment.",
     "people": "{{count}} people"
   },
@@ -99,7 +124,7 @@
     "save": "Save",
     "usersTitle": "Users",
     "settingsTitle": "Settings",
-    "settingsHelp": "Language and theme come from the visitor's browser and system. You can update your admin profile here.",
+    "settingsHelp": "Language and theme can be changed from the top bar. You can update your admin profile here.",
     "role": "Role",
     "customer": "Customer",
     "admin": "Admin"

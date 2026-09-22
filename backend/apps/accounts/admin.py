@@ -20,5 +20,5 @@ admin.site.register(User, UserAdmin)
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ("user", "role", "country")
+    list_display = ("user", "role", "country", "phone", "whatsapp")
     list_filter = ("role",)

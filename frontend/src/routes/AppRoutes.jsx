@@ -8,6 +8,7 @@ import Comments from "../pages/Comments/Comments";
 import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
 import Home from "../pages/Home/Home";
 import Login from "../pages/Login/Login";
+import AuthCallback from "../pages/AuthCallback/AuthCallback";
 import MyPerfumes from "../pages/MyPerfumes/MyPerfumes";
 import Orders from "../pages/Orders/Orders";
 import PerfumeDetail from "../pages/PerfumeDetail/PerfumeDetail";
@@ -22,6 +23,7 @@ export default function AppRoutes() {
         <Route path="/perfumes/:id" element={<PerfumeDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Register />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/recuperar-contrasena" element={<ForgotPassword />} />
         <Route path="/recuperar-contrasena/key/:key" element={<ResetPassword />} />
 

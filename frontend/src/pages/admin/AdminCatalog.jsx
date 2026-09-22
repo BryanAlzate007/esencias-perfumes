@@ -7,6 +7,7 @@ const emptyForm = {
   name: "",
   brand: "",
   description: "",
+  notes: "",
   image_url: "",
   price: "",
   is_active: true,
@@ -76,6 +77,10 @@ export default function AdminCatalog() {
             <Form.Control name="price" type="number" step="0.01" value={form.price} onChange={update} required />
           </Form.Group>
           <Form.Group className="col-12">
+            <Form.Label>Notes</Form.Label>
+            <Form.Control name="notes" value={form.notes} onChange={update} placeholder="Sándalo · Ámbar · Vainilla" />
+          </Form.Group>
+          <Form.Group className="col-12">
             <Form.Label>{t("home.subtitle")}</Form.Label>
             <Form.Control as="textarea" rows={3} name="description" value={form.description} onChange={update} required />
           </Form.Group>
@@ -110,6 +115,7 @@ export default function AdminCatalog() {
                       name: perfume.name,
                       brand: perfume.brand,
                       description: perfume.description,
+                      notes: perfume.notes || "",
                       image_url: perfume.image_url,
                       price: perfume.price,
                       is_active: perfume.is_active,

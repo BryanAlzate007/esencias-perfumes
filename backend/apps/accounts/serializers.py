@@ -11,6 +11,8 @@ User = get_user_model()
 class MeSerializer(serializers.ModelSerializer):
     role = serializers.SerializerMethodField()
     country = serializers.CharField(source="profile.country", required=False, allow_blank=True)
+    phone = serializers.CharField(source="profile.phone", required=False, allow_blank=True)
+    whatsapp = serializers.CharField(source="profile.whatsapp", required=False, allow_blank=True)
     is_admin = serializers.SerializerMethodField()
 
     class Meta:
@@ -21,6 +23,8 @@ class MeSerializer(serializers.ModelSerializer):
             "email",
             "first_name",
             "country",
+            "phone",
+            "whatsapp",
             "role",
             "is_admin",
         )
@@ -36,10 +40,14 @@ class MeSerializer(serializers.ModelSerializer):
         profile_data = validated_data.pop("profile", {})
         instance.first_name = validated_data.get("first_name", instance.first_name)
         instance.save()
-        if "country" in profile_data:
-            profile, _ = Profile.objects.get_or_create(user=instance)
-            profile.country = profile_data["country"]
-            profile.save(update_fields=["country"])
+        profile, _ = Profile.objects.get_or_create(user=instance)
+        updated = []
+        for field in ("country", "phone", "whatsapp"):
+            if field in profile_data:
+                setattr(profile, field, profile_data[field])
+                updated.append(field)
+        if updated:
+            profile.save(update_fields=updated)
         return instance
 
 

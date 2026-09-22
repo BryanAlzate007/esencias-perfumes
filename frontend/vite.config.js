@@ -17,6 +17,10 @@ export default defineConfig({
         target: proxyTarget,
         changeOrigin: true,
       },
+      "/accounts": {
+        target: proxyTarget,
+        changeOrigin: true,
+      },
     },
   },
 });
