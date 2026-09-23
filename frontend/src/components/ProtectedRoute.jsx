@@ -35,7 +35,7 @@ export function ProtectedRoute({ adminOnly = false }) {
   }
 
   if (!adminOnly && isAdmin && location.pathname === "/") {
-    return <Navigate to="/admin/catalogo" replace />;
+    return <Navigate to="/admin" replace />;
   }
 
   return <Outlet />;

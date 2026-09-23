@@ -5,7 +5,7 @@
 
 .home-hero {
   position: relative;
-  min-height: calc(100vh - 4rem);
+  min-height: 100vh;
   background-size: cover;
   background-position: center;
   display: flex;
@@ -17,12 +17,13 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  text-align: center;
-  padding: 5rem 1.25rem 7rem;
+  text-align: left;
+  padding: 6.5rem 1.25rem 7rem;
   background:
-    linear-gradient(180deg, rgba(7, 6, 5, 0.18) 0%, rgba(7, 6, 5, 0.55) 55%, rgba(7, 6, 5, 0.92) 100%);
+    linear-gradient(90deg, rgba(7, 6, 5, 0.55) 0%, rgba(7, 6, 5, 0.18) 48%, rgba(7, 6, 5, 0.22) 100%),
+    linear-gradient(180deg, rgba(7, 6, 5, 0.18) 0%, rgba(7, 6, 5, 0.42) 55%, rgba(7, 6, 5, 0.92) 100%);
 }
 
 .home-kicker {
@@ -33,20 +34,33 @@
   margin-bottom: 0.85rem;
 }
 
+.home-hero-brand {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(3.1rem, 12vw, 8.4rem);
+  line-height: 0.88;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f7edd9;
+  margin: 0;
+  max-width: 100%;
+}
+
 .home-hero-title {
   font-family: "Cormorant Garamond", Georgia, serif;
   font-weight: 500;
   font-size: clamp(2.1rem, 6vw, 4.6rem);
   line-height: 1.1;
   max-width: 16ch;
+  text-align: left;
   color: #f7edd9;
-  margin-bottom: 1.75rem;
+  margin: 1.85rem 0 2rem;
 }
 
 .home-hero-actions {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0.85rem;
 }
 
@@ -185,6 +199,11 @@
 }
 
 @media (min-width: 768px) {
+  .home-hero-overlay {
+    padding-left: clamp(3rem, 6vw, 5.5rem);
+    padding-right: 4rem;
+  }
+
   .essence-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1rem;
@@ -216,9 +235,11 @@
 
 [data-bs-theme="light"] .home-hero-overlay {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(26, 20, 12, 0.35) 48%, rgba(255, 255, 255, 0.97) 100%);
+    linear-gradient(90deg, rgba(7, 6, 5, 0.45) 0%, rgba(7, 6, 5, 0.16) 50%, rgba(7, 6, 5, 0.2) 100%),
+    linear-gradient(180deg, rgba(7, 6, 5, 0.12) 0%, rgba(7, 6, 5, 0.28) 55%, rgba(255, 255, 255, 0.97) 100%);
 }
 
+[data-bs-theme="light"] .home-hero-brand,
 [data-bs-theme="light"] .home-hero-title {
   color: #f7edd9;
   text-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);

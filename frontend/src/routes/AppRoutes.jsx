@@ -2,6 +2,8 @@ import { Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import MainLayout from "../layouts/MainLayout";
 import AdminCatalog from "../pages/admin/AdminCatalog";
+import AdminLookup from "../pages/admin/AdminLookup";
+import AdminDashboard from "../pages/admin/AdminDashboard";
 import AdminSettings from "../pages/admin/AdminSettings";
 import AdminUsers from "../pages/admin/AdminUsers";
 import Comments from "../pages/Comments/Comments";
@@ -34,11 +36,13 @@ export default function AppRoutes() {
         </Route>
 
         <Route element={<ProtectedRoute adminOnly />}>
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/catalogo" element={<AdminCatalog />} />
           <Route path="/admin/pedidos" element={<Orders />} />
           <Route path="/admin/usuarios" element={<AdminUsers />} />
           <Route path="/admin/comentarios" element={<Comments />} />
           <Route path="/admin/configuraciones" element={<AdminSettings />} />
+          <Route path="/admin/configuraciones/:section" element={<AdminLookup />} />
         </Route>
       </Route>
     </Routes>

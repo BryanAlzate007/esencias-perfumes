@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Alert, Button, Form } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { updateMe } from "../../services/auth";
+import "./AdminSettings.css";
 
 export default function AdminSettings() {
   const { t } = useTranslation();
@@ -44,6 +46,18 @@ export default function AdminSettings() {
           {t("admin.save")}
         </Button>
       </Form>
+      <section className="perfume-settings-card">
+        <h2>{t("admin.perfumeSettings")}</h2>
+        <Link className="perfume-settings-link" to="/admin/configuraciones/acordes">
+          {t("admin.mainChords")}
+        </Link>
+        <Link className="perfume-settings-link" to="/admin/configuraciones/envases">
+          {t("admin.containers")}
+        </Link>
+        <Link className="perfume-settings-link" to="/admin/configuraciones/perfiles">
+          {t("admin.personalProfile")}
+        </Link>
+      </section>
     </>
   );
 }

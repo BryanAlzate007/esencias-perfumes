@@ -23,7 +23,7 @@ export default function AuthCallback() {
         }
         const next = sessionStorage.getItem("esencias-auth-next") || "/";
         sessionStorage.removeItem("esencias-auth-next");
-        navigate(me?.is_admin ? "/admin/catalogo" : next, { replace: true });
+        navigate(me?.is_admin ? "/admin" : next, { replace: true });
       })
       .catch(() => {
         if (!cancelled) {

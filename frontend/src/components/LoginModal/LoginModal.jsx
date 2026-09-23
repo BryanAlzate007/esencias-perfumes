@@ -43,7 +43,7 @@ export default function LoginModal() {
     const me = await refreshUser();
     handleClose();
     const next = redirectTo || "/";
-    navigate(me?.is_admin ? "/admin/catalogo" : next, { replace: true });
+    navigate(me?.is_admin ? "/admin" : next, { replace: true });
   }
 
   return (

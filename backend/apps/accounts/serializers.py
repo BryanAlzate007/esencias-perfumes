@@ -3,9 +3,15 @@ from rest_framework import serializers
 
 from apps.core.permissions import is_admin_user, user_role
 
-from .models import Profile
+from .models import Profile, Profile_person
 
 User = get_user_model()
+
+
+class ProfilePersonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile_person
+        fields = ("id", "name", "description")
 
 
 class MeSerializer(serializers.ModelSerializer):

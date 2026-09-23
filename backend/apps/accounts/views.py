@@ -1,13 +1,21 @@
 from django.contrib.auth import get_user_model
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.core.permissions import IsAdminRole
 
-from .serializers import AdminUserSerializer, MeSerializer
+from .models import Profile_person
+from .serializers import AdminUserSerializer, MeSerializer, ProfilePersonSerializer
 
 User = get_user_model()
+
+
+class ProfilePersonViewSet(viewsets.ModelViewSet):
+    serializer_class = ProfilePersonSerializer
+    permission_classes = [permissions.IsAuthenticated, IsAdminRole]
+    queryset = Profile_person.objects.all()
+    pagination_class = None
 
 
 class CsrfCookieView(APIView):

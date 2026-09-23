@@ -1,5 +1,7 @@
 import api from "./api";
 
+export { listMainChords } from "./lookups";
+
 export async function listPerfumes() {
   const { data } = await api.get("/perfumes/");
   return data;

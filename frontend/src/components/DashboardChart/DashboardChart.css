@@ -1,0 +1,101 @@
+.dashboard-charts {
+  display: grid;
+  gap: 1.15rem;
+  margin-top: 1.5rem;
+}
+
+.dashboard-chart {
+  border: 1px solid var(--bs-border-color);
+  background: var(--bs-tertiary-bg);
+  border-radius: 1.15rem;
+  padding: 1.15rem 1.15rem 0.9rem;
+}
+
+.dashboard-chart-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.85rem;
+  margin-bottom: 1.1rem;
+}
+
+.dashboard-chart-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.dashboard-chart-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin: 0.25rem 0 0;
+  color: var(--bs-secondary-color);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dashboard-chart-filters {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.dashboard-chart-filter {
+  border: 1px solid #d4b483;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  padding: 0.45rem 0.85rem;
+}
+
+.dashboard-chart-filter.is-active,
+.dashboard-chart-filter:hover {
+  background: #d4b483;
+  color: #1a140c;
+}
+
+.dashboard-bars {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 0.35rem;
+  align-items: end;
+  height: 210px;
+}
+
+.dashboard-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  min-width: 0;
+}
+
+.dashboard-bar-track {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  flex: 1;
+  border-bottom: 1px solid rgba(212, 180, 131, 0.35);
+}
+
+.dashboard-bar-fill {
+  width: 100%;
+  min-height: 2px;
+  background: #d4b483;
+  border-radius: 999px 999px 0 0;
+}
+
+.dashboard-bar-label {
+  margin-top: 0.4rem;
+  color: var(--bs-secondary-color);
+  font-size: 0.62rem;
+  line-height: 1;
+  text-align: center;
+}

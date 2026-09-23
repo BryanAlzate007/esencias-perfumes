@@ -50,7 +50,7 @@ function AppearanceControls({ language, theme, t, onLanguage, onTheme, menuId })
   );
 }
 
-export default function AppNavbar() {
+export default function AppNavbar({ adminNavOpen = false, onToggleAdminNav }) {
   const { t, i18n } = useTranslation();
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const { count, setOpen } = useCart();
@@ -77,21 +77,13 @@ export default function AppNavbar() {
     { to: "/comentarios", label: t("nav.comments") },
   ];
 
-  const adminLinks = [
-    { to: "/admin/catalogo", label: t("nav.catalog") },
-    { to: "/admin/pedidos", label: t("nav.orders") },
-    { to: "/admin/usuarios", label: t("nav.users") },
-    { to: "/admin/comentarios", label: t("nav.comments") },
-    { to: "/admin/configuraciones", label: t("nav.settings") },
-  ];
-
   const guestLinks = [
     { to: "/", label: t("nav.home") },
     { to: "/#coleccion", label: t("home.collectionCta"), hash: "coleccion" },
     { to: "/#historia", label: t("home.storyCta"), hash: "historia" },
     { to: "/#contacto", label: t("home.contactTitle"), hash: "contacto" },
   ];
-  const links = isAdmin ? adminLinks : isAuthenticated ? customerLinks : guestLinks;
+  const links = isAuthenticated && !isAdmin ? customerLinks : guestLinks;
 
   const appearance = {
     language,
@@ -102,9 +94,22 @@ export default function AppNavbar() {
   };
 
   return (
-    <Navbar expand="lg" sticky="top" className="border-bottom bg-body">
+    <Navbar expand="lg" sticky="top" className={`navbar-esencias border-bottom bg-body${pathname === "/" ? " navbar-home" : ""}${adminNavOpen && pathname === "/" ? " navbar-admin-open" : ""}`}>
       <Container>
-        <Navbar.Brand as={NavLink} to={isAdmin ? "/admin/catalogo" : "/"}>
+        {onToggleAdminNav && (
+          <button
+            type="button"
+            className={`admin-nav-toggle${adminNavOpen ? " is-open" : ""}`}
+            onClick={onToggleAdminNav}
+            aria-expanded={adminNavOpen}
+            aria-label={adminNavOpen ? t("nav.closeAdminMenu") : t("nav.adminMenu")}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+        )}
+        <Navbar.Brand as={NavLink} to="/" className="navbar-esencias-brand">
           {t("app.name")}
         </Navbar.Brand>
         <div className="d-flex d-lg-none align-items-center gap-1 ms-auto me-2">
@@ -112,7 +117,7 @@ export default function AppNavbar() {
         </div>
         <Navbar.Toggle aria-controls="main-navigation" />
         <Navbar.Collapse id="main-navigation">
-          <Nav className="me-auto">
+          <Nav className="mx-lg-auto">
             {links.map((link) => (
               <Nav.Link
                 as={NavLink}
@@ -141,7 +146,7 @@ export default function AppNavbar() {
             )}
             {!isAuthenticated && (
               <>
-                <Button variant="outline-secondary" size="sm" onClick={() => openLogin("/")}>
+                <Button variant="outline-secondary" size="sm" className="navbar-shop-btn" onClick={() => openLogin("/")}>
                   {t("nav.login")}
                 </Button>
                 <Nav.Link as={NavLink} to="/registro">

@@ -1,3 +1,120 @@
+.navbar-esencias {
+  z-index: 30;
+  font-family: "Outfit", system-ui, sans-serif;
+}
+
+.admin-nav-toggle {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.28rem;
+  width: 2.15rem;
+  height: 2.15rem;
+  margin-right: 0.75rem;
+  padding: 0;
+  border: 1px solid rgba(212, 180, 131, 0.55);
+  background: transparent;
+  color: inherit;
+}
+
+.admin-nav-toggle span {
+  display: block;
+  width: 0.95rem;
+  height: 1px;
+  margin-inline: auto;
+  background: currentColor;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.admin-nav-toggle.is-open span:nth-child(1) {
+  transform: translateY(0.36rem) rotate(45deg);
+}
+
+.admin-nav-toggle.is-open span:nth-child(2) {
+  opacity: 0;
+}
+
+.admin-nav-toggle.is-open span:nth-child(3) {
+  transform: translateY(-0.36rem) rotate(-45deg);
+}
+
+.navbar-esencias .navbar-esencias-brand {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 500;
+  font-size: 1.15rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: inherit;
+}
+
+.navbar-esencias .nav-link,
+.navbar-esencias .navbar-text,
+.navbar-esencias .dropdown-toggle {
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.navbar-esencias .navbar-shop-btn,
+.navbar-esencias .btn {
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-radius: 0;
+  padding: 0.45rem 0.9rem;
+}
+
+.navbar-esencias .navbar-shop-btn {
+  border-color: #d4b483;
+  color: #d4b483;
+  background: transparent;
+}
+
+.navbar-esencias .navbar-shop-btn:hover,
+.navbar-esencias .navbar-shop-btn:focus {
+  background: #d4b483;
+  border-color: #d4b483;
+  color: #1a140c;
+}
+
+.navbar-esencias.navbar-home {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 30;
+  background: transparent !important;
+  border-bottom: 1px solid rgba(212, 180, 131, 0.18) !important;
+  --bs-navbar-color: #f4ead7;
+  --bs-navbar-hover-color: #d4b483;
+  --bs-navbar-active-color: #d4b483;
+  --bs-navbar-brand-color: #f7edd9;
+  --bs-navbar-brand-hover-color: #d4b483;
+}
+
+.navbar-esencias.navbar-home .navbar-collapse.show,
+.navbar-esencias.navbar-home .navbar-collapse.collapsing {
+  background: rgba(7, 6, 5, 0.94);
+  margin-top: 0.65rem;
+  padding: 0.75rem 1rem 1rem;
+}
+
+.navbar-esencias.navbar-home .navbar-toggler-icon {
+  filter: invert(1);
+}
+
+.navbar-esencias.navbar-home.navbar-admin-open {
+  background: rgba(7, 6, 5, 0.94) !important;
+}
+
+html[data-bs-theme="light"] .navbar-esencias.navbar-home {
+  --bs-navbar-color: #f4ead7;
+  --bs-navbar-hover-color: #d4b483;
+  --bs-navbar-active-color: #d4b483;
+  --bs-navbar-brand-color: #f7edd9;
+  --bs-navbar-brand-hover-color: #d4b483;
+}
+
 .theme-toggle {
   display: inline-flex;
   align-items: center;

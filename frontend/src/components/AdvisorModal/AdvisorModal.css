@@ -1,0 +1,110 @@
+.advisor-modal .modal-dialog {
+  max-width: 26.5rem;
+}
+
+.advisor-modal .modal-content {
+  background: #11100e;
+  color: #f7edd9;
+  border: 1px solid rgba(212, 180, 131, 0.55);
+  border-radius: 1.35rem;
+  padding: 0.15rem 0.4rem 0.85rem;
+}
+
+.advisor-modal .modal-header {
+  border: 0;
+  padding-bottom: 0;
+}
+
+.advisor-modal .btn-close {
+  filter: invert(1) grayscale(1) brightness(1.7);
+  opacity: 0.75;
+}
+
+.advisor-modal-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(1.85rem, 4.4vw, 2.45rem);
+  line-height: 1.02;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+  color: #f7edd9;
+  margin: 0 0.35rem 0.9rem;
+}
+
+.advisor-modal-lead {
+  text-align: center;
+  color: #cbb892;
+  margin: 0 0.6rem 1.45rem;
+}
+
+.advisor-modal-actions {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.advisor-modal-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  min-height: 3rem;
+  border: 1px solid #d4b483;
+  border-radius: 999px;
+  background: transparent;
+  color: #f7edd9;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-size: 0.68rem;
+  line-height: 1.25;
+  padding: 0.8rem 1.15rem;
+  cursor: pointer;
+}
+
+.advisor-modal-button svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: none;
+}
+
+.advisor-modal-button:hover,
+.advisor-modal-button-solid {
+  background: #d4b483;
+  color: #1a140c;
+}
+
+.advisor-modal-backdrop.show {
+  opacity: 0.72;
+}
+
+[data-bs-theme="light"] .advisor-modal .modal-content {
+  background: #ffffff;
+  color: #1a140c;
+  border-color: #d4b483;
+}
+
+[data-bs-theme="light"] .advisor-modal .btn-close {
+  filter: none;
+  opacity: 0.7;
+}
+
+[data-bs-theme="light"] .advisor-modal-title {
+  color: #1a140c;
+}
+
+[data-bs-theme="light"] .advisor-modal-lead {
+  color: #6b5e4a;
+}
+
+[data-bs-theme="light"] .advisor-modal-button {
+  color: #1a140c;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+[data-bs-theme="light"] .advisor-modal-button:hover,
+[data-bs-theme="light"] .advisor-modal-button-solid {
+  background: #d4b483;
+  color: #1a140c;
+}

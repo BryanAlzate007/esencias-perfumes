@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Alert, Container, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import { Navigate } from "react-router-dom";
+import AdvisorModal from "../../components/AdvisorModal/AdvisorModal";
 import PerfumeCard from "../../components/PerfumeCard/PerfumeCard";
 import { useAuth } from "../../hooks/useAuth";
 import { useAuthModal } from "../../hooks/useAuthModal";
@@ -18,7 +18,7 @@ function scrollToId(id) {
 
 export default function Home() {
   const { t } = useTranslation();
-  const { isAdmin, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const { openLogin } = useAuthModal();
   const { addItem } = useCart();
   const [perfumes, setPerfumes] = useState([]);
@@ -44,10 +44,6 @@ export default function Home() {
     requestAnimationFrame(() => scrollToId(hash));
   }, [status]);
 
-  if (isAdmin) {
-    return <Navigate to="/admin/catalogo" replace />;
-  }
-
   async function handleAdd(id) {
     if (!isAuthenticated) {
       setMessage(t("cart.loginRequired"));
@@ -68,12 +64,13 @@ export default function Home() {
 
   return (
     <div className="home-page">
+      <AdvisorModal onWeb={() => scrollToId("contacto")} />
       <section className="home-hero" style={{ backgroundImage: `url(${heroImage})` }}>
         <div className="home-hero-overlay">
-          <p className="home-kicker">{t("app.name")}</p>
-          <h1 className="home-hero-title">{t("home.heroPhrase")}</h1>
+          <h1 className="home-hero-brand">{t("app.name")}</h1>
+          <p className="home-hero-title">{t("home.heroPhrase")}</p>
           <div className="home-hero-actions">
-            <button type="button" className="home-ghost-button" onClick={() => scrollToId("coleccion")}>
+            <button type="button" className="home-ghost-button home-ghost-button-solid" onClick={() => scrollToId("coleccion")}>
               {t("home.collectionCta")}
             </button>
             <button type="button" className="home-ghost-button" onClick={() => scrollToId("historia")}>
