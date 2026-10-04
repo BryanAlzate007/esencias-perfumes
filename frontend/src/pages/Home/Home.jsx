@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Alert, Container, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import AdvisorModal from "../../components/AdvisorModal/AdvisorModal";
 import PerfumeCard from "../../components/PerfumeCard/PerfumeCard";
 import { useAuth } from "../../hooks/useAuth";
@@ -18,6 +19,7 @@ function scrollToId(id) {
 
 export default function Home() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const { openLogin } = useAuthModal();
   const { addItem } = useCart();
@@ -64,7 +66,7 @@ export default function Home() {
 
   return (
     <div className="home-page">
-      <AdvisorModal onWeb={() => scrollToId("contacto")} />
+      <AdvisorModal onWeb={() => navigate("/asesoria")} />
       <section className="home-hero" style={{ backgroundImage: `url(${heroImage})` }}>
         <div className="home-hero-overlay">
           <h1 className="home-hero-brand">{t("app.name")}</h1>

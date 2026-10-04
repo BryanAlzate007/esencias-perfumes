@@ -26,6 +26,7 @@ ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 if DEBUG:
     ALLOWED_HOSTS = list(ALLOWED_HOSTS) + ["testserver"]
 FRONTEND_URL = env("FRONTEND_URL").rstrip("/")
+GEMINI_API_KEY = env("GEMINI_API_KEY", default="")
 
 DJANGO_APPS = [
     "django.contrib.admin",
@@ -56,6 +57,7 @@ LOCAL_APPS = [
     "apps.purchases.apps.PurchasesConfig",
     "apps.reviews.apps.ReviewsConfig",
     "apps.preferences.apps.PreferencesConfig",
+    "apps.chatia.apps.ChatiaConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

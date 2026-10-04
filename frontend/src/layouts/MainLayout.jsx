@@ -25,6 +25,7 @@ export default function MainLayout() {
   const { isAdmin, ready } = useAuth();
   const isDesktop = useDesktopNav();
   const isHome = pathname === "/";
+  const isChat = pathname === "/asesoria";
   const isAdminRoute = pathname.startsWith("/admin");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -38,7 +39,7 @@ export default function MainLayout() {
   const docked = isAdmin && isAdminRoute && isDesktop && sidebarOpen;
 
   return (
-    <div className={docked ? "app-shell-admin-open" : undefined}>
+    <div className={[docked ? "app-shell-admin-open" : "", isChat ? "app-shell-chat" : ""].filter(Boolean).join(" ") || undefined}>
       <AppNavbar
         adminNavOpen={sidebarOpen}
         onToggleAdminNav={isAdmin ? () => setSidebarOpen((open) => !open) : undefined}
@@ -47,7 +48,7 @@ export default function MainLayout() {
         <AdminSidebar open={sidebarOpen} docked={docked} onClose={() => setSidebarOpen(false)} />
       )}
       <div className="app-main">
-        {isHome ? (
+        {isHome || isChat ? (
           <Outlet />
         ) : (
           <Container as="main" className="py-4 py-md-5">

@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import ChatIA from "../components/ChatIA/ChatIA";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import MainLayout from "../layouts/MainLayout";
 import AdminCatalog from "../pages/admin/AdminCatalog";
@@ -22,6 +23,7 @@ export default function AppRoutes() {
     <Routes>
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
+        <Route path="/asesoria" element={<ChatIA />} />
         <Route path="/perfumes/:id" element={<PerfumeDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Register />} />

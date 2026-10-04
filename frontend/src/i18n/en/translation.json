@@ -79,6 +79,42 @@
     "advisorWhatsapp": "Get advice on WhatsApp",
     "advisorWhatsappMessage": "Hi, I would like help choosing a perfume."
   },
+  "chat": {
+    "kicker": "Advice",
+    "title": "Advice on the web",
+    "placeholder": "Write your message",
+    "send": "Send",
+    "you": "You",
+    "greetings": [
+      {
+        "advisor": "Sofía",
+        "welcome": "Hi! 😊 I'm Sofía.\n\nSo glad you're here 💕. Tell me what you're looking for and I'll help you find a fragrance that feels like you.\n\nAnd if you have no idea which one to choose, that's fine 😄. We can figure it out together.\n\nWho would the perfume be for?"
+      },
+      {
+        "advisor": "Valentina",
+        "welcome": "Hi! 👋💕 I'm Valentina.\n\nLovely to help you 😊. Tell me what you're looking for and I'll help you find a fragrance that fits your taste and your budget.\n\nIf you don't know which perfume you want, even better! 😄 I'll ask a few quick questions and we'll discover which scents you might like.\n\nShall we start? 🌸"
+      },
+      {
+        "advisor": "Laura",
+        "welcome": "Hi! 💗 I'm Laura, so glad you're here!\n\nIf you're looking for a perfume and don't know where to start, I'll help 😊. Just tell me what kinds of scents you like, the occasion, and roughly how much you want to spend.\n\nFrom there we'll look at options until we find one you love ✨"
+      },
+      {
+        "advisor": "Valeria",
+        "welcome": "Hi! 👋✨ I'm Valeria.\n\nTell me what you're looking for and I'll help you find a good option 😊.\n\nDo you already have a perfume in mind, or would you like a recommendation based on your taste? 🌸"
+      },
+      {
+        "advisor": "Juan",
+        "welcome": "Hi! 😊 I'm Juan.\n\nTell me, how can I help? If you're looking for a perfume and don't know which one to choose, tell me what kinds of scents you like and we'll look at a few options."
+      },
+      {
+        "advisor": "Sebastián",
+        "welcome": "Hi! 😊 I'm Sebastián.\n\nGlad you reached out. Tell me what you need and I'll help you find a fragrance you like, within what you want to spend.\n\nIs it for you or a gift? 🎁"
+      }
+    ],
+    "back": "Back",
+    "thinking": "Looking for a fragrance…",
+    "error": "I couldn't reply just now. Try again."
+  },
   "perfume": {
     "reviews": "Comments and reviews",
     "writeReview": "Write a review",
@@ -170,7 +206,7 @@
     "customer": "Customer",
     "admin": "Admin"
   },
-  "profile": {
+  "profile": { 
     "saved": "Profile updated."
   },
   "common": {

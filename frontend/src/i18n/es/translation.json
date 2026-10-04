@@ -79,6 +79,42 @@
     "advisorWhatsapp": "Asesorarme desde WhatsApp",
     "advisorWhatsappMessage": "Hola, quiero ayuda para elegir un perfume."
   },
+  "chat": {
+    "kicker": "Asesoría",
+    "title": "Asesoría desde la web",
+    "placeholder": "Escribe tu mensaje",
+    "send": "Enviar",
+    "you": "Tú",
+    "greetings": [
+      {
+        "advisor": "Sofía",
+        "welcome": "¡Hola! 😊 Soy Sofía.\n\nQué bueno que estés por aquí 💕. Cuéntame qué estás buscando y te ayudo a encontrar una fragancia que vaya contigo.\n\nY si no tienes ni idea de cuál elegir, no pasa nada 😄, también podemos descubrirlo juntos.\n\n¿Para quién sería el perfume?"
+      },
+      {
+        "advisor": "Valentina",
+        "welcome": "¡Hola! 👋💕 Soy Valentina.\n\nQué gusto atenderte 😊. Cuéntame qué estás buscando y te ayudo a encontrar una fragancia que se adapte a tus gustos y a tu presupuesto.\n\nSi no sabes qué perfume quieres, ¡mucho mejor! 😄 Te hago unas pregunticas rápidas y descubrimos juntos qué aromas podrían gustarte.\n\n¿Empezamos? 🌸"
+      },
+      {
+        "advisor": "Laura",
+        "welcome": "¡Hola! 💗 Soy Laura, ¡qué gusto tenerte por aquí!\n\nSi estás buscando perfume y no sabes por dónde empezar, yo te ayudo 😊. Solo cuéntame qué tipo de aromas te gustan, para qué ocasión lo quieres y más o menos cuánto quieres invertir.\n\nY de ahí vamos mirando opciones hasta encontrar uno que te encante ✨"
+      },
+      {
+        "advisor": "Valeria",
+        "welcome": "¡Hola! 👋✨ Soy Valeria.\n\nCuéntame qué estás buscando y te ayudo a encontrar una buena opción 😊.\n\n¿Ya tienes algún perfume en mente o quieres que te recomiende según tus gustos? 🌸"
+      },
+      {
+        "advisor": "Juan",
+        "welcome": "¡Hola! 😊 Soy Juan.\n\nCuéntame, ¿en qué te puedo ayudar? Si estás buscando un perfume y no sabes cuál escoger, dime qué tipo de aromas te gustan y miramos algunas opciones."
+      },
+      {
+        "advisor": "Sebastián",
+        "welcome": "¡Hola! 😊 Soy Sebastián.\n\nQué bueno que nos escribas. Cuéntame qué necesitas y te ayudo a encontrar una fragancia que te guste y que esté dentro de lo que quieres gastar.\n\n¿Es para ti o para regalar? 🎁"
+      }
+    ],
+    "back": "Volver",
+    "thinking": "Buscando una fragancia…",
+    "error": "No pude responder ahora. Intenta de nuevo."
+  },
   "perfume": {
     "reviews": "Comentarios y reseñas",
     "writeReview": "Escribe una reseña",
