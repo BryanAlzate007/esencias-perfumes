@@ -1,3 +1,4 @@
+import { ensureCsrfCookie } from "../services/auth";
 import { getCSRFToken } from "./csrf";
 
 function apiOrigin() {
@@ -40,6 +41,10 @@ export async function allauthRequest(method, path, data, extraHeaders = {}) {
 
   const response = await fetch(`${ALLAUTH_BASE_URL}${path}`, options);
   const message = await response.json();
+
+  if (method !== "GET") {
+    await ensureCsrfCookie();
+  }
 
   if ([401, 410].includes(message.status) || (message.status === 200 && message.meta?.is_authenticated)) {
     emitAuthChange(message);

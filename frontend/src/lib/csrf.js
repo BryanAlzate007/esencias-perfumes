@@ -7,9 +7,9 @@ export function setCSRFToken(token) {
 }
 
 export function getCSRFToken() {
-  if (csrfToken) {
-    return csrfToken;
-  }
   const match = document.cookie.match(/(?:^|; )csrftoken=([^;]*)/);
-  return match ? decodeURIComponent(match[1]) : "";
+  if (match) {
+    return decodeURIComponent(match[1]);
+  }
+  return csrfToken;
 }
