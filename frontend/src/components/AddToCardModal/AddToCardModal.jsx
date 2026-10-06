@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Alert, Button, Form, Modal, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useCart } from "../../hooks/useCart";
+import { mediaUrl } from "../../lib/media";
 import { cancelDraft, confirmDraft, startDraft, updateQuote } from "../../services/orders";
 import "./AddToCardModal.css";
 
@@ -152,7 +153,9 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
         )}
         {quote && (
           <>
-            <img className="add-cart-lotion" src={quote.perfume.image_url} alt={quote.perfume.name} />
+            {mediaUrl(quote.perfume.image_url) && (
+              <img className="add-cart-lotion" src={mediaUrl(quote.perfume.image_url)} alt={quote.perfume.name} />
+            )}
             <div className="add-cart-price-row">
               <p className="add-cart-total">
                 ${quote.total}
@@ -178,7 +181,7 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
                 const selected = quote.selected_container === container.id;
                 return (
                   <label key={container.id} className={selected ? "add-cart-option is-selected" : "add-cart-option"}>
-                    <img src={container.image_url} alt="" />
+                    {mediaUrl(container.image_url) && <img src={mediaUrl(container.image_url)} alt="" />}
                     <span className="add-cart-option-copy">
                       <input
                         type="radio"

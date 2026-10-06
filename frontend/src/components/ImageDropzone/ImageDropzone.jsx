@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { mediaUrl } from "../../lib/media";
 import "./ImageDropzone.css";
 
 export default function ImageDropzone({ files, existing, onAdd, onRemoveFile, onRemoveExisting, labels }) {
@@ -66,7 +67,7 @@ export default function ImageDropzone({ files, existing, onAdd, onRemoveFile, on
         <div className="image-dropzone-grid">
           {existing.map((image) => (
             <figure key={image.id} className="image-dropzone-item">
-              <img src={image.image} alt={image.alt_text || ""} />
+              <img src={mediaUrl(image.image)} alt={image.alt_text || ""} />
               {image.is_primary && <span className="image-dropzone-badge">{labels.primary}</span>}
               <button type="button" className="image-dropzone-remove" onClick={() => onRemoveExisting(image.id)}>
                 {labels.remove}

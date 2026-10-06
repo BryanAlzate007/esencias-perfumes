@@ -6,6 +6,7 @@ import AddToCartModal from "../../components/AddToCardModal/AddToCardModal";
 import VotePanels from "../../components/VotePanels/VotePanels";
 import { useAuth } from "../../hooks/useAuth";
 import { useAuthModal } from "../../hooks/useAuthModal";
+import { mediaUrl } from "../../lib/media";
 import { getPerfume } from "../../services/perfumes";
 import {
   createPerfumeReview,
@@ -86,7 +87,7 @@ export default function PerfumeDetail() {
             (photo) => (
               <Image
                 key={photo.id}
-                src={photo.image}
+                src={mediaUrl(photo.image)}
                 alt={photo.alt_text || perfume.name}
                 fluid
                 className="rounded shadow-sm perfume-detail-image mb-3"

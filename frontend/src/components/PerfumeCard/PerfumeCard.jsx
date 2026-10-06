@@ -1,17 +1,19 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { mediaUrl } from "../../lib/media";
 import "./PerfumeCard.css";
 
 export default function PerfumeCard({ perfume, index = 0, onAddToCart, showCart = true }) {
   const { t } = useTranslation();
   const number = String(index + 1).padStart(2, "0");
   const notes = perfume.notes || perfume.brand;
+  const cover = mediaUrl(perfume.image_url);
 
   return (
     <article className="essence-card">
       <Link to={`/perfumes/${perfume.id}`} className="essence-card-link">
         <div className="essence-card-media">
-          {perfume.image_url && <img src={perfume.image_url} alt={perfume.name} />}
+          {cover && <img src={cover} alt={perfume.name} />}
           <span className="essence-card-index">No. {number}</span>
         </div>
         <div className="essence-card-body">
