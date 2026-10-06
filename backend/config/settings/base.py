@@ -22,7 +22,10 @@ environ.Env.read_env(BASE_DIR / ".env")
 
 SECRET_KEY = env("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
-ALLOWED_HOSTS = env("ALLOWED_HOSTS")
+ALLOWED_HOSTS = os.getenv(
+    "ALLOWED_HOSTS",
+    "localhost,127.0.0.1"
+).split(",")
 if DEBUG:
     ALLOWED_HOSTS = list(ALLOWED_HOSTS) + ["testserver"]
 FRONTEND_URL = env("FRONTEND_URL").rstrip("/")
@@ -67,12 +70,14 @@ LOCAL_APPS = [
     "apps.reviews.apps.ReviewsConfig",
     "apps.preferences.apps.PreferencesConfig",
     "apps.chatia.apps.ChatiaConfig",
+    
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
