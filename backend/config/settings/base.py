@@ -145,9 +145,16 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 SITE_ID = 1
 
-CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS")
+def _with_origin(origins, origin):
+    if origin and origin not in origins:
+        origins.append(origin)
+    return origins
+
+
+PRODUCTION_FRONTEND_ORIGIN = "https://esencias-three.vercel.app"
+CORS_ALLOWED_ORIGINS = _with_origin(list(env("CORS_ALLOWED_ORIGINS")), PRODUCTION_FRONTEND_ORIGIN)
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS")
+CSRF_TRUSTED_ORIGINS = _with_origin(list(env("CSRF_TRUSTED_ORIGINS")), PRODUCTION_FRONTEND_ORIGIN)
 SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_HTTPONLY = True
