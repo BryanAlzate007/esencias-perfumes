@@ -21,7 +21,7 @@ env = environ.Env(
 environ.Env.read_env(BASE_DIR / ".env")
 
 SECRET_KEY = env("SECRET_KEY")
-DEBUG = env("DEBUG")
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 if DEBUG:
     ALLOWED_HOSTS = list(ALLOWED_HOSTS) + ["testserver"]
