@@ -82,7 +82,17 @@ export default function PerfumeDetail() {
       {message && <Alert variant="warning">{message}</Alert>}
       <Row className="g-4 mb-5">
         <Col md={5}>
-          <Image src={perfume.image_url} alt={perfume.name} fluid className="rounded shadow-sm perfume-detail-image" />
+          {(perfume.images?.length ? perfume.images : perfume.image_url ? [{ id: "cover", image: perfume.image_url, alt_text: perfume.name }] : []).map(
+            (photo) => (
+              <Image
+                key={photo.id}
+                src={photo.image}
+                alt={photo.alt_text || perfume.name}
+                fluid
+                className="rounded shadow-sm perfume-detail-image mb-3"
+              />
+            ),
+          )}
         </Col>
         <Col md={7}>
           <p className="text-body-secondary mb-1">{perfume.brand}</p>

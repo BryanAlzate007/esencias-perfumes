@@ -24,7 +24,7 @@ class MainChordViewSet(AdminCatalogViewSet):
 
 class PerfumeViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
-        queryset = with_last_review(Perfume.objects.prefetch_related("main_chords")).order_by("name")
+        queryset = with_last_review(Perfume.objects.prefetch_related("main_chords", "images")).order_by("name")
         if self.action in ("list", "retrieve") and not is_admin_user(self.request.user):
             queryset = queryset.filter(is_active=True)
         return queryset
@@ -42,4 +42,4 @@ class PerfumeViewSet(viewsets.ModelViewSet):
 
 class ContainerViewSet(AdminCatalogViewSet):
     serializer_class = ContainerSerializer
-    queryset = Container.objects.prefetch_related("main_chords")
+    queryset = Container.objects.prefetch_related("main_chords", "images")

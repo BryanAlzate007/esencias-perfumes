@@ -9,7 +9,7 @@ from .pricing import line_total
 class CartItemSerializer(serializers.ModelSerializer):
     perfume_name = serializers.CharField(source="perfume.name", read_only=True)
     brand = serializers.CharField(source="perfume.brand", read_only=True)
-    image_url = serializers.URLField(source="perfume.image_url", read_only=True)
+    image_url = serializers.CharField(source="perfume.image_url", read_only=True)
     container_name = serializers.SerializerMethodField()
     price = serializers.DecimalField(source="unit_price", max_digits=10, decimal_places=2, read_only=True)
 
@@ -71,7 +71,7 @@ class CartItemSerializer(serializers.ModelSerializer):
 class OrderItemSerializer(serializers.ModelSerializer):
     perfume_name = serializers.CharField(source="perfume.name", read_only=True)
     brand = serializers.CharField(source="perfume.brand", read_only=True)
-    image_url = serializers.URLField(source="perfume.image_url", read_only=True)
+    image_url = serializers.CharField(source="perfume.image_url", read_only=True)
     container_name = serializers.SerializerMethodField()
     subtotal = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
 
@@ -109,6 +109,8 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class OwnedPerfumeSerializer(serializers.ModelSerializer):
+    image_url = serializers.ReadOnlyField()
+
     class Meta:
         model = Perfume
         fields = ("id", "name", "brand", "description", "notes", "image_url", "price")

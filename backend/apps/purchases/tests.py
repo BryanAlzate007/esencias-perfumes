@@ -16,7 +16,6 @@ class DraftQuoteTests(TestCase):
             name="Aurora",
             brand="Esencias",
             description="Cítrica",
-            image_url="https://example.com/a.jpg",
             price="10.00",
             grams=100,
             gram_price="0.20",
@@ -28,7 +27,6 @@ class DraftQuoteTests(TestCase):
         return Container.objects.create(
             name=name,
             description=name,
-            image_url="https://example.com/frasco.jpg",
             type="Frasco",
             size="50 ml",
             weight="120 g",

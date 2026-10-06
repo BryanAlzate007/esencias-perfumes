@@ -81,7 +81,6 @@ class CatalogAndReviewsTests(TestCase):
             name="Noche",
             brand="Esencias",
             description="Amaderada",
-            image_url="https://example.com/n.jpg",
             price="80.00",
         )
 

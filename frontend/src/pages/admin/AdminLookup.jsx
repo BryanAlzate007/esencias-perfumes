@@ -45,7 +45,6 @@ const RESOURCES = {
     fields: [
       { name: "name", labelKey: "auth.name", required: true, col: "col-md-6" },
       { name: "type", labelKey: "admin.type", required: true, col: "col-md-6" },
-      { name: "image_url", labelKey: "admin.imageUrl", required: true },
       { name: "size", labelKey: "admin.size", required: true, col: "col-md-4" },
       { name: "weight", labelKey: "admin.weight", required: true, col: "col-md-4" },
       { name: "volume", labelKey: "admin.volume", required: true, col: "col-md-4" },

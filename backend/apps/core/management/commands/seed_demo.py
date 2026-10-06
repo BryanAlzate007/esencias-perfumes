@@ -13,7 +13,6 @@ PERFUMES = [
         "brand": "Esencias",
         "description": "Una estela amaderada y cálida, con sándalo cremoso, ámbar suave y un fondo de vainilla ahumada.",
         "notes": "Sándalo · Ámbar · Vainilla",
-        "image_url": "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80",
         "price": "89.00",
     },
     {
@@ -21,7 +20,6 @@ PERFUMES = [
         "brand": "Esencias",
         "description": "Bergamota brillante, lima y neroli para los días de calor. Fresca, nítida y fácil de llevar.",
         "notes": "Bergamota · Lima · Neroli",
-        "image_url": "https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=800&q=80",
         "price": "72.00",
     },
     {
@@ -29,7 +27,6 @@ PERFUMES = [
         "brand": "Maison Luna",
         "description": "Rosa de Damasco envuelta en pachulí y almizcle. Elegante, intensa y pensada para la noche.",
         "notes": "Rosa · Pachulí · Almizcle",
-        "image_url": "https://images.unsplash.com/photo-1615634260167-c8cdede054de?auto=format&fit=crop&w=800&q=80",
         "price": "115.00",
     },
     {
@@ -37,7 +34,6 @@ PERFUMES = [
         "brand": "Costa Atelier",
         "description": "Notas acuáticas, sal marina y cedro claro. Recuerda a una tarde de verano frente al océano.",
         "notes": "Sal marina · Cedro · Acuática",
-        "image_url": "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=800&q=80",
         "price": "64.00",
     },
     {
@@ -45,7 +41,6 @@ PERFUMES = [
         "brand": "Maison Luna",
         "description": "Vainilla gourmand con tonka, café tostado y un toque de canela. Dulce, pero con carácter.",
         "notes": "Vainilla · Tonka · Café",
-        "image_url": "https://images.pexels.com/photos/1961795/pexels-photo-1961795.jpeg?auto=compress&cs=tinysrgb&w=800",
         "price": "98.00",
     },
     {
@@ -53,7 +48,6 @@ PERFUMES = [
         "brand": "Atelier Norte",
         "description": "Cedro, vetiver e incienso. Seco, verde y envolvente; ideal para otoño e invierno.",
         "notes": "Cedro · Vetiver · Incienso",
-        "image_url": "https://images.pexels.com/photos/965989/pexels-photo-965989.jpeg?auto=compress&cs=tinysrgb&w=800",
         "price": "81.00",
     },
 ]
