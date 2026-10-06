@@ -1,6 +1,14 @@
 import { getCSRFToken } from "./csrf";
 
-const BASE_URL = "/_allauth/browser/v1";
+function apiOrigin() {
+  const apiUrl = import.meta.env.VITE_API_URL || "/api/v1";
+  if (apiUrl.startsWith("http://") || apiUrl.startsWith("https://")) {
+    return new URL(apiUrl).origin;
+  }
+  return "";
+}
+
+export const ALLAUTH_BASE_URL = `${apiOrigin()}/_allauth/browser/v1`;
 
 function emitAuthChange(message) {
   document.dispatchEvent(new CustomEvent("allauth.auth.change", { detail: message }));
@@ -30,7 +38,7 @@ export async function allauthRequest(method, path, data, extraHeaders = {}) {
     options.body = JSON.stringify(data);
   }
 
-  const response = await fetch(`${BASE_URL}${path}`, options);
+  const response = await fetch(`${ALLAUTH_BASE_URL}${path}`, options);
   const message = await response.json();
 
   if ([401, 410].includes(message.status) || (message.status === 200 && message.meta?.is_authenticated)) {

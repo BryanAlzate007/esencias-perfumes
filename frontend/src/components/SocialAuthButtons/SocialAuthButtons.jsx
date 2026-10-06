@@ -1,3 +1,4 @@
+import { ALLAUTH_BASE_URL } from "../../lib/allauth";
 import { getCSRFToken } from "../../lib/csrf";
 import "./SocialAuthButtons.css";
 
@@ -12,7 +13,7 @@ export default function SocialAuthButtons({ process = "login" }) {
     sessionStorage.setItem("esencias-auth-next", window.location.pathname || "/");
     const form = document.createElement("form");
     form.method = "POST";
-    form.action = "/_allauth/browser/v1/auth/provider/redirect";
+    form.action = `${ALLAUTH_BASE_URL}/auth/provider/redirect`;
     const fields = {
       csrfmiddlewaretoken: getCSRFToken(),
       provider,

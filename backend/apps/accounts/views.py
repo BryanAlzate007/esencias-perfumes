@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.middleware.csrf import get_token
 from rest_framework import generics, permissions, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -23,7 +24,7 @@ class CsrfCookieView(APIView):
     permission_classes = []
 
     def get(self, request):
-        return Response({"detail": "ok"})
+        return Response({"detail": "ok", "csrfToken": get_token(request)})
 
 
 class MeView(generics.RetrieveUpdateAPIView):

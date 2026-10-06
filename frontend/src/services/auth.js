@@ -1,7 +1,9 @@
+import { setCSRFToken } from "../lib/csrf";
 import api from "./api";
 
 export async function ensureCsrfCookie() {
-  await api.get("/csrf/");
+  const { data } = await api.get("/csrf/");
+  setCSRFToken(data.csrfToken);
 }
 
 export async function getMe() {
