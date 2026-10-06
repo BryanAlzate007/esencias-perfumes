@@ -144,7 +144,12 @@
     "empty": "Tu carrito está vacío.",
     "checkout": "Hacer pedido",
     "total": "Total",
-    "loginRequired": "Inicia sesión para añadir perfumes al carrito."
+    "loginRequired": "Inicia sesión para añadir perfumes al carrito.",
+    "orderNumber": "Pedido #{{id}}",
+    "grams": "Gramos",
+    "noContainers": "No hay envases disponibles.",
+    "draftError": "No se pudo abrir el pedido.",
+    "quoteError": "No se pudo actualizar el precio."
   },
   "orders": {
     "title": "Pedidos",
@@ -181,6 +186,7 @@
     "brand": "Marca",
     "imageUrl": "Imagen",
     "price": "Precio",
+    "gramPrice": "Valor del gramo",
     "priceUsd": "Precio USD",
     "color": "Color",
     "notes": "Notas",

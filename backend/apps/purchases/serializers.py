@@ -3,18 +3,36 @@ from rest_framework import serializers
 from apps.perfumes.models import Perfume
 
 from .models import CartItem, Order, OrderItem
+from .pricing import line_total
 
 
 class CartItemSerializer(serializers.ModelSerializer):
     perfume_name = serializers.CharField(source="perfume.name", read_only=True)
     brand = serializers.CharField(source="perfume.brand", read_only=True)
     image_url = serializers.URLField(source="perfume.image_url", read_only=True)
-    price = serializers.DecimalField(source="perfume.price", max_digits=10, decimal_places=2, read_only=True)
+    container_name = serializers.SerializerMethodField()
+    price = serializers.DecimalField(source="unit_price", max_digits=10, decimal_places=2, read_only=True)
 
     class Meta:
         model = CartItem
-        fields = ("id", "perfume", "perfume_name", "brand", "image_url", "price", "quantity")
-        read_only_fields = ("id", "perfume_name", "brand", "image_url", "price")
+        fields = (
+            "id",
+            "perfume",
+            "perfume_name",
+            "brand",
+            "image_url",
+            "container",
+            "container_name",
+            "grams",
+            "price",
+            "quantity",
+        )
+        read_only_fields = ("id", "perfume_name", "brand", "image_url", "container_name", "price")
+
+    def get_container_name(self, obj):
+        if obj.container_id is None:
+            return ""
+        return obj.container.name
 
     def validate_perfume(self, value):
         if not value.is_active:
@@ -24,15 +42,29 @@ class CartItemSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = self.context["request"].user
         perfume = validated_data["perfume"]
+        container = validated_data.get("container")
         quantity = validated_data.get("quantity", 1)
+        if container is None:
+            grams = quantity
+            unit_price = perfume.price
+        else:
+            grams, unit_price = line_total(perfume, container, validated_data.get("grams", quantity))
+            quantity = 1
         item, created = CartItem.objects.get_or_create(
             user=user,
             perfume=perfume,
-            defaults={"quantity": quantity},
+            container=container,
+            defaults={"quantity": quantity, "grams": grams, "unit_price": unit_price},
         )
-        if not created:
+        if not created and container is None:
             item.quantity += quantity
-            item.save(update_fields=["quantity"])
+            item.unit_price = perfume.price
+            item.save(update_fields=["quantity", "unit_price", "updated_at"])
+        elif not created:
+            item.quantity = 1
+            item.grams = grams
+            item.unit_price = unit_price
+            item.save(update_fields=["quantity", "grams", "unit_price", "updated_at"])
         return item
 
 
@@ -40,11 +72,29 @@ class OrderItemSerializer(serializers.ModelSerializer):
     perfume_name = serializers.CharField(source="perfume.name", read_only=True)
     brand = serializers.CharField(source="perfume.brand", read_only=True)
     image_url = serializers.URLField(source="perfume.image_url", read_only=True)
+    container_name = serializers.SerializerMethodField()
     subtotal = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
 
     class Meta:
         model = OrderItem
-        fields = ("id", "perfume", "perfume_name", "brand", "image_url", "quantity", "unit_price", "subtotal")
+        fields = (
+            "id",
+            "perfume",
+            "perfume_name",
+            "brand",
+            "image_url",
+            "container",
+            "container_name",
+            "grams",
+            "quantity",
+            "unit_price",
+            "subtotal",
+        )
+
+    def get_container_name(self, obj):
+        if obj.container_id is None:
+            return ""
+        return obj.container.name
 
 
 class OrderSerializer(serializers.ModelSerializer):

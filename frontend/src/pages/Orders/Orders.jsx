@@ -55,7 +55,9 @@ export default function Orders() {
             <ListGroup variant="flush">
               {order.items.map((item) => (
                 <ListGroup.Item key={item.id} className="px-0">
-                  {item.perfume_name} · x{item.quantity} · ${Number(item.subtotal).toFixed(2)}
+                  {item.perfume_name}
+                  {item.container_name ? ` · ${item.container_name} · ${item.grams} g` : ` · x${item.quantity}`}
+                  {" · "}${Number(item.subtotal).toFixed(2)}
                 </ListGroup.Item>
               ))}
             </ListGroup>

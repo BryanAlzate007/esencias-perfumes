@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { Alert, Container, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import AddToCartModal from "../../components/AddToCardModal/AddToCardModal";
 import AdvisorModal from "../../components/AdvisorModal/AdvisorModal";
 import PerfumeCard from "../../components/PerfumeCard/PerfumeCard";
 import { useAuth } from "../../hooks/useAuth";
 import { useAuthModal } from "../../hooks/useAuthModal";
-import { useCart } from "../../hooks/useCart";
 import { listPerfumes } from "../../services/perfumes";
 import heroImage from "../../assets/hero-perfume.jpg";
 import "./Home.css";
@@ -22,7 +22,7 @@ export default function Home() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const { openLogin } = useAuthModal();
-  const { addItem } = useCart();
+  const [draftPerfumeId, setDraftPerfumeId] = useState(null);
   const [perfumes, setPerfumes] = useState([]);
   const [status, setStatus] = useState("loading");
   const [message, setMessage] = useState("");
@@ -52,8 +52,7 @@ export default function Home() {
       openLogin("/");
       return;
     }
-    await addItem(id);
-    setMessage(t("home.added"));
+    setDraftPerfumeId(id);
   }
 
   const brands = [...new Set([...(perfumes.map((item) => item.brand) || []), ...FALLBACK_BRANDS])];
@@ -67,6 +66,12 @@ export default function Home() {
   return (
     <div className="home-page">
       <AdvisorModal onWeb={() => navigate("/asesoria")} />
+      <AddToCartModal
+        perfumeId={draftPerfumeId}
+        show={draftPerfumeId != null}
+        onHide={() => setDraftPerfumeId(null)}
+        onAdded={() => setMessage(t("home.added"))}
+      />
       <section className="home-hero" style={{ backgroundImage: `url(${heroImage})` }}>
         <div className="home-hero-overlay">
           <h1 className="home-hero-brand">{t("app.name")}</h1>

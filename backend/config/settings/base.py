@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import os
 import environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -27,6 +27,15 @@ if DEBUG:
     ALLOWED_HOSTS = list(ALLOWED_HOSTS) + ["testserver"]
 FRONTEND_URL = env("FRONTEND_URL").rstrip("/")
 GEMINI_API_KEY = env("GEMINI_API_KEY", default="")
+
+
+WOMPI_PUBLIC_KEY = os.getenv("WOMPI_PUBLIC_KEY")
+WOMPI_PRIVATE_KEY = os.getenv("WOMPI_PRIVATE_KEY")
+WOMPI_EVENTS_SECRET = os.getenv("WOMPI_EVENTS_SECRET")
+WOMPI_API_URL = os.getenv(
+    "WOMPI_API_URL",
+    "https://sandbox.wompi.co/v1"
+)
 
 DJANGO_APPS = [
     "django.contrib.admin",

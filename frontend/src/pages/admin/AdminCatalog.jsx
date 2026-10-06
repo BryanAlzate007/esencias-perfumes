@@ -12,6 +12,8 @@ const emptyForm = {
   image_url: "",
   price: "",
   price_usd: "",
+  grams: 100,
+  gram_price: "0",
   color: "",
   main_chords: [],
   is_active: true,
@@ -58,6 +60,8 @@ export default function AdminCatalog() {
       image_url: perfume.image_url,
       price: perfume.price,
       price_usd: perfume.price_usd ?? "",
+      grams: perfume.grams ?? 100,
+      gram_price: perfume.gram_price ?? "0",
       color: perfume.color || "",
       main_chords: perfume.main_chords || [],
       is_active: perfume.is_active,
@@ -79,6 +83,8 @@ export default function AdminCatalog() {
       ...form,
       price: Number(form.price),
       price_usd: form.price_usd === "" ? null : Number(form.price_usd),
+      grams: Number(form.grams),
+      gram_price: Number(form.gram_price),
     };
     try {
       if (editingId) {
@@ -166,6 +172,14 @@ export default function AdminCatalog() {
               <Form.Group className="col-md-4">
                 <Form.Label>{t("admin.color")}</Form.Label>
                 <Form.Control name="color" value={form.color} onChange={update} />
+              </Form.Group>
+              <Form.Group className="col-md-4">
+                <Form.Label>{t("cart.grams")}</Form.Label>
+                <Form.Control name="grams" type="number" min="1" step="1" value={form.grams} onChange={update} required />
+              </Form.Group>
+              <Form.Group className="col-md-4">
+                <Form.Label>{t("admin.gramPrice")}</Form.Label>
+                <Form.Control name="gram_price" type="number" min="0" step="0.01" value={form.gram_price} onChange={update} required />
               </Form.Group>
               <Form.Group className="col-12">
                 <Form.Label>{t("admin.notes")}</Form.Label>

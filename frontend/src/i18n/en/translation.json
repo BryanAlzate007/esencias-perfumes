@@ -144,7 +144,12 @@
     "empty": "Your cart is empty.",
     "checkout": "Place order",
     "total": "Total",
-    "loginRequired": "Log in to add perfumes to your cart."
+    "loginRequired": "Log in to add perfumes to your cart.",
+    "orderNumber": "Order #{{id}}",
+    "grams": "Grams",
+    "noContainers": "There are no containers available.",
+    "draftError": "The order could not be opened.",
+    "quoteError": "The price could not be updated."
   },
   "orders": {
     "title": "Orders",
@@ -181,6 +186,7 @@
     "brand": "Brand",
     "imageUrl": "Image",
     "price": "Price",
+    "gramPrice": "Price per gram",
     "priceUsd": "Price USD",
     "color": "Color",
     "notes": "Notes",

@@ -13,6 +13,8 @@ PERFUME_FIELDS = (
     "price",
     "price_usd",
     "color",
+    "grams",
+    "gram_price",
     "main_chords",
     "is_active",
 )
@@ -38,6 +40,7 @@ class ContainerSerializer(serializers.ModelSerializer):
             "volume",
             "material",
             "color",
+            "price",
             "main_chords",
             "is_active",
         )

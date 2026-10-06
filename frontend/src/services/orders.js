@@ -38,3 +38,22 @@ export async function listMyPerfumes() {
   const { data } = await api.get("/my-perfumes/");
   return data;
 }
+
+export async function startDraft(perfumeId) {
+  const { data } = await api.post("/orders/draft/", { perfume: perfumeId });
+  return data;
+}
+
+export async function updateQuote(orderId, payload) {
+  const { data } = await api.patch(`/orders/${orderId}/quote/`, payload);
+  return data;
+}
+
+export async function confirmDraft(orderId) {
+  const { data } = await api.post(`/orders/${orderId}/confirm/`);
+  return data;
+}
+
+export async function cancelDraft(orderId) {
+  await api.delete(`/orders/${orderId}/draft/`);
+}

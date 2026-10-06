@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { Alert, Button, Col, Form, Image, Row, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
+import AddToCartModal from "../../components/AddToCardModal/AddToCardModal";
 import VotePanels from "../../components/VotePanels/VotePanels";
 import { useAuth } from "../../hooks/useAuth";
-import { useCart } from "../../hooks/useCart";
+import { useAuthModal } from "../../hooks/useAuthModal";
 import { getPerfume } from "../../services/perfumes";
 import {
   createPerfumeReview,
@@ -25,8 +26,9 @@ export default function PerfumeDetail() {
   const { id } = useParams();
   const { t, i18n } = useTranslation();
   const { isAuthenticated } = useAuth();
-  const { addItem } = useCart();
+  const { openLogin } = useAuthModal();
   const [perfume, setPerfume] = useState(null);
+  const [cartOpen, setCartOpen] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [community, setCommunity] = useState(null);
   const [body, setBody] = useState("");
@@ -87,11 +89,23 @@ export default function PerfumeDetail() {
           <h1 className="h2">{perfume.name}</h1>
           <p>{perfume.description}</p>
           <p className="h4">${Number(perfume.price).toFixed(2)}</p>
-          {isAuthenticated && (
-            <Button variant="dark" onClick={() => addItem(perfume.id)}>
-              {t("home.addToCart")}
-            </Button>
-          )}
+          <Button
+            variant="dark"
+            onClick={() => {
+              if (!isAuthenticated) {
+                openLogin(`/perfumes/${perfume.id}`);
+                return;
+              }
+              setCartOpen(true);
+            }}
+          >
+            {t("home.addToCart")}
+          </Button>
+          <AddToCartModal
+            perfumeId={perfume.id}
+            show={cartOpen}
+            onHide={() => setCartOpen(false)}
+          />
         </Col>
       </Row>
 

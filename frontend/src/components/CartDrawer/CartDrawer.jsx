@@ -30,7 +30,8 @@ export default function CartDrawer() {
                     <div>
                       <strong>{item.perfume_name}</strong>
                       <div className="small text-body-secondary">
-                        {item.brand} · x{item.quantity}
+                        {item.brand}
+                        {item.container_name ? ` · ${item.container_name} · ${item.grams} g` : ` · x${item.quantity}`}
                       </div>
                     </div>
                     <div className="text-end">

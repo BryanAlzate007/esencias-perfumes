@@ -40,6 +40,7 @@ const RESOURCES = {
       { key: "name", labelKey: "auth.name" },
       { key: "type", labelKey: "admin.type" },
       { key: "color", labelKey: "admin.color" },
+      { key: "price", labelKey: "admin.price" },
     ],
     fields: [
       { name: "name", labelKey: "auth.name", required: true, col: "col-md-6" },
@@ -50,6 +51,7 @@ const RESOURCES = {
       { name: "volume", labelKey: "admin.volume", required: true, col: "col-md-4" },
       { name: "material", labelKey: "admin.material", required: true, col: "col-md-6" },
       { name: "color", labelKey: "admin.color", required: true, col: "col-md-6" },
+      { name: "price", labelKey: "admin.price", type: "number", required: true, col: "col-md-4" },
       { name: "main_chords", labelKey: "admin.mainChords", type: "chords" },
       { name: "description", labelKey: "admin.description", type: "textarea", required: true },
       { name: "is_active", labelKey: "admin.active", type: "checkbox" },
@@ -84,6 +86,9 @@ function emptyForm(fields) {
       }
       if (field.type === "checkbox") {
         return [field.name, true];
+      }
+      if (field.type === "number") {
+        return [field.name, "0"];
       }
       return [field.name, ""];
     }),
@@ -261,8 +266,11 @@ function LookupScreen({ resource }) {
                         <Form.Control
                           id={`lookup-${field.name}`}
                           name={field.name}
+                          type={field.type === "number" ? "number" : undefined}
                           as={field.type === "textarea" ? "textarea" : "input"}
                           rows={field.type === "textarea" ? 3 : undefined}
+                          min={field.type === "number" ? "0" : undefined}
+                          step={field.type === "number" ? "0.01" : undefined}
                           value={form[field.name]}
                           onChange={update}
                           required={field.required}
