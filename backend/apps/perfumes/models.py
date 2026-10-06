@@ -6,7 +6,6 @@ class Perfume(models.Model):
     brand = models.CharField(max_length=120)
     description = models.TextField()
     notes = models.CharField(max_length=200, blank=True)
-    image_url = models.URLField(max_length=500)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     price_usd = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     color = models.CharField(max_length=200, blank=True)
@@ -42,7 +41,6 @@ class Main_chords(models.Model):
 class Container(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
-    image_url = models.URLField(max_length=500)
     type = models.CharField(max_length=200)
     size = models.CharField(max_length=200)
     weight = models.CharField(max_length=200)
@@ -62,4 +60,70 @@ class Container(models.Model):
         return self.name
 
 
-        
+class PerfumeImage(models.Model):
+    perfume = models.ForeignKey(
+        "perfumes.Perfume",
+        on_delete=models.CASCADE,
+        related_name="images",
+    )
+
+    image = models.ImageField(
+        upload_to="perfumes/",
+    )
+
+    alt_text = models.CharField(
+        max_length=150,
+        blank=True,
+    )
+
+    is_primary = models.BooleanField(
+        default=False,
+    )
+
+    order = models.PositiveIntegerField(
+        default=0,
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    class Meta:
+        ordering = ["order", "id"]
+
+    def __str__(self):
+        return f"Imagen de {self.perfume}"
+
+class EnvaseImage(models.Model):
+    container = models.ForeignKey(
+        "perfumes.Container",
+        on_delete=models.CASCADE,
+        related_name="images",
+    )
+
+    image = models.ImageField(
+        upload_to="containers/",
+    )
+
+    alt_text = models.CharField(
+        max_length=150,
+        blank=True,
+    )
+
+    is_primary = models.BooleanField(
+        default=False,
+    )
+
+    order = models.PositiveIntegerField(
+        default=0,
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    class Meta:
+        ordering = ["order", "id"]
+
+    def __str__(self):
+        return f"Imagen de {self.container}"

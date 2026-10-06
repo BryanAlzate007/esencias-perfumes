@@ -35,17 +35,10 @@ export function AuthProvider({ children }) {
     }
 
     function onAuthChanged(event) {
-      loadProfile(event.detail)
-        .then((me) => {
-          if (!cancelled) {
-            setUser(me);
-          }
-        })
-        .catch(() => {
-          if (!cancelled) {
-            setUser(null);
-          }
-        });
+      if (event.detail?.meta?.is_authenticated || cancelled) {
+        return;
+      }
+      setUser(null);
     }
 
     document.addEventListener("allauth.auth.change", onAuthChanged);

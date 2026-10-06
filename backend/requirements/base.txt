@@ -9,3 +9,4 @@ google-genai>=1.0
 whitenoise>=6.12,<7
 dj-database-url>=2.0
 django-cors-headers>=4.6
+pillow>=11.1.0

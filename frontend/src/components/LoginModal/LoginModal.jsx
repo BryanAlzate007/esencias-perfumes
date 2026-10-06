@@ -1,18 +1,20 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Alert, Button, Form, Modal } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { allauthErrors, login } from "../../lib/allauth";
 import { useAuth } from "../../hooks/useAuth";
 import { useAuthModal } from "../../hooks/useAuthModal";
+import { getMe } from "../../services/auth";
 import SocialAuthButtons from "../SocialAuthButtons/SocialAuthButtons";
 import "./LoginModal.css";
 
 export default function LoginModal() {
   const { t } = useTranslation();
-  const { refreshUser } = useAuth();
+  const { setUser } = useAuth();
   const { open, closeLogin, redirectTo } = useAuthModal();
   const navigate = useNavigate();
+  const submitting = useRef(false);
   const [form, setForm] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
@@ -29,21 +31,32 @@ export default function LoginModal() {
 
   async function handleSubmit(event) {
     event.preventDefault();
+    if (submitting.current) {
+      return;
+    }
+    submitting.current = true;
     setSaving(true);
     setError("");
     const identifier = form.username.includes("@")
       ? { email: form.username, password: form.password }
       : { username: form.username, password: form.password };
-    const result = await login(identifier);
-    if (result.status !== 200 || !result.meta?.is_authenticated) {
-      setError(allauthErrors(result) || t("common.error"));
+    try {
+      const result = await login(identifier);
+      if (result.status !== 200 || !result.meta?.is_authenticated) {
+        setError(allauthErrors(result) || t("common.error"));
+        return;
+      }
+      const me = await getMe();
+      setUser(me);
+      handleClose();
+      const next = redirectTo || "/";
+      navigate(me?.is_admin ? "/admin" : next, { replace: true });
+    } catch {
+      setError(t("common.error"));
+    } finally {
+      submitting.current = false;
       setSaving(false);
-      return;
     }
-    const me = await refreshUser();
-    handleClose();
-    const next = redirectTo || "/";
-    navigate(me?.is_admin ? "/admin" : next, { replace: true });
   }
 
   return (
