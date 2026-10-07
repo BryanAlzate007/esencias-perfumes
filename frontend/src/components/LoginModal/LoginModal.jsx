@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Alert, Button, Form, Modal } from "react-bootstrap";
+import { Alert, Button, Form, Modal, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { allauthErrors, login } from "../../lib/allauth";
@@ -84,7 +84,8 @@ export default function LoginModal() {
               autoComplete="current-password"
             />
           </Form.Group>
-          <Button type="submit" variant="dark" className="w-100" disabled={saving}>
+          <Button type="submit" variant="primary" className="w-100" disabled={saving}>
+            {saving && <Spinner animation="border" size="sm" className="me-2" />}
             {t("auth.submitLogin")}
           </Button>
         </Form>
