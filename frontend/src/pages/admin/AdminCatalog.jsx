@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import ImageDropzone from "../../components/ImageDropzone/ImageDropzone";
 import RelationSelect from "../../components/RelationSelect/RelationSelect";
 import { listMainChords, createPerfume, deletePerfume, listPerfumes, updatePerfume } from "../../services/perfumes";
+import "./AdminCatalog.css";
 
 const CATALOGS = [
   { value: "caballero", labelKey: "admin.catalogCaballero" },
@@ -186,12 +187,12 @@ export default function AdminCatalog() {
         </tbody>
       </Table>
 
-      <Modal show={open} onHide={closeModal} centered scrollable size="lg">
-        <Form onSubmit={handleSubmit}>
-          <Modal.Header closeButton>
-            <Modal.Title>{editingId ? t("admin.edit") : t("admin.newPerfume")}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
+      <Modal show={open} onHide={closeModal} centered scrollable size="lg" fullscreen="sm-down" className="catalog-modal">
+        <Modal.Header closeButton>
+          <Modal.Title>{editingId ? t("admin.edit") : t("admin.newPerfume")}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form id="catalog-perfume-form" onSubmit={handleSubmit}>
             {error && open && <Alert variant="danger">{error}</Alert>}
             <div className="row g-3">
               <Form.Group className="col-md-4">
@@ -273,16 +274,16 @@ export default function AdminCatalog() {
                 <Form.Check name="is_active" checked={form.is_active} onChange={update} label={t("admin.active")} />
               </Form.Group>
             </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button type="button" variant="outline-secondary" onClick={closeModal}>
-              {t("admin.cancel")}
-            </Button>
-            <Button type="submit" variant="dark" disabled={saving}>
-              {t("admin.save")}
-            </Button>
-          </Modal.Footer>
-        </Form>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button type="button" variant="outline-secondary" onClick={closeModal}>
+            {t("admin.cancel")}
+          </Button>
+          <Button type="submit" form="catalog-perfume-form" variant="dark" disabled={saving}>
+            {t("admin.save")}
+          </Button>
+        </Modal.Footer>
       </Modal>
     </>
   );

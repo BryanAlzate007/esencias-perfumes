@@ -13,8 +13,9 @@ urlpatterns = [
     path("api/v1/", include("apps.reviews.urls")),
     path("api/v1/", include("apps.purchases.urls")),
     path("api/v1/", include("apps.chatia.urls")),
-]
+    path("api-auth/", include("rest_framework.urls"))
 
+]
 urlpatterns += [
     re_path(r"^media/(?P<path>.*)$", stored_media),
 ]

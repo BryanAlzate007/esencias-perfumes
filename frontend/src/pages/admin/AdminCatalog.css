@@ -1,0 +1,21 @@
+.catalog-modal .modal-dialog {
+  max-height: calc(100dvh - 3.5rem);
+}
+
+.catalog-modal .modal-content {
+  max-height: 100%;
+}
+
+.catalog-modal .modal-body {
+  min-height: 0;
+  overflow-y: auto;
+}
+
+@media (max-width: 575.98px) {
+  .catalog-modal .modal-dialog,
+  .catalog-modal .modal-content {
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+  }
+}
