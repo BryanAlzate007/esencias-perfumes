@@ -90,6 +90,20 @@ class DraftQuoteTests(TestCase):
         self.assertEqual(CartItem.objects.filter(user=self.user, container=self.glass).count(), 1)
         self.assertFalse(Order.objects.filter(pk=body["order_id"]).exists())
 
+    def test_anonymous_quote_uses_the_catalog_price(self):
+        response = self.client.post(
+            "/api/v1/quotes/",
+            {"perfume": self.perfume.id, "container": self.glass.id, "grams": 150, "total": "1.00"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, 200, response.content)
+        body = response.json()
+        self.assertNotIn("order_id", body)
+        self.assertEqual(body["grams"], 150)
+        self.assertEqual(body["total"], "15.00")
+        self.assertEqual(body["perfume"]["brand"], "Esencias")
+        self.assertFalse(Order.objects.exists())
+
     def test_grams_below_the_perfume_base_stay_at_the_base(self):
         self.client.force_login(self.user)
         draft = self.client.post("/api/v1/orders/draft/", {"perfume": self.perfume.id}, format="json")

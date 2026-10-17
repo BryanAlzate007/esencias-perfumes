@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom";
 import AddToCartModal from "../../components/AddToCardModal/AddToCardModal";
 import AdvisorModal from "../../components/AdvisorModal/AdvisorModal";
 import PerfumeCard from "../../components/PerfumeCard/PerfumeCard";
-import { useAuth } from "../../hooks/useAuth";
-import { useAuthModal } from "../../hooks/useAuthModal";
 import { listPerfumes } from "../../services/perfumes";
 import heroImage from "../../assets/hero-perfume.jpg";
 import "./Home.css";
@@ -20,8 +18,6 @@ function scrollToId(id) {
 export default function Home() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
-  const { openLogin } = useAuthModal();
   const [draftPerfumeId, setDraftPerfumeId] = useState(null);
   const [perfumes, setPerfumes] = useState([]);
   const [status, setStatus] = useState("loading");
@@ -46,12 +42,8 @@ export default function Home() {
     requestAnimationFrame(() => scrollToId(hash));
   }, [status]);
 
-  async function handleAdd(id) {
-    if (!isAuthenticated) {
-      setMessage(t("cart.loginRequired"));
-      openLogin("/");
-      return;
-    }
+  function handleAdd(id) {
+    setMessage("");
     setDraftPerfumeId(id);
   }
 

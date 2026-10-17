@@ -19,7 +19,8 @@
     "logout": "Salir",
     "cart": "Carrito",
     "language": "Idioma",
-    "theme": "Tema"
+    "theme": "Tema",
+    "privacy": "Política de privacidad"
   },
   "theme": {
     "light": "Claro",
@@ -145,7 +146,7 @@
     "checkout": "Pagar",
     "paymentError": "No se pudo iniciar el pago.",
     "total": "Total",
-    "loginRequired": "Inicia sesión para añadir perfumes al carrito.",
+    "loginRequired": "Inicia sesión para comprar lo que tienes en el carrito.",
     "orderNumber": "Pedido #{{id}}",
     "grams": "Gramos",
     "noContainers": "No hay envases disponibles.",

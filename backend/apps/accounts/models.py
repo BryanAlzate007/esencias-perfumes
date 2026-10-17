@@ -24,6 +24,24 @@ class Profile(models.Model):
 
 
 
+class DataDeletionRequest(models.Model):
+    class Status(models.TextChoices):
+        DELETED = "deleted", "Eliminada"
+        ABSENT = "absent", "Sin datos"
+        KEPT = "kept", "Conservada"
+
+    confirmation_code = models.CharField(max_length=64, unique=True)
+    facebook_user_id = models.CharField(max_length=64)
+    status = models.CharField(max_length=20, choices=Status.choices)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.confirmation_code
+
+
 class Profile_person(models.Model):
   name = models.CharField(max_length=200)
   description = models.TextField()

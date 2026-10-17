@@ -2,11 +2,14 @@ import { useState } from "react";
 import { Alert, Button, ListGroup, Offcanvas } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useAuthModal } from "../../hooks/useAuthModal";
 import { useCart } from "../../hooks/useCart";
+import { CHECKOUT_AFTER_LOGIN } from "../../lib/guestCart";
 
 export default function CartDrawer() {
   const { t } = useTranslation();
   const { items, open, setOpen, removeItem, checkout, total } = useCart();
+  const { openLogin } = useAuthModal();
   const navigate = useNavigate();
   const [paying, setPaying] = useState(false);
   const [error, setError] = useState("");
@@ -15,7 +18,13 @@ export default function CartDrawer() {
     setPaying(true);
     setError("");
     try {
-      await checkout();
+      const session = await checkout();
+      if (session?.needsLogin) {
+        sessionStorage.setItem(CHECKOUT_AFTER_LOGIN, "1");
+        setOpen(false);
+        openLogin(`${window.location.pathname}${window.location.search}`);
+        return;
+      }
       navigate("/pedidos");
     } catch (requestError) {
       setError(requestError?.response?.data?.detail || t("cart.paymentError"));

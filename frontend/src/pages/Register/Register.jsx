@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Alert, Button, Card, Form } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { allauthErrors, signUp } from "../../lib/allauth";
 import { useAuth } from "../../hooks/useAuth";
 import { useAuthModal } from "../../hooks/useAuthModal";
@@ -90,6 +90,9 @@ export default function Register() {
             {t("auth.hasAccount")}
           </button>
         </div>
+        <p className="mt-3 mb-0 text-center small">
+          <Link to="/politica-de-privacidad">{t("nav.privacy")}</Link>
+        </p>
       </Card.Body>
     </Card>
   );

@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { allauthErrors, login } from "../../lib/allauth";
 import { useAuth } from "../../hooks/useAuth";
 import { useAuthModal } from "../../hooks/useAuthModal";
+import { CHECKOUT_AFTER_LOGIN } from "../../lib/guestCart";
 import { getMe } from "../../services/auth";
 import SocialAuthButtons from "../SocialAuthButtons/SocialAuthButtons";
 import "./LoginModal.css";
@@ -15,6 +16,7 @@ export default function LoginModal() {
   const { open, closeLogin, redirectTo } = useAuthModal();
   const navigate = useNavigate();
   const submitting = useRef(false);
+  const authenticated = useRef(false);
   const [form, setForm] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
@@ -24,6 +26,10 @@ export default function LoginModal() {
   }
 
   function handleClose() {
+    if (!authenticated.current) {
+      sessionStorage.removeItem(CHECKOUT_AFTER_LOGIN);
+    }
+    authenticated.current = false;
     setError("");
     setSaving(false);
     closeLogin();
@@ -47,6 +53,7 @@ export default function LoginModal() {
         return;
       }
       const me = await getMe();
+      authenticated.current = true;
       setUser(me);
       handleClose();
       const next = redirectTo || "/";
@@ -97,6 +104,11 @@ export default function LoginModal() {
             {t("auth.noAccount")}
           </Link>
         </div>
+        <p className="mt-3 mb-0 text-center small">
+          <Link to="/politica-de-privacidad" onClick={handleClose}>
+            {t("nav.privacy")}
+          </Link>
+        </p>
       </Modal.Body>
     </Modal>
   );

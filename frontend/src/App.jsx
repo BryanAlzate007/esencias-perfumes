@@ -10,14 +10,14 @@ export default function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <CartProvider>
-          <BrowserRouter>
-            <AuthModalProvider>
+        <BrowserRouter>
+          <AuthModalProvider>
+            <CartProvider>
               <AppRoutes />
               <LoginModal />
-            </AuthModalProvider>
-          </BrowserRouter>
-        </CartProvider>
+            </CartProvider>
+          </AuthModalProvider>
+        </BrowserRouter>
       </AuthProvider>
     </ThemeProvider>
   );

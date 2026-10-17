@@ -5,8 +5,13 @@ export async function getCart() {
   return data;
 }
 
-export async function addToCart(perfumeId, quantity = 1) {
-  const { data } = await api.post("/cart/", { perfume: perfumeId, quantity });
+export async function addToCart(perfumeId, quantity = 1, extra = {}) {
+  const { data } = await api.post("/cart/", { perfume: perfumeId, quantity, ...extra });
+  return data;
+}
+
+export async function previewQuote(payload) {
+  const { data } = await api.post("/quotes/", payload);
   return data;
 }
 

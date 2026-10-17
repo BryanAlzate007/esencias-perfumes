@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { Outlet, useLocation } from "react-router-dom";
 import { Container } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import AdminSidebar from "../components/AdminSidebar/AdminSidebar";
 import AppNavbar from "../components/Navbar/Navbar";
 import CartDrawer from "../components/CartDrawer/CartDrawer";
@@ -22,6 +23,7 @@ function useDesktopNav() {
 
 export default function MainLayout() {
   const { pathname } = useLocation();
+  const { t } = useTranslation();
   const { isAdmin, ready } = useAuth();
   const isDesktop = useDesktopNav();
   const isHome = pathname === "/";
@@ -56,6 +58,13 @@ export default function MainLayout() {
           </Container>
         )}
       </div>
+      {!isChat && (
+        <footer className="text-center small py-4">
+          <Link to="/politica-de-privacidad" className="text-body-secondary">
+            {t("nav.privacy")}
+          </Link>
+        </footer>
+      )}
       <CartDrawer />
     </div>
   );

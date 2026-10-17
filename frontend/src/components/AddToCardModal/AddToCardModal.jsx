@@ -3,19 +3,18 @@ import { Alert, Button, Form, Modal, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useCart } from "../../hooks/useCart";
 import { mediaUrl } from "../../lib/media";
-import { cancelDraft, confirmDraft, startDraft, updateQuote } from "../../services/orders";
+import { previewQuote } from "../../services/orders";
 import "./AddToCardModal.css";
 
 export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
   const { t } = useTranslation();
-  const { refreshCart, setOpen } = useCart();
+  const { saveQuote } = useCart();
   const [quote, setQuote] = useState(null);
   const [grams, setGrams] = useState(100);
   const [loading, setLoading] = useState(false);
   const [pricing, setPricing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const orderIdRef = useRef(null);
   const quoteRef = useRef(null);
   const gramsRef = useRef(grams);
   const timer = useRef(null);
@@ -32,13 +31,11 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
     setLoading(true);
     setError("");
     setQuote(null);
-    startDraft(perfumeId)
+    previewQuote({ perfume: perfumeId })
       .then((data) => {
         if (!active) {
-          cancelDraft(data.order_id).catch(() => {});
           return;
         }
-        orderIdRef.current = data.order_id;
         setQuote(data);
         setGrams(data.grams);
       })
@@ -55,20 +52,15 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
     return () => {
       active = false;
       clearTimeout(timer.current);
-      const orderId = orderIdRef.current;
-      orderIdRef.current = null;
-      if (orderId) {
-        cancelDraft(orderId).catch(() => {});
-      }
     };
   }, [show, perfumeId, t]);
 
-  async function applyQuote(orderId, payload) {
+  async function applyQuote(payload) {
     const seq = ++requestSeq.current;
     setPricing(true);
     setError("");
     try {
-      const data = await updateQuote(orderId, payload);
+      const data = await previewQuote({ perfume: perfumeId, ...payload });
       if (seq !== requestSeq.current) {
         return;
       }
@@ -87,13 +79,13 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
 
   function selectContainer(containerId) {
     const current = quoteRef.current;
-    if (!current?.order_id) {
+    if (!current) {
       return;
     }
     clearTimeout(timer.current);
     const base = current.base_grams;
     const nextGrams = Number(gramsRef.current);
-    applyQuote(current.order_id, {
+    applyQuote({
       container: containerId,
       grams: Number.isFinite(nextGrams) && nextGrams >= base ? nextGrams : base,
     });
@@ -103,12 +95,12 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
     setGrams(nextValue);
     const current = quoteRef.current;
     const parsed = Number(nextValue);
-    if (!current?.order_id || !current.selected_container || !Number.isFinite(parsed) || parsed < 1) {
+    if (!current?.selected_container || !Number.isFinite(parsed) || parsed < 1) {
       return;
     }
     clearTimeout(timer.current);
     timer.current = setTimeout(() => {
-      applyQuote(current.order_id, {
+      applyQuote({
         container: current.selected_container,
         grams: parsed,
       });
@@ -116,17 +108,14 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
   }
 
   async function handleConfirm() {
-    if (!quote?.order_id) {
+    if (!quote) {
       return;
     }
     setSaving(true);
     setError("");
     clearTimeout(timer.current);
     try {
-      await confirmDraft(quote.order_id);
-      orderIdRef.current = null;
-      await refreshCart();
-      setOpen(true);
+      await saveQuote(quote);
       onAdded?.();
       onHide();
     } catch {

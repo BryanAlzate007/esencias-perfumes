@@ -46,6 +46,7 @@ def build_quote(item):
         "perfume": {
             "id": perfume.id,
             "name": perfume.name,
+            "brand": perfume.brand,
             "image_url": perfume.image_url,
             "price": format(money(perfume.price), ".2f"),
         },

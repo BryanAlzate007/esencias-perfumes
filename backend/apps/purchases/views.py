@@ -1,3 +1,5 @@
+from types import SimpleNamespace
+
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -40,6 +42,32 @@ def _draft_item(user, pk):
     if order is None:
         return None
     return order.items.select_related("perfume", "container").first()
+
+
+class QuotePreviewView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        perfume = Perfume.objects.filter(pk=request.data.get("perfume"), is_active=True).first()
+        if perfume is None:
+            return Response({"detail": "Perfume no disponible."}, status=status.HTTP_400_BAD_REQUEST)
+        container = None
+        raw_container = request.data.get("container")
+        if raw_container not in (None, ""):
+            container = Container.objects.filter(pk=raw_container, is_active=True).first()
+            if container is None:
+                return Response({"container": ["Envase no disponible."]}, status=status.HTTP_400_BAD_REQUEST)
+        grams, _total = line_total(perfume, container, request.data.get("grams", perfume.grams))
+        line = SimpleNamespace(
+            perfume=perfume,
+            container=container,
+            container_id=container.id if container else None,
+            grams=grams,
+            order_id=None,
+        )
+        payload = build_quote(line)
+        payload.pop("order_id", None)
+        return Response(payload)
 
 
 class DraftOrderView(APIView):

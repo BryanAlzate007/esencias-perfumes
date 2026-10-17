@@ -19,7 +19,8 @@
     "logout": "Log out",
     "cart": "Cart",
     "language": "Language",
-    "theme": "Theme"
+    "theme": "Theme",
+    "privacy": "Privacy policy"
   },
   "theme": {
     "light": "Light",
@@ -145,7 +146,7 @@
     "checkout": "Pay",
     "paymentError": "The payment could not be started.",
     "total": "Total",
-    "loginRequired": "Log in to add perfumes to your cart.",
+    "loginRequired": "Log in to buy what is already in your cart.",
     "orderNumber": "Order #{{id}}",
     "grams": "Grams",
     "noContainers": "There are no containers available.",

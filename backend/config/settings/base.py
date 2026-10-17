@@ -29,6 +29,7 @@ ALLOWED_HOSTS = os.getenv(
 if DEBUG:
     ALLOWED_HOSTS = list(ALLOWED_HOSTS) + ["testserver"]
 FRONTEND_URL = env("FRONTEND_URL").rstrip("/")
+FACEBOOK_CLIENT_SECRET = env("FACEBOOK_CLIENT_SECRET", default="")
 GEMINI_API_KEY = env("GEMINI_API_KEY", default="")
 
 

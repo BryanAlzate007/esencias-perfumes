@@ -5,7 +5,6 @@ import { Link, useParams } from "react-router-dom";
 import AddToCartModal from "../../components/AddToCardModal/AddToCardModal";
 import VotePanels from "../../components/VotePanels/VotePanels";
 import { useAuth } from "../../hooks/useAuth";
-import { useAuthModal } from "../../hooks/useAuthModal";
 import { mediaUrl } from "../../lib/media";
 import { getPerfume } from "../../services/perfumes";
 import {
@@ -27,7 +26,6 @@ export default function PerfumeDetail() {
   const { id } = useParams();
   const { t, i18n } = useTranslation();
   const { isAuthenticated } = useAuth();
-  const { openLogin } = useAuthModal();
   const [perfume, setPerfume] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [reviews, setReviews] = useState([]);
@@ -100,16 +98,7 @@ export default function PerfumeDetail() {
           <h1 className="h2">{perfume.name}</h1>
           <p>{perfume.description}</p>
           <p className="h4">${Number(perfume.price).toFixed(2)}</p>
-          <Button
-            variant="dark"
-            onClick={() => {
-              if (!isAuthenticated) {
-                openLogin(`/perfumes/${perfume.id}`);
-                return;
-              }
-              setCartOpen(true);
-            }}
-          >
+          <Button variant="dark" onClick={() => setCartOpen(true)}>
             {t("home.addToCart")}
           </Button>
           <AddToCartModal

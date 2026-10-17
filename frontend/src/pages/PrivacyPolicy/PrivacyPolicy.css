@@ -1,0 +1,13 @@
+.privacy-policy {
+  max-width: 42rem;
+}
+
+.privacy-policy h2 {
+  font-size: 1.15rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.privacy-policy p {
+  line-height: 1.6;
+}

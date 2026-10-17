@@ -15,6 +15,7 @@ import AuthCallback from "../pages/AuthCallback/AuthCallback";
 import MyPerfumes from "../pages/MyPerfumes/MyPerfumes";
 import Orders from "../pages/Orders/Orders";
 import PerfumeDetail from "../pages/PerfumeDetail/PerfumeDetail";
+import PrivacyPolicy from "../pages/PrivacyPolicy/PrivacyPolicy";
 import Register from "../pages/Register/Register";
 import ResetPassword from "../pages/ResetPassword/ResetPassword";
 
@@ -30,6 +31,7 @@ export default function AppRoutes() {
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/recuperar-contrasena" element={<ForgotPassword />} />
         <Route path="/recuperar-contrasena/key/:key" element={<ResetPassword />} />
+        <Route path="/politica-de-privacidad" element={<PrivacyPolicy />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/tus-perfumes" element={<MyPerfumes />} />
