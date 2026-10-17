@@ -2,15 +2,19 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://esencias-t2yx.onrender.com/api/:path*"
+      "destination": "https://api.esencias.site/api/:path*"
     },
     {
       "source": "/_allauth/:path*",
-      "destination": "https://esencias-t2yx.onrender.com/_allauth/:path*"
+      "destination": "https://api.esencias.site/_allauth/:path*"
     },
     {
       "source": "/accounts/:path*",
-      "destination": "https://esencias-t2yx.onrender.com/accounts/:path*"
+      "destination": "https://api.esencias.site/accounts/:path*"
+    },
+    {
+      "source": "/media/:path*",
+      "destination": "https://api.esencias.site/media/:path*"
     }
   ]
 }

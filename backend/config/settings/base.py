@@ -162,17 +162,27 @@ def _with_origin(origins, origin):
     return origins
 
 
-PRODUCTION_FRONTEND_ORIGIN = "https://esencias-three.vercel.app"
-CORS_ALLOWED_ORIGINS = _with_origin(list(env("CORS_ALLOWED_ORIGINS")), PRODUCTION_FRONTEND_ORIGIN)
+PRODUCTION_FRONTEND_ORIGINS = [
+    "https://www.esencias.site",
+    "https://esencias.site",
+]
+CORS_ALLOWED_ORIGINS = list(env("CORS_ALLOWED_ORIGINS"))
+CSRF_TRUSTED_ORIGINS = list(env("CSRF_TRUSTED_ORIGINS"))
+for _origin in (*PRODUCTION_FRONTEND_ORIGINS, "https://api.esencias.site"):
+    CSRF_TRUSTED_ORIGINS = _with_origin(CSRF_TRUSTED_ORIGINS, _origin)
+for _origin in PRODUCTION_FRONTEND_ORIGINS:
+    CORS_ALLOWED_ORIGINS = _with_origin(CORS_ALLOWED_ORIGINS, _origin)
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = _with_origin(list(env("CSRF_TRUSTED_ORIGINS")), PRODUCTION_FRONTEND_ORIGIN)
 SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = False
-# The Vercel page and this API are different sites. A Lax cookie is not stored
-# or sent on that cross-site POST, so Django reports "CSRF cookie not set".
-if os.getenv("RENDER") == "true":
+# www.esencias.site and api.esencias.site are different origins. Secure cookies
+# with SameSite=None are sent on the login and payment requests.
+if os.getenv("RENDER") == "true" or os.getenv("DJANGO_ENV") == "production":
+    for _host in ("api.esencias.site",):
+        if _host not in ALLOWED_HOSTS:
+            ALLOWED_HOSTS.append(_host)
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = "None"
