@@ -178,11 +178,15 @@ CSRF_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = False
 # www.esencias.site and api.esencias.site are different origins. Secure cookies
-# with SameSite=None are sent on the login and payment requests.
+# with SameSite=None are sent on the login and payment requests. Render forwards
+# HTTPS as HTTP, so the OAuth callback must still be built with https.
 if os.getenv("RENDER") == "true" or os.getenv("DJANGO_ENV") == "production":
-    for _host in ("api.esencias.site",):
+    for _host in ("api.esencias.site", "esencias-t2yx.onrender.com"):
         if _host not in ALLOWED_HOSTS:
             ALLOWED_HOSTS.append(_host)
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    USE_X_FORWARDED_HOST = True
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = "None"
