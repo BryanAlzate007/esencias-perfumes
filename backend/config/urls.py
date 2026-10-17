@@ -12,6 +12,7 @@ urlpatterns = [
     path("api/v1/", include("apps.perfumes.urls")),
     path("api/v1/", include("apps.reviews.urls")),
     path("api/v1/", include("apps.purchases.urls")),
+    path("api/v1/", include("apps.payments.urls")),
     path("api/v1/", include("apps.chatia.urls")),
     path("api-auth/", include("rest_framework.urls"))
 

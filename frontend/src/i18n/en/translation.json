@@ -142,7 +142,8 @@
   "cart": {
     "title": "Cart",
     "empty": "Your cart is empty.",
-    "checkout": "Place order",
+    "checkout": "Pay",
+    "paymentError": "The payment could not be started.",
     "total": "Total",
     "loginRequired": "Log in to add perfumes to your cart.",
     "orderNumber": "Order #{{id}}",
@@ -157,7 +158,9 @@
     "status": "Status",
     "pending": "Pending",
     "confirmed": "Confirmed",
-    "cancelled": "Cancelled"
+    "cancelled": "Cancelled",
+    "pay": "Pay",
+    "paymentError": "The payment could not be opened."
   },
   "myPerfumes": {
     "title": "Your perfumes",

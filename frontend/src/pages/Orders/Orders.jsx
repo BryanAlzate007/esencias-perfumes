@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
-import { Alert, Badge, Card, Form, ListGroup } from "react-bootstrap";
+import { Alert, Badge, Button, Card, Form, ListGroup } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../hooks/useAuth";
+import { openWompiCheckout } from "../../lib/wompi";
 import { listOrders, updateOrder } from "../../services/orders";
+import { startPayment } from "../../services/payments";
 
 export default function Orders() {
   const { t, i18n } = useTranslation();
   const { isAdmin } = useAuth();
   const [orders, setOrders] = useState([]);
+  const [payingId, setPayingId] = useState(null);
+  const [error, setError] = useState("");
 
   async function load() {
     const data = await listOrders();
@@ -16,6 +20,11 @@ export default function Orders() {
 
   useEffect(() => {
     load().catch(() => setOrders([]));
+    const refresh = () => {
+      load().catch(() => {});
+    };
+    window.addEventListener("payment-updated", refresh);
+    return () => window.removeEventListener("payment-updated", refresh);
   }, []);
 
   async function handleStatus(id, status) {
@@ -23,9 +32,23 @@ export default function Orders() {
     await load();
   }
 
+  async function handlePay(orderId) {
+    setPayingId(orderId);
+    setError("");
+    try {
+      const session = await startPayment(orderId);
+      await openWompiCheckout(session);
+    } catch (requestError) {
+      setError(requestError?.response?.data?.detail || t("orders.paymentError"));
+    } finally {
+      setPayingId(null);
+    }
+  }
+
   return (
     <>
       <h1 className="h2 mb-4">{t("orders.title")}</h1>
+      {error && <Alert variant="danger">{error}</Alert>}
       {orders.length === 0 && <Alert variant="light">{t("orders.empty")}</Alert>}
       {orders.map((order) => (
         <Card key={order.id} className="mb-3">
@@ -49,7 +72,14 @@ export default function Orders() {
                   <option value="cancelled">{t("orders.cancelled")}</option>
                 </Form.Select>
               ) : (
-                <Badge bg="secondary">{t(`orders.${order.status}`)}</Badge>
+                <div className="d-flex align-items-center gap-2">
+                  {order.status === "pending" && (
+                    <Button size="sm" variant="dark" disabled={payingId === order.id} onClick={() => handlePay(order.id)}>
+                      {t("orders.pay")}
+                    </Button>
+                  )}
+                  <Badge bg="secondary">{t(`orders.${order.status}`)}</Badge>
+                </div>
               )}
             </div>
             <ListGroup variant="flush">

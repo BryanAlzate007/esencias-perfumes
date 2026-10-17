@@ -19,11 +19,6 @@ export async function removeCartItem(id) {
   await api.delete(`/cart/${id}/`);
 }
 
-export async function checkout() {
-  const { data } = await api.post("/orders/checkout/");
-  return data;
-}
-
 export async function listOrders() {
   const { data } = await api.get("/orders/");
   return data;

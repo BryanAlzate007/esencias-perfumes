@@ -142,7 +142,8 @@
   "cart": {
     "title": "Carrito",
     "empty": "Tu carrito está vacío.",
-    "checkout": "Hacer pedido",
+    "checkout": "Pagar",
+    "paymentError": "No se pudo iniciar el pago.",
     "total": "Total",
     "loginRequired": "Inicia sesión para añadir perfumes al carrito.",
     "orderNumber": "Pedido #{{id}}",
@@ -157,7 +158,9 @@
     "status": "Estado",
     "pending": "Pendiente",
     "confirmed": "Confirmado",
-    "cancelled": "Cancelado"
+    "cancelled": "Cancelado",
+    "pay": "Pagar",
+    "paymentError": "No se pudo abrir el pago."
   },
   "myPerfumes": {
     "title": "Tus perfumes",

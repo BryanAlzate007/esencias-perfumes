@@ -34,6 +34,7 @@ GEMINI_API_KEY = env("GEMINI_API_KEY", default="")
 
 WOMPI_PUBLIC_KEY = os.getenv("WOMPI_PUBLIC_KEY")
 WOMPI_PRIVATE_KEY = os.getenv("WOMPI_PRIVATE_KEY")
+WOMPI_INTEGRITY_SECRET = os.getenv("WOMPI_INTEGRITY_SECRET")
 WOMPI_EVENTS_SECRET = os.getenv("WOMPI_EVENTS_SECRET")
 WOMPI_API_URL = os.getenv(
     "WOMPI_API_URL",
@@ -67,6 +68,7 @@ LOCAL_APPS = [
     "apps.accounts.apps.AccountsConfig",
     "apps.perfumes.apps.PerfumesConfig",
     "apps.purchases.apps.PurchasesConfig",
+    "apps.payments.apps.PaymentsConfig",
     "apps.reviews.apps.ReviewsConfig",
     "apps.preferences.apps.PreferencesConfig",
     "apps.chatia.apps.ChatiaConfig",

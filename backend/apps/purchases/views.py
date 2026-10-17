@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.core.permissions import IsAdminRole, is_admin_user
+from apps.payments.services import PaymentError, session_payload, start_payment
 from apps.perfumes.models import Container, Perfume
 
 from .models import CartItem, Order, OrderItem
@@ -118,22 +119,11 @@ class CheckoutView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
-        items = list(CartItem.objects.filter(user=request.user).select_related("perfume", "container"))
-        if not items:
-            return Response({"detail": "El carrito está vacío."}, status=status.HTTP_400_BAD_REQUEST)
-
-        order = Order.objects.create(user=request.user, status=Order.Status.CONFIRMED)
-        for item in items:
-            OrderItem.objects.create(
-                order=order,
-                perfume=item.perfume,
-                container=item.container,
-                quantity=item.quantity,
-                grams=item.grams,
-                unit_price=item.unit_price if item.container_id else item.perfume.price,
-            )
-        CartItem.objects.filter(user=request.user).delete()
-        return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
+        try:
+            payment = start_payment(request.user)
+        except PaymentError as error:
+            return Response({"detail": error.detail}, status=error.status_code)
+        return Response(session_payload(payment), status=status.HTTP_201_CREATED)
 
 
 class OrderListView(generics.ListAPIView):
@@ -172,8 +162,7 @@ class MyPerfumesView(generics.ListAPIView):
 
     def get_queryset(self):
         perfume_ids = (
-            OrderItem.objects.filter(order__user=self.request.user)
-            .exclude(order__status__in=[Order.Status.CANCELLED, Order.Status.DRAFT])
+            OrderItem.objects.filter(order__user=self.request.user, order__status=Order.Status.CONFIRMED)
             .values_list("perfume_id", flat=True)
             .distinct()
         )

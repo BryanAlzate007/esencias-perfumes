@@ -1,5 +1,7 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from "react";
-import { addToCart as addToCartRequest, checkout as checkoutRequest, getCart, removeCartItem } from "../services/orders";
+import { openWompiCheckout } from "../lib/wompi";
+import { addToCart as addToCartRequest, getCart, removeCartItem } from "../services/orders";
+import { startPayment } from "../services/payments";
 import { useAuth } from "../hooks/useAuth";
 
 export const CartContext = createContext(null);
@@ -43,10 +45,15 @@ export function CartProvider({ children }) {
   );
 
   const checkout = useCallback(async () => {
-    const order = await checkoutRequest();
+    const session = await startPayment();
     await refreshCart();
     setOpen(false);
-    return order;
+    try {
+      await openWompiCheckout(session);
+    } catch {
+      // The order stays pending and can be paid again from Pedidos.
+    }
+    return session;
   }, [refreshCart]);
 
   const total = items.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);

@@ -1,4 +1,5 @@
-import { Button, ListGroup, Offcanvas } from "react-bootstrap";
+import { useState } from "react";
+import { Alert, Button, ListGroup, Offcanvas } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
@@ -7,10 +8,20 @@ export default function CartDrawer() {
   const { t } = useTranslation();
   const { items, open, setOpen, removeItem, checkout, total } = useCart();
   const navigate = useNavigate();
+  const [paying, setPaying] = useState(false);
+  const [error, setError] = useState("");
 
   async function handleCheckout() {
-    await checkout();
-    navigate("/pedidos");
+    setPaying(true);
+    setError("");
+    try {
+      await checkout();
+      navigate("/pedidos");
+    } catch (requestError) {
+      setError(requestError?.response?.data?.detail || t("cart.paymentError"));
+    } finally {
+      setPaying(false);
+    }
   }
 
   return (
@@ -45,10 +56,11 @@ export default function CartDrawer() {
               ))}
             </ListGroup>
             <div className="mt-auto">
+              {error && <Alert variant="danger">{error}</Alert>}
               <p className="fw-semibold">
                 {t("cart.total")}: ${total.toFixed(2)}
               </p>
-              <Button variant="dark" className="w-100" onClick={handleCheckout}>
+              <Button variant="dark" className="w-100" onClick={handleCheckout} disabled={paying}>
                 {t("cart.checkout")}
               </Button>
             </div>
