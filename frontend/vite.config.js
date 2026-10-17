@@ -15,11 +15,11 @@ export default defineConfig({
       },
       "/_allauth": {
         target: proxyTarget,
-        changeOrigin: true,
+        changeOrigin: false,
       },
       "/accounts": {
         target: proxyTarget,
-        changeOrigin: true,
+        changeOrigin: false,
       },
       "/media": {
         target: proxyTarget,

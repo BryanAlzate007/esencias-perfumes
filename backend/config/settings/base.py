@@ -79,6 +79,7 @@ LOCAL_APPS = [
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
+    "apps.core.middleware.DockerBrowserHostMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "corsheaders.middleware.CorsMiddleware",
@@ -181,6 +182,8 @@ CSRF_COOKIE_HTTPONLY = False
 # with SameSite=None are sent on the login and payment requests. Render forwards
 # HTTPS as HTTP, so the OAuth callback must still be built with https.
 if os.getenv("RENDER") == "true" or os.getenv("DJANGO_ENV") == "production":
+    if FRONTEND_URL.startswith(("http://localhost", "http://127.0.0.1")):
+        FRONTEND_URL = "https://www.esencias.site"
     for _host in ("api.esencias.site", "esencias-t2yx.onrender.com"):
         if _host not in ALLOWED_HOSTS:
             ALLOWED_HOSTS.append(_host)

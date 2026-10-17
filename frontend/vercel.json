@@ -15,6 +15,10 @@
     {
       "source": "/media/:path*",
       "destination": "https://api.esencias.site/media/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
