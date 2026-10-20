@@ -14,12 +14,12 @@ function cartItems(data) {
 
 export function CartProvider({ children }) {
   const navigate = useNavigate();
-  const { ready, isAuthenticated, isAdmin } = useAuth();
+  const { ready, isAuthenticated } = useAuth();
   const [items, setItems] = useState([]);
   const [open, setOpen] = useState(false);
 
   const loadCart = useCallback(async () => {
-    if (!ready || isAdmin) {
+    if (!ready) {
       return [];
     }
     if (!isAuthenticated) {
@@ -27,7 +27,7 @@ export function CartProvider({ children }) {
     }
     await syncGuestCart(addToCartRequest);
     return cartItems(await getCart());
-  }, [ready, isAuthenticated, isAdmin]);
+  }, [ready, isAuthenticated]);
 
   const refreshCart = useCallback(async () => {
     const next = await loadCart();
@@ -36,7 +36,7 @@ export function CartProvider({ children }) {
   }, [loadCart]);
 
   const checkout = useCallback(async () => {
-    if (!isAuthenticated || isAdmin) {
+    if (!isAuthenticated) {
       return { needsLogin: true };
     }
     await syncGuestCart(addToCartRequest);
@@ -49,7 +49,7 @@ export function CartProvider({ children }) {
       // The order stays pending and can be paid again from Pedidos.
     }
     return session;
-  }, [isAuthenticated, isAdmin]);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     let cancelled = false;
@@ -71,9 +71,6 @@ export function CartProvider({ children }) {
         return;
       }
       sessionStorage.removeItem(CHECKOUT_AFTER_LOGIN);
-      if (isAdmin) {
-        return;
-      }
       try {
         const session = await checkout();
         if (!cancelled && session && !session.needsLogin) {
@@ -89,12 +86,12 @@ export function CartProvider({ children }) {
     return () => {
       cancelled = true;
     };
-  }, [loadCart, isAuthenticated, isAdmin, checkout, navigate]);
+  }, [loadCart, isAuthenticated, checkout, navigate]);
 
   const saveQuote = useCallback(
     async (quote) => {
       const line = lineFromQuote(quote);
-      if (!isAuthenticated || isAdmin) {
+      if (!isAuthenticated) {
         const next = addGuestItem(line);
         setItems(next);
         setOpen(true);
@@ -109,12 +106,12 @@ export function CartProvider({ children }) {
       setOpen(true);
       return next;
     },
-    [isAuthenticated, isAdmin, refreshCart],
+    [isAuthenticated, refreshCart],
   );
 
   const removeItem = useCallback(
     async (id) => {
-      if (!isAuthenticated || isAdmin) {
+      if (!isAuthenticated) {
         const next = removeGuestItem(id);
         setItems(next);
         return next;
@@ -122,7 +119,7 @@ export function CartProvider({ children }) {
       await removeCartItem(id);
       return refreshCart();
     },
-    [isAuthenticated, isAdmin, refreshCart],
+    [isAuthenticated, refreshCart],
   );
 
   const total = items.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);

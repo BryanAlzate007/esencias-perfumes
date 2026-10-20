@@ -8,7 +8,7 @@ import { startPayment } from "../../services/payments";
 
 export default function Orders() {
   const { t, i18n } = useTranslation();
-  const { isAdmin } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [orders, setOrders] = useState([]);
   const [payingId, setPayingId] = useState(null);
   const [error, setError] = useState("");
@@ -61,26 +61,26 @@ export default function Orders() {
                   {new Intl.DateTimeFormat(i18n.language, { dateStyle: "medium" }).format(new Date(order.created_at))}
                 </div>
               </div>
-              {isAdmin ? (
-                <Form.Select
-                  value={order.status}
-                  onChange={(event) => handleStatus(order.id, event.target.value)}
-                  style={{ maxWidth: "12rem" }}
-                >
-                  <option value="pending">{t("orders.pending")}</option>
-                  <option value="confirmed">{t("orders.confirmed")}</option>
-                  <option value="cancelled">{t("orders.cancelled")}</option>
-                </Form.Select>
-              ) : (
-                <div className="d-flex align-items-center gap-2">
-                  {order.status === "pending" && (
-                    <Button size="sm" variant="dark" disabled={payingId === order.id} onClick={() => handlePay(order.id)}>
-                      {t("orders.pay")}
-                    </Button>
-                  )}
+              <div className="d-flex align-items-center gap-2">
+                {order.status === "pending" && (!isAdmin || order.username === user?.username) && (
+                  <Button size="sm" variant="dark" disabled={payingId === order.id} onClick={() => handlePay(order.id)}>
+                    {t("orders.pay")}
+                  </Button>
+                )}
+                {isAdmin ? (
+                  <Form.Select
+                    value={order.status}
+                    onChange={(event) => handleStatus(order.id, event.target.value)}
+                    style={{ maxWidth: "12rem" }}
+                  >
+                    <option value="pending">{t("orders.pending")}</option>
+                    <option value="confirmed">{t("orders.confirmed")}</option>
+                    <option value="cancelled">{t("orders.cancelled")}</option>
+                  </Form.Select>
+                ) : (
                   <Badge bg="secondary">{t(`orders.${order.status}`)}</Badge>
-                </div>
-              )}
+                )}
+              </div>
             </div>
             <ListGroup variant="flush">
               {order.items.map((item) => (

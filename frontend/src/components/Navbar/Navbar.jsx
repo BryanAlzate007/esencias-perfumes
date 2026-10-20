@@ -139,11 +139,9 @@ export default function AppNavbar({ adminNavOpen = false, onToggleAdminNav }) {
             <div className="d-none d-lg-flex align-items-center gap-2 me-lg-2">
               <AppearanceControls {...appearance} menuId="language-switcher" />
             </div>
-            {!isAdmin && (
-              <Button variant="outline-secondary" size="sm" onClick={() => setOpen(true)}>
-                {t("nav.cart")} {count > 0 && <Badge bg="dark">{count}</Badge>}
-              </Button>
-            )}
+            <Button variant="outline-secondary" size="sm" onClick={() => setOpen(true)}>
+              {t("nav.cart")} {count > 0 && <Badge bg="dark">{count}</Badge>}
+            </Button>
             {!isAuthenticated && (
               <>
                 <Button variant="outline-secondary" size="sm" className="navbar-shop-btn" onClick={() => openLogin("/")}>
