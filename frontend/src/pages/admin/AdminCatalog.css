@@ -1,3 +1,22 @@
+.catalog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.catalog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.catalog-excel-error {
+  white-space: pre-line;
+}
+
 .catalog-toolbar {
   display: grid;
   gap: 0.85rem;

@@ -1,9 +1,11 @@
 import json
+from decimal import Decimal
 from io import BytesIO
 
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
+from openpyxl import Workbook, load_workbook
 from PIL import Image
 from rest_framework.test import APIClient
 
@@ -124,6 +126,83 @@ class PerfumeCatalogTests(TestCase):
         )
         self.assertEqual(person.status_code, 201, person.content)
         self.assertEqual(Profile_person.objects.filter(name="Nocturna").count(), 1)
+
+    def test_admin_can_export_and_import_catalog_excel(self):
+        perfume = Perfume.objects.create(
+            name="Aurora",
+            brand="Esencias",
+            description="Cítrica",
+            notes="Bergamota",
+            catalog=Perfume.Catalog.DAMA,
+            price="70.00",
+            price_usd="18.50",
+            grams=50,
+            gram_price="1.20",
+            color="Ámbar",
+            is_active=True,
+        )
+        perfume.main_chords.add(self.chord)
+        self.client.force_login(self.admin)
+
+        exported = self.client.get("/api/v1/perfumes/export/")
+        self.assertEqual(exported.status_code, 200)
+        sheet = load_workbook(BytesIO(exported.content)).active
+        self.assertEqual(sheet.cell(1, 2).value, "nombre")
+        self.assertEqual(sheet.cell(2, 2).value, "Aurora")
+        self.assertEqual(sheet.cell(2, 12).value, "Amaderado")
+
+        workbook = Workbook()
+        sheet = workbook.active
+        sheet.append(["nombre", "marca", "descripción", "catálogo", "precio", "acordes", "activo"])
+        sheet.append(["Aurora", "Esencias", "Más cítrica", "dama", 80, "Amaderado, Floral", "si"])
+        sheet.append(["Noche", "Esencias", "Intensa", "caballero", "90,50", "Especiado", "no"])
+        uploaded = self.client.post(
+            "/api/v1/perfumes/import/",
+            data={"file": workbook_file(workbook)},
+            format="multipart",
+        )
+        self.assertEqual(uploaded.status_code, 200, uploaded.content)
+        self.assertEqual(uploaded.json(), {"created": 1, "updated": 1})
+        perfume.refresh_from_db()
+        self.assertEqual(perfume.price, 80)
+        self.assertEqual(perfume.description, "Más cítrica")
+        self.assertEqual(set(perfume.main_chords.values_list("name", flat=True)), {"Amaderado", "Floral"})
+        created = Perfume.objects.get(name="Noche")
+        self.assertEqual(created.catalog, Perfume.Catalog.CABALLERO)
+        self.assertEqual(created.price, Decimal("90.50"))
+        self.assertFalse(created.is_active)
+
+    def test_invalid_excel_does_not_change_the_catalog(self):
+        self.client.force_login(self.admin)
+        workbook = Workbook()
+        sheet = workbook.active
+        sheet.append(["nombre", "marca", "descripción", "catálogo", "precio"])
+        sheet.append(["Valido", "Esencias", "Texto", "dama", 10])
+        sheet.append(["Invalido", "Esencias", "Texto", "otro", 10])
+        uploaded = self.client.post(
+            "/api/v1/perfumes/import/",
+            data={"file": workbook_file(workbook)},
+            format="multipart",
+        )
+        self.assertEqual(uploaded.status_code, 400)
+        self.assertEqual(uploaded.json()["errors"][0]["row"], 3)
+        self.assertFalse(Perfume.objects.filter(name="Valido").exists())
+
+    def test_customer_cannot_import_or_export_catalog(self):
+        customer = User.objects.create_user(username="cliente", email="cliente@example.com", password="Cliente1234!")
+        self.client.force_login(customer)
+        self.assertEqual(self.client.get("/api/v1/perfumes/export/").status_code, 403)
+        self.assertEqual(self.client.post("/api/v1/perfumes/import/", data={}, format="multipart").status_code, 403)
+
+
+def workbook_file(workbook):
+    buffer = BytesIO()
+    workbook.save(buffer)
+    return SimpleUploadedFile(
+        "catalogo.xlsx",
+        buffer.getvalue(),
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
 
 
 def jpeg(name):

@@ -1,9 +1,17 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Alert, Button, Form, Modal, Table } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import ImageDropzone from "../../components/ImageDropzone/ImageDropzone";
 import RelationSelect from "../../components/RelationSelect/RelationSelect";
-import { listMainChords, createPerfume, deletePerfume, listAllPerfumes, updatePerfume } from "../../services/perfumes";
+import {
+  listMainChords,
+  createPerfume,
+  deletePerfume,
+  downloadPerfumesExcel,
+  importPerfumesExcel,
+  listAllPerfumes,
+  updatePerfume,
+} from "../../services/perfumes";
 import "./AdminCatalog.css";
 
 const CATALOGS = [
@@ -42,6 +50,9 @@ export default function AdminCatalog() {
   const [query, setQuery] = useState("");
   const [catalogFilter, setCatalogFilter] = useState("");
   const [loaded, setLoaded] = useState(false);
+  const [notice, setNotice] = useState("");
+  const [excelBusy, setExcelBusy] = useState(false);
+  const excelInput = useRef(null);
 
   const visiblePerfumes = useMemo(() => {
     const term = query.trim().toLocaleLowerCase();
@@ -161,15 +172,77 @@ export default function AdminCatalog() {
     await load();
   }
 
+  async function handleDownload() {
+    setExcelBusy(true);
+    setError("");
+    setNotice("");
+    try {
+      await downloadPerfumesExcel();
+    } catch {
+      setError(t("common.error"));
+    } finally {
+      setExcelBusy(false);
+    }
+  }
+
+  async function handleUpload(event) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) {
+      return;
+    }
+    setExcelBusy(true);
+    setError("");
+    setNotice("");
+    try {
+      const result = await importPerfumesExcel(file);
+      setNotice(t("admin.excelImported", { created: result.created, updated: result.updated }));
+      await load();
+    } catch (uploadError) {
+      const errors = uploadError.response?.data?.errors;
+      if (Array.isArray(errors) && errors.length > 0) {
+        setError(errors.map((item) => t("admin.excelRowError", { row: item.row, message: item.message })).join("\n"));
+      } else {
+        setError(uploadError.response?.data?.detail || t("common.error"));
+      }
+    } finally {
+      setExcelBusy(false);
+    }
+  }
+
   return (
     <>
-      <div className="d-flex justify-content-between align-items-center mb-4">
+      <div className="catalog-header">
         <h1 className="h2 mb-0">{t("admin.catalogTitle")}</h1>
-        <Button variant="dark" onClick={openCreate}>
-          {t("admin.newPerfume")}
-        </Button>
+        <div className="catalog-actions">
+          <Button variant="outline-dark" onClick={handleDownload} disabled={excelBusy}>
+            {t("admin.downloadExcel")}
+          </Button>
+          <Button variant="outline-dark" onClick={() => excelInput.current?.click()} disabled={excelBusy}>
+            {t("admin.uploadExcel")}
+          </Button>
+          <input
+            ref={excelInput}
+            type="file"
+            accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            hidden
+            onChange={handleUpload}
+          />
+          <Button variant="dark" onClick={openCreate}>
+            {t("admin.newPerfume")}
+          </Button>
+        </div>
       </div>
-      {error && !open && <Alert variant="danger">{error}</Alert>}
+      {notice && !open && (
+        <Alert variant="success" dismissible onClose={() => setNotice("")}>
+          {notice}
+        </Alert>
+      )}
+      {error && !open && (
+        <Alert variant="danger" className="catalog-excel-error">
+          {error}
+        </Alert>
+      )}
       <div className="catalog-toolbar">
         <Form.Control
           type="search"

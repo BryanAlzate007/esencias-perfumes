@@ -42,3 +42,22 @@ export async function updatePerfume(id, payload) {
 export async function deletePerfume(id) {
   await api.delete(`/perfumes/${id}/`);
 }
+
+export async function downloadPerfumesExcel() {
+  const { data } = await api.get("/perfumes/export/", { responseType: "blob" });
+  const url = URL.createObjectURL(data);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "catalogo-perfumes.xlsx";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+export async function importPerfumesExcel(file) {
+  const payload = new FormData();
+  payload.append("file", file);
+  const { data } = await api.post("/perfumes/import/", payload);
+  return data;
+}
