@@ -36,7 +36,10 @@ class CaptchaConfigView(APIView):
     permission_classes = []
 
     def get(self, request):
-        return Response({"site_key": settings.RECAPTCHA_SITE_KEY})
+        return Response({
+            "site_key": settings.RECAPTCHA_SITE_KEY,
+            "action": settings.RECAPTCHA_ACTION,
+        })
 
 
 class MeView(generics.RetrieveUpdateAPIView):

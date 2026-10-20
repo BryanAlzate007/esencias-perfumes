@@ -1,23 +1,27 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 
-const SCRIPT_ID = "recaptcha-api";
+const SCRIPT_ID = "recaptcha-enterprise";
+
+function enterpriseApi() {
+  return window.grecaptcha?.enterprise;
+}
 
 function loadRecaptcha(language) {
-  if (window.grecaptcha?.ready) {
-    return Promise.resolve(window.grecaptcha);
+  if (enterpriseApi()?.ready) {
+    return Promise.resolve(enterpriseApi());
   }
   return new Promise((resolve, reject) => {
     const finish = () => {
-      if (window.grecaptcha?.ready) {
-        resolve(window.grecaptcha);
+      if (enterpriseApi()?.ready) {
+        resolve(enterpriseApi());
         return;
       }
       reject(new Error("captcha"));
     };
     const existing = document.getElementById(SCRIPT_ID);
     if (existing) {
-      if (window.grecaptcha?.ready) {
-        resolve(window.grecaptcha);
+      if (enterpriseApi()?.ready) {
+        resolve(enterpriseApi());
         return;
       }
       existing.addEventListener("load", finish, { once: true });
@@ -26,7 +30,7 @@ function loadRecaptcha(language) {
     }
     const script = document.createElement("script");
     script.id = SCRIPT_ID;
-    script.src = `https://www.google.com/recaptcha/api.js?render=explicit&hl=${encodeURIComponent(language || "es")}`;
+    script.src = `https://www.google.com/recaptcha/enterprise.js?render=explicit&hl=${encodeURIComponent(language || "es")}`;
     script.async = true;
     script.onload = finish;
     script.onerror = () => reject(new Error("captcha"));
@@ -34,7 +38,7 @@ function loadRecaptcha(language) {
   });
 }
 
-const Recaptcha = forwardRef(function Recaptcha({ siteKey, theme = "light", language = "es", onChange, onError }, ref) {
+const Recaptcha = forwardRef(function Recaptcha({ siteKey, action = "SIGNUP", theme = "light", language = "es", onChange, onError }, ref) {
   const node = useRef(null);
   const widgetId = useRef(null);
   const onChangeRef = useRef(onChange);
@@ -44,8 +48,8 @@ const Recaptcha = forwardRef(function Recaptcha({ siteKey, theme = "light", lang
 
   useImperativeHandle(ref, () => ({
     reset() {
-      if (widgetId.current !== null && window.grecaptcha?.reset) {
-        window.grecaptcha.reset(widgetId.current);
+      if (widgetId.current !== null && enterpriseApi()?.reset) {
+        enterpriseApi().reset(widgetId.current);
       }
       onChangeRef.current("");
     },
@@ -64,6 +68,7 @@ const Recaptcha = forwardRef(function Recaptcha({ siteKey, theme = "light", lang
           }
           widgetId.current = grecaptcha.render(node.current, {
             sitekey: siteKey,
+            action,
             theme: theme === "dark" ? "dark" : "light",
             callback: (token) => onChangeRef.current(token),
             "expired-callback": () => onChangeRef.current(""),
@@ -80,7 +85,7 @@ const Recaptcha = forwardRef(function Recaptcha({ siteKey, theme = "light", lang
     return () => {
       cancelled = true;
     };
-  }, [siteKey, theme, language]);
+  }, [siteKey, action, theme, language]);
 
   return <div ref={node} className="auth-captcha" />;
 });

@@ -29,6 +29,7 @@ export default function Register() {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [siteKey, setSiteKey] = useState("");
+  const [captchaAction, setCaptchaAction] = useState("SIGNUP");
   const [captchaToken, setCaptchaToken] = useState("");
   const [captchaFailed, setCaptchaFailed] = useState(false);
 
@@ -38,6 +39,7 @@ export default function Register() {
       .then((config) => {
         if (!cancelled) {
           setSiteKey(config.site_key || "");
+          setCaptchaAction(config.action || "SIGNUP");
           setCaptchaFailed(!config.site_key);
         }
       })
@@ -119,6 +121,7 @@ export default function Register() {
             <Recaptcha
               ref={captchaRef}
               siteKey={siteKey}
+              action={captchaAction}
               theme={theme}
               language={i18n.language}
               onChange={setCaptchaToken}
