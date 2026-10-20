@@ -8,20 +8,23 @@ export async function listPerfumes() {
 }
 
 export async function listAllPerfumes() {
-  const items = [];
-  let page = 1;
-  while (true) {
-    const { data } = await api.get("/perfumes/", { params: { page } });
-    if (Array.isArray(data)) {
-      return data;
-    }
-    const batch = data.results || [];
-    items.push(...batch);
-    if (!data.next || batch.length === 0) {
-      return items;
-    }
-    page += 1;
+  const { data } = await api.get("/perfumes/", { params: { page: 1 } });
+  if (Array.isArray(data)) {
+    return data;
   }
+  const first = data.results || [];
+  if (!data.next || first.length === 0) {
+    return first;
+  }
+  const pageCount = Math.ceil((data.count || first.length) / first.length);
+  const rest = await Promise.all(
+    Array.from({ length: pageCount - 1 }, (_, index) =>
+      api
+        .get("/perfumes/", { params: { page: index + 2 } })
+        .then((response) => response.data.results || []),
+    ),
+  );
+  return first.concat(...rest);
 }
 
 export async function getPerfume(id) {

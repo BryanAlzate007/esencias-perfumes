@@ -1,15 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Alert, Container, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import AddToCartModal from "../../components/AddToCardModal/AddToCardModal";
 import AdvisorModal from "../../components/AdvisorModal/AdvisorModal";
 import PerfumeCard from "../../components/PerfumeCard/PerfumeCard";
-import { listPerfumes } from "../../services/perfumes";
+import { listAllPerfumes } from "../../services/perfumes";
 import heroImage from "../../assets/hero-perfume.jpg";
 import "./Home.css";
 
 const FALLBACK_BRANDS = ["Esencias", "Maison Luna", "Costa Atelier", "Atelier Norte", "Velmont", "Ambre Royal"];
+
+const CATALOGS = [
+  { value: "caballero", labelKey: "admin.catalogCaballero" },
+  { value: "dama", labelKey: "admin.catalogDama" },
+  { value: "arabe", labelKey: "admin.catalogArabe" },
+];
 
 function scrollToId(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -22,13 +28,24 @@ export default function Home() {
   const [perfumes, setPerfumes] = useState([]);
   const [status, setStatus] = useState("loading");
   const [message, setMessage] = useState("");
+  const [query, setQuery] = useState("");
+  const [catalogFilter, setCatalogFilter] = useState("");
   const [contact, setContact] = useState({ name: "", email: "", message: "" });
   const [contactSent, setContactSent] = useState(false);
 
+  const visiblePerfumes = useMemo(() => {
+    const term = query.trim().toLocaleLowerCase();
+    return perfumes.filter((perfume) => {
+      const matchesCatalog = !catalogFilter || perfume.catalog === catalogFilter;
+      const matchesName = !term || perfume.name.toLocaleLowerCase().includes(term);
+      return matchesCatalog && matchesName;
+    });
+  }, [perfumes, query, catalogFilter]);
+
   useEffect(() => {
-    listPerfumes()
+    listAllPerfumes()
       .then((data) => {
-        setPerfumes(data.results || []);
+        setPerfumes(data);
         setStatus("ready");
       })
       .catch(() => setStatus("error"));
@@ -92,6 +109,29 @@ export default function Home() {
         <Container>
           <p className="home-kicker">{t("home.collectionKicker")}</p>
           <h2 className="home-section-title">{t("home.collectionTitle")}</h2>
+          <div className="home-catalog-toolbar">
+            <input
+              type="search"
+              className="home-catalog-search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder={t("admin.searchPerfumes")}
+              aria-label={t("admin.searchPerfumes")}
+            />
+            <div className="home-catalog-filters" role="group" aria-label={t("admin.perfumeCatalog")}>
+              {CATALOGS.map((item) => (
+                <button
+                  key={item.value}
+                  type="button"
+                  className={`home-catalog-filter${catalogFilter === item.value ? " is-active" : ""}`}
+                  aria-pressed={catalogFilter === item.value}
+                  onClick={() => setCatalogFilter((current) => (current === item.value ? "" : item.value))}
+                >
+                  {t(item.labelKey)}
+                </button>
+              ))}
+            </div>
+          </div>
           {message && <Alert variant="dark" className="mt-3">{message}</Alert>}
           {status === "loading" && (
             <div className="d-flex align-items-center gap-2 text-light mt-4">
@@ -103,8 +143,11 @@ export default function Home() {
           {status === "ready" && perfumes.length === 0 && (
             <Alert variant="dark" className="mt-3">{t("home.empty")}</Alert>
           )}
+          {status === "ready" && perfumes.length > 0 && visiblePerfumes.length === 0 && (
+            <Alert variant="dark" className="mt-3">{t("admin.noMatches")}</Alert>
+          )}
           <div className="essence-grid">
-            {perfumes.map((perfume, index) => (
+            {visiblePerfumes.map((perfume, index) => (
               <PerfumeCard
                 key={perfume.id}
                 perfume={perfume}
