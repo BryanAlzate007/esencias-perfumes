@@ -46,6 +46,8 @@
     "noAccount": "Don't have an account?",
     "hasAccount": "Already have an account?",
     "orEmail": "Or continue with email",
+    "captchaRequired": "Confirm the captcha to create the account.",
+    "captchaError": "The captcha could not be loaded. Reload the page.",
     "socialError": "That social login could not be completed. Try again or create an account.",
     "forgotSent": "If the email exists, you will receive a reset link.",
     "resetDone": "Your password was updated. You can log in now.",

@@ -21,6 +21,7 @@ export const privacyContent = {
           "Opiniones: comentarios, valoraciones y ocasiones que marques sobre un perfume.",
           "Asesoría: el mensaje que escribes en el chat, para generar una respuesta.",
           "Datos técnicos: una cookie de sesión y una cookie de seguridad para mantener tu ingreso y proteger los formularios. El idioma y el tema se guardan en tu navegador.",
+          "Al crear una cuenta con correo, el captcha de Google comprueba que el formulario lo envía una persona. No guardamos el resultado de esa comprobación.",
         ],
       },
       {
@@ -42,6 +43,7 @@ export const privacyContent = {
         title: "Con quién los compartimos",
         paragraphs: [
           "Google o Facebook, solo si eliges iniciar sesión con esa cuenta, para comprobar tu identidad.",
+          "Google reCAPTCHA, cuando te registras con correo, para distinguir personas de envíos automáticos.",
           "Wompi, para procesar el pago en pesos colombianos y avisarnos el resultado.",
           "El proveedor del modelo de asesoría, que recibe el mensaje del chat para redactar la respuesta.",
           "Quienes alojan el sitio y la base de datos, únicamente para prestar el servicio.",
@@ -106,6 +108,7 @@ export const privacyContent = {
           "Reviews: comments, ratings, and occasions you mark for a perfume.",
           "Advice: the message you type in the chat, so a reply can be generated.",
           "Technical data: a session cookie and a security cookie to keep you signed in and protect forms. Language and theme stay in your browser.",
+          "When you create an account with email, Google's captcha checks that a person submitted the form. We do not store the result of that check.",
         ],
       },
       {
@@ -127,6 +130,7 @@ export const privacyContent = {
         title: "Who we share it with",
         paragraphs: [
           "Google or Facebook, only if you choose to sign in with that account, to verify your identity.",
+          "Google reCAPTCHA, when you register with email, to tell people apart from automated submissions.",
           "Wompi, to process the payment in Colombian pesos and report the result.",
           "The advice-model provider, which receives the chat message in order to write the reply.",
           "The providers that host the site and the database, only to run the service.",

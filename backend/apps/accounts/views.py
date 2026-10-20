@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.middleware.csrf import get_token
 from django.utils.decorators import method_decorator
@@ -28,6 +29,14 @@ class CsrfCookieView(APIView):
 
     def get(self, request):
         return Response({"detail": "ok", "csrfToken": get_token(request)})
+
+
+class CaptchaConfigView(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request):
+        return Response({"site_key": settings.RECAPTCHA_SITE_KEY})
 
 
 class MeView(generics.RetrieveUpdateAPIView):

@@ -1,4 +1,5 @@
 import json
+from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -15,7 +16,26 @@ class AllauthAuthTests(TestCase):
     def setUp(self):
         self.client = APIClient()
 
-    def test_signup_login_logout_and_me(self):
+    def test_email_signup_requires_captcha(self):
+        signup = self.client.post(
+            "/_allauth/browser/v1/auth/signup",
+            data=json.dumps(
+                {
+                    "username": "sin-captcha",
+                    "email": "sin-captcha@example.com",
+                    "password": "StrongPass123!",
+                    "country": "Colombia",
+                    "phone": "+573001112233",
+                    "whatsapp": "+573001112233",
+                }
+            ),
+            content_type="application/json",
+        )
+        self.assertEqual(signup.status_code, 400, signup.content)
+        self.assertFalse(User.objects.filter(username="sin-captcha").exists())
+
+    @patch("apps.accounts.forms.verify_recaptcha", return_value=True)
+    def test_signup_login_logout_and_me(self, _verify):
         signup = self.client.post(
             "/_allauth/browser/v1/auth/signup",
             data=json.dumps(
@@ -27,6 +47,7 @@ class AllauthAuthTests(TestCase):
                     "country": "Colombia",
                     "phone": "+573001112233",
                     "whatsapp": "+573001112233",
+                    "captcha": "token",
                 }
             ),
             content_type="application/json",

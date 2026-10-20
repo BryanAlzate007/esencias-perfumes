@@ -1,18 +1,23 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Alert, Button, Card, Form } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { allauthErrors, signUp } from "../../lib/allauth";
 import { useAuth } from "../../hooks/useAuth";
 import { useAuthModal } from "../../hooks/useAuthModal";
+import { useTheme } from "../../hooks/useTheme";
+import Recaptcha from "../../components/Recaptcha/Recaptcha";
 import SocialAuthButtons from "../../components/SocialAuthButtons/SocialAuthButtons";
+import { getCaptchaConfig } from "../../services/auth";
 import "../../components/LoginModal/LoginModal.css";
 
 export default function Register() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { refreshUser } = useAuth();
   const { openLogin } = useAuthModal();
+  const { theme } = useTheme();
   const navigate = useNavigate();
+  const captchaRef = useRef(null);
   const [form, setForm] = useState({
     username: "",
     email: "",
@@ -23,6 +28,28 @@ export default function Register() {
   });
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [siteKey, setSiteKey] = useState("");
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaFailed, setCaptchaFailed] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    getCaptchaConfig()
+      .then((config) => {
+        if (!cancelled) {
+          setSiteKey(config.site_key || "");
+          setCaptchaFailed(!config.site_key);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setCaptchaFailed(true);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   function update(event) {
     setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
@@ -30,10 +57,15 @@ export default function Register() {
 
   async function handleSubmit(event) {
     event.preventDefault();
+    if (!captchaToken) {
+      setError(t("auth.captchaRequired"));
+      return;
+    }
     setSaving(true);
     setError("");
-    const result = await signUp(form);
+    const result = await signUp({ ...form, captcha: captchaToken });
     if (!(result.status === 200 && result.meta?.is_authenticated)) {
+      captchaRef.current?.reset();
       setError(allauthErrors(result) || t("common.error"));
       setSaving(false);
       return;
@@ -81,7 +113,19 @@ export default function Register() {
               autoComplete="new-password"
             />
           </Form.Group>
-          <Button type="submit" variant="dark" className="w-100" disabled={saving}>
+          {captchaFailed ? (
+            <Alert variant="warning">{t("auth.captchaError")}</Alert>
+          ) : (
+            <Recaptcha
+              ref={captchaRef}
+              siteKey={siteKey}
+              theme={theme}
+              language={i18n.language}
+              onChange={setCaptchaToken}
+              onError={() => setCaptchaFailed(true)}
+            />
+          )}
+          <Button type="submit" variant="dark" className="w-100" disabled={saving || !captchaToken}>
             {t("auth.submitRegister")}
           </Button>
         </Form>

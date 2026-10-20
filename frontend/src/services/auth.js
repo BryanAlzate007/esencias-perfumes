@@ -1,6 +1,11 @@
 import { setCSRFToken } from "../lib/csrf";
 import api from "./api";
 
+export async function getCaptchaConfig() {
+  const { data } = await api.get("/captcha/");
+  return data;
+}
+
 export async function ensureCsrfCookie() {
   const { data } = await api.get("/csrf/");
   setCSRFToken(data.csrfToken);

@@ -20,6 +20,11 @@
   text-transform: uppercase;
 }
 
+.auth-captcha {
+  min-height: 78px;
+  margin-bottom: 1rem;
+}
+
 .social-auth-divider::before,
 .social-auth-divider::after {
   content: "";
