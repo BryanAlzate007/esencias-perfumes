@@ -207,6 +207,8 @@
     "mainChords": "Acordes principales",
     "active": "Activo",
     "search": "Buscar...",
+    "searchPerfumes": "Buscar por nombre...",
+    "noMatches": "Ningún perfume coincide.",
     "noOptions": "Sin opciones",
     "usersTitle": "Usuarios",
     "settingsTitle": "Configuraciones",

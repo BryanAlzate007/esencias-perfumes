@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Alert, Button, Form, Modal, Table } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import ImageDropzone from "../../components/ImageDropzone/ImageDropzone";
 import RelationSelect from "../../components/RelationSelect/RelationSelect";
-import { listMainChords, createPerfume, deletePerfume, listPerfumes, updatePerfume } from "../../services/perfumes";
+import { listMainChords, createPerfume, deletePerfume, listAllPerfumes, updatePerfume } from "../../services/perfumes";
 import "./AdminCatalog.css";
 
 const CATALOGS = [
@@ -39,11 +39,24 @@ export default function AdminCatalog() {
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [query, setQuery] = useState("");
+  const [catalogFilter, setCatalogFilter] = useState("");
+  const [loaded, setLoaded] = useState(false);
+
+  const visiblePerfumes = useMemo(() => {
+    const term = query.trim().toLocaleLowerCase();
+    return perfumes.filter((perfume) => {
+      const matchesCatalog = !catalogFilter || perfume.catalog === catalogFilter;
+      const matchesName = !term || perfume.name.toLocaleLowerCase().includes(term);
+      return matchesCatalog && matchesName;
+    });
+  }, [perfumes, query, catalogFilter]);
 
   async function load() {
-    const [data, chordData] = await Promise.all([listPerfumes(), listMainChords()]);
-    setPerfumes(data.results || []);
+    const [data, chordData] = await Promise.all([listAllPerfumes(), listMainChords()]);
+    setPerfumes(data);
     setChords(chordData.map((chord) => ({ value: chord.id, label: chord.name })));
+    setLoaded(true);
   }
 
   useEffect(() => {
@@ -157,6 +170,28 @@ export default function AdminCatalog() {
         </Button>
       </div>
       {error && !open && <Alert variant="danger">{error}</Alert>}
+      <div className="catalog-toolbar">
+        <Form.Control
+          type="search"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder={t("admin.searchPerfumes")}
+          aria-label={t("admin.searchPerfumes")}
+        />
+        <div className="catalog-filters" role="group" aria-label={t("admin.perfumeCatalog")}>
+          {CATALOGS.map((item) => (
+            <button
+              key={item.value}
+              type="button"
+              className={`catalog-filter${catalogFilter === item.value ? " is-active" : ""}`}
+              aria-pressed={catalogFilter === item.value}
+              onClick={() => setCatalogFilter((current) => (current === item.value ? "" : item.value))}
+            >
+              {t(item.labelKey)}
+            </button>
+          ))}
+        </div>
+      </div>
       <Table responsive hover>
         <thead>
           <tr>
@@ -168,7 +203,14 @@ export default function AdminCatalog() {
           </tr>
         </thead>
         <tbody>
-          {perfumes.map((perfume) => (
+          {loaded && visiblePerfumes.length === 0 && (
+            <tr>
+              <td colSpan={5} className="text-body-secondary">
+                {t("admin.noMatches")}
+              </td>
+            </tr>
+          )}
+          {visiblePerfumes.map((perfume) => (
             <tr key={perfume.id}>
               <td>{perfume.name}</td>
               <td>{perfume.brand}</td>

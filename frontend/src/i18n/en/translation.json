@@ -207,6 +207,8 @@
     "mainChords": "Main chords",
     "active": "Active",
     "search": "Search...",
+    "searchPerfumes": "Search by name...",
+    "noMatches": "No perfumes match.",
     "noOptions": "No options",
     "usersTitle": "Users",
     "settingsTitle": "Settings",

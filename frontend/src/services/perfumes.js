@@ -7,6 +7,23 @@ export async function listPerfumes() {
   return data;
 }
 
+export async function listAllPerfumes() {
+  const items = [];
+  let page = 1;
+  while (true) {
+    const { data } = await api.get("/perfumes/", { params: { page } });
+    if (Array.isArray(data)) {
+      return data;
+    }
+    const batch = data.results || [];
+    items.push(...batch);
+    if (!data.next || batch.length === 0) {
+      return items;
+    }
+    page += 1;
+  }
+}
+
 export async function getPerfume(id) {
   const { data } = await api.get(`/perfumes/${id}/`);
   return data;
