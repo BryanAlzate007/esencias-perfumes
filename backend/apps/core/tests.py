@@ -1,7 +1,9 @@
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
-from django.test import TestCase
+from django.core import mail
+from django.core.cache import cache
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 from rest_framework.test import APIClient
@@ -11,6 +13,76 @@ from apps.perfumes.models import Perfume
 from apps.purchases.models import Order
 
 User = get_user_model()
+
+
+CONTACT_SETTINGS = {
+    "EMAIL_BACKEND": "django.core.mail.backends.locmem.EmailBackend",
+    "EMAIL_HOST": "smtp.gmail.com",
+    "EMAIL_HOST_PASSWORD": "app-password",
+    "DEFAULT_FROM_EMAIL": "bryanalzate007@gmail.com",
+    "CONTACT_EMAIL": "esencias.soporte@gmail.com",
+}
+
+
+@override_settings(**CONTACT_SETTINGS)
+class ContactEmailTests(TestCase):
+    def setUp(self):
+        cache.clear()
+        self.client = APIClient()
+
+    def test_sends_distributor_request(self):
+        response = self.client.post(
+            reverse("contact"),
+            {
+                "name": "Ana",
+                "email": "ana@example.com",
+                "phone": "3001234567",
+                "message": "Quiero ser distribuidor",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(mail.outbox), 1)
+        sent = mail.outbox[0]
+        self.assertEqual(sent.subject, "Nuevo distribuidor")
+        self.assertEqual(sent.to, ["esencias.soporte@gmail.com"])
+        self.assertEqual(sent.from_email, "bryanalzate007@gmail.com")
+        self.assertEqual(sent.reply_to, ["ana@example.com"])
+        self.assertIn("Nombre: Ana", sent.body)
+        self.assertIn("WhatsApp: 3001234567", sent.body)
+        self.assertIn("Quiero ser distribuidor", sent.body)
+
+    def test_rejects_an_invalid_email(self):
+        response = self.client.post(
+            reverse("contact"),
+            {
+                "name": "Ana",
+                "email": "no-es-correo",
+                "phone": "3001234567",
+                "message": "Hola",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(len(mail.outbox), 0)
+
+    @override_settings(EMAIL_HOST_PASSWORD="")
+    def test_reports_when_smtp_is_not_configured(self):
+        response = self.client.post(
+            reverse("contact"),
+            {
+                "name": "Ana",
+                "email": "ana@example.com",
+                "phone": "3001234567",
+                "message": "Hola",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 503)
+        self.assertEqual(len(mail.outbox), 0)
 
 
 class HealthCheckTests(TestCase):

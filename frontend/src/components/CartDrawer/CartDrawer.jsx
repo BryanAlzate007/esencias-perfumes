@@ -4,10 +4,11 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useAuthModal } from "../../hooks/useAuthModal";
 import { useCart } from "../../hooks/useCart";
+import { formatMoney } from "../../lib/money";
 import { CHECKOUT_AFTER_LOGIN } from "../../lib/guestCart";
 
 export default function CartDrawer() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { items, open, setOpen, removeItem, checkout, total } = useCart();
   const { openLogin } = useAuthModal();
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ export default function CartDrawer() {
                       </div>
                     </div>
                     <div className="text-end">
-                      <div>${(Number(item.price) * item.quantity).toFixed(2)}</div>
+                      <div>{formatMoney(Number(item.price) * item.quantity, i18n.language)}</div>
                       <Button variant="link" size="sm" className="p-0" onClick={() => removeItem(item.id)}>
                         {t("common.delete")}
                       </Button>
@@ -67,7 +68,7 @@ export default function CartDrawer() {
             <div className="mt-auto">
               {error && <Alert variant="danger">{error}</Alert>}
               <p className="fw-semibold">
-                {t("cart.total")}: ${total.toFixed(2)}
+                {t("cart.total")}: {formatMoney(total, i18n.language)}
               </p>
               <Button variant="dark" className="w-100" onClick={handleCheckout} disabled={paying}>
                 {t("cart.checkout")}

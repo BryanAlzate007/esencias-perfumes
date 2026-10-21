@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import AddToCartModal from "../../components/AddToCardModal/AddToCardModal";
 import AdvisorModal from "../../components/AdvisorModal/AdvisorModal";
 import PerfumeCard from "../../components/PerfumeCard/PerfumeCard";
+import { sendContact } from "../../services/contact";
 import { listPerfumePage, PERFUME_PAGE_SIZE } from "../../services/perfumes";
 import heroImage from "../../assets/hero-perfume.jpg";
 import "./Home.css";
@@ -53,8 +54,10 @@ export default function Home() {
   const [message, setMessage] = useState("");
   const [query, setQuery] = useState("");
   const [catalogFilter, setCatalogFilter] = useState("");
-  const [contact, setContact] = useState({ name: "", email: "", message: "" });
+  const [contact, setContact] = useState({ name: "", email: "", phone: "", message: "" });
   const [contactSent, setContactSent] = useState(false);
+  const [contactSending, setContactSending] = useState(false);
+  const [contactError, setContactError] = useState("");
 
   const pageCount = filtered ? 1 : Math.max(1, Math.ceil(total / PERFUME_PAGE_SIZE));
 
@@ -117,9 +120,18 @@ export default function Home() {
   const brands = [...new Set([...(perfumes.map((item) => item.brand) || []), ...FALLBACK_BRANDS])];
   const marqueeBrands = [...brands, ...brands];
 
-  function handleContact(event) {
+  async function handleContact(event) {
     event.preventDefault();
-    setContactSent(true);
+    setContactError("");
+    setContactSending(true);
+    try {
+      await sendContact(contact);
+      setContactSent(true);
+    } catch (requestError) {
+      setContactError(requestError?.response?.data?.detail || t("home.contactError"));
+    } finally {
+      setContactSending(false);
+    }
   }
 
   return (
@@ -262,6 +274,7 @@ export default function Home() {
             <Alert variant="success" className="mt-4">{t("home.contactSent")}</Alert>
           ) : (
             <form className="home-contact-form" onSubmit={handleContact}>
+              {contactError && <Alert variant="danger">{contactError}</Alert>}
               <label>
                 {t("auth.name")}
                 <input
@@ -280,6 +293,17 @@ export default function Home() {
                 />
               </label>
               <label>
+                {t("home.contactPhone")}
+                <input
+                  type="tel"
+                  required
+                  autoComplete="tel"
+                  placeholder={t("home.contactPhonePlaceholder")}
+                  value={contact.phone}
+                  onChange={(event) => setContact((current) => ({ ...current, phone: event.target.value }))}
+                />
+              </label>
+              <label>
                 {t("home.contactMessage")}
                 <textarea
                   rows={4}
@@ -288,8 +312,8 @@ export default function Home() {
                   onChange={(event) => setContact((current) => ({ ...current, message: event.target.value }))}
                 />
               </label>
-              <button type="submit" className="home-ghost-button home-ghost-button-solid">
-                {t("home.contactSend")}
+              <button type="submit" className="home-ghost-button home-ghost-button-solid" disabled={contactSending}>
+                {contactSending ? t("home.contactSending") : t("home.contactSend")}
               </button>
             </form>
           )}

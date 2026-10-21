@@ -1,10 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { mediaUrl } from "../../lib/media";
+import { formatMoney } from "../../lib/money";
 import "./PerfumeCard.css";
 
 export default function PerfumeCard({ perfume, index = 0, onAddToCart, showCart = true }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const number = String(index + 1).padStart(2, "0");
   const notes = perfume.notes || perfume.brand;
   const cover = mediaUrl(perfume.image_url);
@@ -19,7 +20,7 @@ export default function PerfumeCard({ perfume, index = 0, onAddToCart, showCart 
         <div className="essence-card-body">
           <div className="essence-card-title-row">
             <h3 className="essence-card-name">{perfume.name}</h3>
-            <span className="essence-card-price">${Number(perfume.price).toFixed(0)}</span>
+            <span className="essence-card-price">{formatMoney(perfume.price, i18n.language)}</span>
           </div>
           <p className="essence-card-notes">{notes}</p>
         </div>

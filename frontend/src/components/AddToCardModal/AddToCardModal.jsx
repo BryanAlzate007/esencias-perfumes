@@ -4,10 +4,11 @@ import { useTranslation } from "react-i18next";
 import { useCart } from "../../hooks/useCart";
 import { mediaUrl } from "../../lib/media";
 import { previewQuote } from "../../services/orders";
+import { formatMoney } from "../../lib/money";
 import "./AddToCardModal.css";
 
 export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { saveQuote } = useCart();
   const [quote, setQuote] = useState(null);
   const [grams, setGrams] = useState(100);
@@ -147,7 +148,7 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
             )}
             <div className="add-cart-price-row">
               <p className="add-cart-total">
-                ${quote.total}
+                {formatMoney(quote.total, i18n.language)}
                 {pricing && <Spinner animation="border" size="sm" className="ms-2" />}
               </p>
               {quote.selected_container != null && (

@@ -6,6 +6,7 @@ import AddToCartModal from "../../components/AddToCardModal/AddToCardModal";
 import VotePanels from "../../components/VotePanels/VotePanels";
 import { useAuth } from "../../hooks/useAuth";
 import { mediaUrl } from "../../lib/media";
+import { formatMoney } from "../../lib/money";
 import { getPerfume } from "../../services/perfumes";
 import {
   createPerfumeReview,
@@ -97,7 +98,7 @@ export default function PerfumeDetail() {
           <p className="text-body-secondary mb-1">{perfume.brand}</p>
           <h1 className="h2">{perfume.name}</h1>
           <p>{perfume.description}</p>
-          <p className="h4">${Number(perfume.price).toFixed(2)}</p>
+          <p className="h4">{formatMoney(perfume.price, i18n.language)}</p>
           <Button variant="dark" onClick={() => setCartOpen(true)}>
             {t("home.addToCart")}
           </Button>

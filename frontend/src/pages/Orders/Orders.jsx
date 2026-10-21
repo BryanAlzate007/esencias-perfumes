@@ -3,6 +3,7 @@ import { Alert, Badge, Button, Card, Form, ListGroup } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../hooks/useAuth";
 import { openWompiCheckout } from "../../lib/wompi";
+import { formatMoney } from "../../lib/money";
 import { listOrders, updateOrder } from "../../services/orders";
 import { startPayment } from "../../services/payments";
 
@@ -87,12 +88,12 @@ export default function Orders() {
                 <ListGroup.Item key={item.id} className="px-0">
                   {item.perfume_name}
                   {item.container_name ? ` · ${item.container_name} · ${item.grams} g` : ` · x${item.quantity}`}
-                  {" · "}${Number(item.subtotal).toFixed(2)}
+                  {" · "}{formatMoney(item.subtotal, i18n.language)}
                 </ListGroup.Item>
               ))}
             </ListGroup>
             <p className="fw-semibold mt-3 mb-0">
-              {t("cart.total")}: ${Number(order.total).toFixed(2)}
+              {t("cart.total")}: {formatMoney(order.total, i18n.language)}
             </p>
           </Card.Body>
         </Card>
