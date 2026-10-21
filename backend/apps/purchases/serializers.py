@@ -43,13 +43,26 @@ class CartItemSerializer(serializers.ModelSerializer):
         user = self.context["request"].user
         perfume = validated_data["perfume"]
         container = validated_data.get("container")
-        quantity = validated_data.get("quantity", 1)
+        try:
+            quantity = int(validated_data.get("quantity", 1))
+        except (TypeError, ValueError):
+            quantity = 1
+        if quantity < 1:
+            quantity = 1
         if container is None:
-            grams = quantity
+            raw_grams = validated_data.get("grams")
+            if raw_grams in (None, ""):
+                grams = quantity
+            else:
+                try:
+                    grams = int(raw_grams)
+                except (TypeError, ValueError):
+                    grams = quantity
+                if grams < 1:
+                    grams = quantity
             unit_price = perfume.price
         else:
             grams, unit_price = line_total(perfume, container, validated_data.get("grams", quantity))
-            quantity = 1
         item, created = CartItem.objects.get_or_create(
             user=user,
             perfume=perfume,
@@ -61,7 +74,7 @@ class CartItemSerializer(serializers.ModelSerializer):
             item.unit_price = perfume.price
             item.save(update_fields=["quantity", "unit_price", "updated_at"])
         elif not created:
-            item.quantity = 1
+            item.quantity += quantity
             item.grams = grams
             item.unit_price = unit_price
             item.save(update_fields=["quantity", "grams", "unit_price", "updated_at"])

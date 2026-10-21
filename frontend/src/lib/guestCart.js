@@ -36,7 +36,7 @@ export function syncGuestCart(addToCart) {
         if (item.container) {
           extra.container = item.container;
         }
-        await addToCart(item.perfume, item.container ? 1 : item.quantity, extra);
+        await addToCart(item.perfume, item.quantity || 1, extra);
         writeGuestCart(readGuestCart().filter((line) => line.id !== item.id));
       }
     } finally {
@@ -51,13 +51,12 @@ export function addGuestItem(line) {
   const index = items.findIndex((item) => item.perfume === line.perfume && item.container === line.container);
   if (index === -1) {
     items.push(line);
-  } else if (line.container) {
-    items[index] = { ...items[index], ...line, id: items[index].id, quantity: 1 };
   } else {
     items[index] = {
       ...items[index],
-      quantity: Number(items[index].quantity) + 1,
-      price: line.price,
+      ...line,
+      id: items[index].id,
+      quantity: Number(items[index].quantity) + Number(line.quantity || 1),
     };
   }
   writeGuestCart(items);
@@ -83,6 +82,6 @@ export function lineFromQuote(quote) {
     container_name: container?.name || "",
     grams: quote.grams,
     price: quote.total,
-    quantity: 1,
+    quantity: Math.max(1, Number(quote.quantity) || 1),
   };
 }

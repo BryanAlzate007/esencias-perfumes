@@ -101,7 +101,7 @@ export function CartProvider({ children }) {
       if (line.container) {
         extra.container = line.container;
       }
-      await addToCartRequest(line.perfume, 1, extra);
+      await addToCartRequest(line.perfume, line.quantity || 1, extra);
       const next = await refreshCart();
       setOpen(true);
       return next;

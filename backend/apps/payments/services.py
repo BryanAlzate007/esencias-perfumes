@@ -126,7 +126,10 @@ def _quoted_line(item):
         if not container.is_active:
             raise UnavailableProduct()
         grams, unit_price = line_total(perfume, container, item.grams)
-        return grams, 1, unit_price
+        quantity = item.quantity or 0
+        if quantity < 1:
+            raise PaymentError("La cantidad del carrito no es válida.")
+        return grams, quantity, unit_price
     _, unit_price = line_total(perfume, None, perfume.grams)
     quantity = item.quantity or 0
     if quantity < 1:

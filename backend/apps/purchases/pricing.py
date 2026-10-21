@@ -87,6 +87,7 @@ def build_quote(item):
             "image_url": perfume.image_url,
             "price": format(money(perfume.price), ".2f"),
             "stars": star_summary(perfume),
+            "chords": list(perfume.main_chords.order_by("name").values_list("name", flat=True)),
         },
         "perfume_option": {
             "name": perfume.name,

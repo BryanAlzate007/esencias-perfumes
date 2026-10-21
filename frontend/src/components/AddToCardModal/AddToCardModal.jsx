@@ -45,6 +45,7 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
   const { saveQuote } = useCart();
   const [quote, setQuote] = useState(null);
   const [grams, setGrams] = useState(100);
+  const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
   const [pricing, setPricing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -65,6 +66,7 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
     setLoading(true);
     setError("");
     setQuote(null);
+    setQuantity(1);
     previewQuote({ perfume: perfumeId })
       .then((data) => {
         if (!active) {
@@ -149,7 +151,8 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
     setError("");
     clearTimeout(timer.current);
     try {
-      await saveQuote(quote);
+      const units = Math.max(1, Math.floor(Number(quantity) || 1));
+      await saveQuote({ ...quote, quantity: units });
       onAdded?.();
       onHide();
     } catch {
@@ -181,12 +184,33 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
             )}
             <div className="add-cart-detail">
               <h2 className="add-cart-name">{quote.perfume.name}</h2>
+              {quote.perfume.chords?.length > 0 && (
+                <div className="add-cart-chords">
+                  {quote.perfume.chords.map((chord) => (
+                    <span key={chord} className="add-cart-chord">
+                      {chord}
+                    </span>
+                  ))}
+                </div>
+              )}
               <Stars value={quote.perfume.stars} />
               <div className="add-cart-price-row">
                 <p className="add-cart-total">
-                  {formatMoney(quote.total, i18n.language)}
+                  {formatMoney(Number(quote.total) * Math.max(1, Number(quantity) || 1), i18n.language)}
                   {pricing && <Spinner animation="border" size="sm" className="ms-2" />}
                 </p>
+                <Form.Group className="add-cart-quantity">
+                  <Form.Label htmlFor="cart-quantity">{t("cart.quantity")}</Form.Label>
+                  <Form.Control
+                    id="cart-quantity"
+                    type="number"
+                    min={1}
+                    step={1}
+                    value={quantity}
+                    onChange={(event) => setQuantity(event.target.value)}
+                    disabled={saving || pricing}
+                  />
+                </Form.Group>
                 {quote.selected_container != null && (
                   <Form.Group className="add-cart-grams">
                     <Form.Label htmlFor="cart-grams">{t("cart.grams")}</Form.Label>

@@ -159,6 +159,7 @@
     "loginRequired": "Inicia sesión para comprar lo que tienes en el carrito.",
     "orderNumber": "Pedido #{{id}}",
     "grams": "Gramos",
+    "quantity": "Cantidad",
     "gramsHint": "Escoge la cantidad de fragancia que deseas",
     "noContainers": "No hay envases disponibles.",
     "inStock": "En stock",

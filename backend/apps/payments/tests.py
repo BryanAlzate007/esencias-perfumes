@@ -129,9 +129,9 @@ class WompiPaymentTests(TestCase):
         CartItem.objects.filter(user=self.user).update(unit_price="1.00", quantity=9)
         response = self.client.post("/api/v1/payments/", {}, format="json")
         self.assertEqual(response.status_code, 201, response.content)
-        self.assertEqual(response.json()["amount_in_cents"], 1500)
+        self.assertEqual(response.json()["amount_in_cents"], 13500)
         item = Order.objects.get().items.get()
-        self.assertEqual(item.quantity, 1)
+        self.assertEqual(item.quantity, 9)
         self.assertEqual(item.grams, 150)
         self.assertEqual(str(item.unit_price), "15.00")
 
