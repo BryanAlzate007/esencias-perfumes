@@ -76,7 +76,10 @@
 }
 
 .advisor-modal-backdrop.show {
-  opacity: 0.72;
+  opacity: 1;
+  background-color: rgba(7, 6, 5, 0.42);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 [data-bs-theme="light"] .advisor-modal .modal-content {

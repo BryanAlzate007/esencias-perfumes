@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Container, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import AddToCartModal from "../../components/AddToCardModal/AddToCardModal";
 import AdvisorModal from "../../components/AdvisorModal/AdvisorModal";
 import PerfumeCard from "../../components/PerfumeCard/PerfumeCard";
-import { listAllPerfumes } from "../../services/perfumes";
+import { listPerfumePage, PERFUME_PAGE_SIZE } from "../../services/perfumes";
 import heroImage from "../../assets/hero-perfume.jpg";
 import "./Home.css";
 
@@ -21,11 +21,34 @@ function scrollToId(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+function pageItems(current, total) {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, index) => index + 1);
+  }
+  const items = [1];
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+  if (start > 2) {
+    items.push("start");
+  }
+  for (let number = start; number <= end; number += 1) {
+    items.push(number);
+  }
+  if (end < total - 1) {
+    items.push("end");
+  }
+  items.push(total);
+  return items;
+}
+
 export default function Home() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [draftPerfumeId, setDraftPerfumeId] = useState(null);
   const [perfumes, setPerfumes] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [filtered, setFiltered] = useState(false);
+  const [page, setPage] = useState(1);
   const [status, setStatus] = useState("loading");
   const [message, setMessage] = useState("");
   const [query, setQuery] = useState("");
@@ -33,23 +56,35 @@ export default function Home() {
   const [contact, setContact] = useState({ name: "", email: "", message: "" });
   const [contactSent, setContactSent] = useState(false);
 
-  const visiblePerfumes = useMemo(() => {
-    const term = query.trim().toLocaleLowerCase();
-    return perfumes.filter((perfume) => {
-      const matchesCatalog = !catalogFilter || perfume.catalog === catalogFilter;
-      const matchesName = !term || perfume.name.toLocaleLowerCase().includes(term);
-      return matchesCatalog && matchesName;
-    });
-  }, [perfumes, query, catalogFilter]);
+  const pageCount = filtered ? 1 : Math.max(1, Math.ceil(total / PERFUME_PAGE_SIZE));
 
   useEffect(() => {
-    listAllPerfumes()
-      .then((data) => {
-        setPerfumes(data);
-        setStatus("ready");
-      })
-      .catch(() => setStatus("error"));
-  }, []);
+    const term = query.trim();
+    const isFiltered = Boolean(catalogFilter || term);
+    let cancelled = false;
+    const timer = window.setTimeout(() => {
+      setStatus("loading");
+      listPerfumePage({ page, catalog: catalogFilter, search: term })
+        .then((data) => {
+          if (cancelled) {
+            return;
+          }
+          setPerfumes(data.results);
+          setTotal(data.count);
+          setFiltered(data.filtered || isFiltered);
+          setStatus("ready");
+        })
+        .catch(() => {
+          if (!cancelled) {
+            setStatus("error");
+          }
+        });
+    }, term ? 300 : 0);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [page, catalogFilter, query]);
 
   useEffect(() => {
     const hash = window.location.hash.replace("#", "");
@@ -62,6 +97,21 @@ export default function Home() {
   function handleAdd(id) {
     setMessage("");
     setDraftPerfumeId(id);
+  }
+
+  function handleQuery(event) {
+    setQuery(event.target.value);
+    setPage(1);
+  }
+
+  function handleCatalog(value) {
+    setCatalogFilter((current) => (current === value ? "" : value));
+    setPage(1);
+  }
+
+  function handlePage(nextPage) {
+    setPage(nextPage);
+    scrollToId("coleccion");
   }
 
   const brands = [...new Set([...(perfumes.map((item) => item.brand) || []), ...FALLBACK_BRANDS])];
@@ -114,7 +164,7 @@ export default function Home() {
               type="search"
               className="home-catalog-search"
               value={query}
-              onChange={(event) => setQuery(event.target.value)}
+              onChange={handleQuery}
               placeholder={t("admin.searchPerfumes")}
               aria-label={t("admin.searchPerfumes")}
             />
@@ -125,7 +175,7 @@ export default function Home() {
                   type="button"
                   className={`home-catalog-filter${catalogFilter === item.value ? " is-active" : ""}`}
                   aria-pressed={catalogFilter === item.value}
-                  onClick={() => setCatalogFilter((current) => (current === item.value ? "" : item.value))}
+                  onClick={() => handleCatalog(item.value)}
                 >
                   {t(item.labelKey)}
                 </button>
@@ -141,22 +191,56 @@ export default function Home() {
           )}
           {status === "error" && <Alert variant="warning" className="mt-3">{t("common.error")}</Alert>}
           {status === "ready" && perfumes.length === 0 && (
-            <Alert variant="dark" className="mt-3">{t("home.empty")}</Alert>
-          )}
-          {status === "ready" && perfumes.length > 0 && visiblePerfumes.length === 0 && (
-            <Alert variant="dark" className="mt-3">{t("admin.noMatches")}</Alert>
+            <Alert variant="dark" className="mt-3">{filtered ? t("admin.noMatches") : t("home.empty")}</Alert>
           )}
           <div className="essence-grid">
-            {visiblePerfumes.map((perfume, index) => (
+            {status === "ready" && perfumes.map((perfume, index) => (
               <PerfumeCard
                 key={perfume.id}
                 perfume={perfume}
-                index={index}
+                index={filtered ? index : (page - 1) * PERFUME_PAGE_SIZE + index}
                 showCart
                 onAddToCart={handleAdd}
               />
             ))}
           </div>
+          {status === "ready" && !filtered && pageCount > 1 && (
+            <nav className="home-pager" aria-label={t("home.pages")}>
+              <button
+                type="button"
+                className="home-pager-button"
+                onClick={() => handlePage(page - 1)}
+                disabled={page === 1}
+              >
+                {t("home.pagePrev")}
+              </button>
+              {pageItems(page, pageCount).map((item) =>
+                typeof item === "number" ? (
+                  <button
+                    key={item}
+                    type="button"
+                    className={`home-pager-button${item === page ? " is-active" : ""}`}
+                    aria-current={item === page ? "page" : undefined}
+                    onClick={() => handlePage(item)}
+                  >
+                    {item}
+                  </button>
+                ) : (
+                  <span key={item} className="home-pager-gap" aria-hidden="true">
+                    …
+                  </span>
+                ),
+              )}
+              <button
+                type="button"
+                className="home-pager-button"
+                onClick={() => handlePage(page + 1)}
+                disabled={page === pageCount}
+              >
+                {t("home.pageNext")}
+              </button>
+            </nav>
+          )}
         </Container>
       </section>
 

@@ -2,13 +2,44 @@ import api from "./api";
 
 export { listMainChords } from "./lookups";
 
+export const PERFUME_PAGE_SIZE = 12;
+
 export async function listPerfumes() {
   const { data } = await api.get("/perfumes/");
   return data;
 }
 
+export async function listPerfumePage({
+  page = 1,
+  catalog = "",
+  search = "",
+} = {}) {
+  const params = {};
+  const term = search.trim();
+  if (catalog) {
+    params.catalog = catalog;
+  }
+  if (term) {
+    params.search = term;
+  }
+  if (!catalog && !term) {
+    params.page = page;
+  }
+  const { data } = await api.get("/perfumes/", { params });
+  if (Array.isArray(data)) {
+    return { results: data, count: data.length, filtered: true };
+  }
+  return {
+    results: data.results || [],
+    count: data.count || 0,
+    filtered: false,
+  };
+}
+
 export async function listAllPerfumes() {
-  const { data } = await api.get("/perfumes/", { params: { page: 1 } });
+  const { data } = await api.get("/perfumes/", {
+    params: { page: 1, page_size: 100 },
+  });
   if (Array.isArray(data)) {
     return data;
   }
@@ -20,7 +51,7 @@ export async function listAllPerfumes() {
   const rest = await Promise.all(
     Array.from({ length: pageCount - 1 }, (_, index) =>
       api
-        .get("/perfumes/", { params: { page: index + 2 } })
+        .get("/perfumes/", { params: { page: index + 2, page_size: 100 } })
         .then((response) => response.data.results || []),
     ),
   );

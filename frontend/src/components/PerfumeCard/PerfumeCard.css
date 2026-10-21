@@ -1,11 +1,13 @@
 .essence-card {
-  background: #0d0c0a;
+  background: #16130f;
   border: 1px solid rgba(212, 180, 131, 0.28);
   color: #f4ead7;
   display: flex;
   flex-direction: column;
   min-width: 0;
   max-width: 100%;
+  border-radius: var(--bs-border-radius);
+  overflow: hidden;
 }
 
 .essence-card-link {
@@ -87,6 +89,7 @@
   text-transform: uppercase;
   font-size: 0.55rem;
   padding: 0.58rem 0.4rem;
+  border-radius: var(--bs-border-radius-sm);
 }
 
 .essence-card-button:hover {

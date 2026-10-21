@@ -1,5 +1,11 @@
 :root {
   color-scheme: light;
+  --bs-border-radius: 0.85rem;
+  --bs-border-radius-sm: 0.7rem;
+  --bs-border-radius-lg: 1rem;
+  --bs-border-radius-xl: 1.15rem;
+  --bs-border-radius-xxl: 1.35rem;
+  --float-shadow: 0 18px 42px rgba(26, 20, 12, 0.14), 0 6px 16px rgba(26, 20, 12, 0.08);
 }
 
 html[data-bs-theme="light"] {
@@ -22,6 +28,7 @@ html[data-bs-theme="dark"] {
   --bs-secondary-color: #cbb892;
   --bs-tertiary-bg: #11100e;
   --bs-border-color: rgba(212, 180, 131, 0.22);
+  --float-shadow: 0 26px 46px rgba(0, 0, 0, 0.72), 0 10px 22px rgba(0, 0, 0, 0.42), 0 0 36px rgba(212, 180, 131, 0.16);
 }
 
 html,
@@ -38,6 +45,22 @@ body {
 
 .auth-card {
   max-width: 28rem;
+}
+
+.card,
+.essence-card,
+.vote-card,
+.perfume-settings-card,
+.dashboard-chart,
+.modal-content {
+  box-shadow: var(--float-shadow);
+}
+
+.modal-backdrop.show {
+  opacity: 1;
+  background-color: rgba(7, 6, 5, 0.42);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .perfume-detail-image {

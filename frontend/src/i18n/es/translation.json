@@ -62,10 +62,10 @@
     "addToCart": "Añadir al carrito",
     "added": "Añadido al carrito",
     "heroPhrase": "Cada esencia cuenta una historia.",
-    "collectionCta": "Colección",
+    "collectionCta": "Perfumes",
     "storyCta": "Historia",
     "collectionKicker": "Fragancias",
-    "collectionTitle": "The collection",
+    "collectionTitle": "Perfumes",
     "storyKicker": "Maison",
     "storyTitle": "Nuestra historia",
     "storyLead": "Somos quienes transformamos tu esencia en una fragancia.",
@@ -80,7 +80,10 @@
     "advisorLead": "Haz el test y descubre la fragancia que cuenta tu historia.",
     "advisorWeb": "Asesoría desde la web",
     "advisorWhatsapp": "Asesorarme desde WhatsApp",
-    "advisorWhatsappMessage": "Hola, quiero ayuda para elegir un perfume."
+    "advisorWhatsappMessage": "Hola, quiero ayuda para elegir un perfume.",
+    "pagePrev": "Anterior",
+    "pageNext": "Siguiente",
+    "pages": "Páginas"
   },
   "chat": {
     "kicker": "Asesoría",

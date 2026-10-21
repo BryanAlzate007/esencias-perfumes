@@ -194,6 +194,33 @@ class PerfumeCatalogTests(TestCase):
         self.assertEqual(self.client.get("/api/v1/perfumes/export/").status_code, 403)
         self.assertEqual(self.client.post("/api/v1/perfumes/import/", data={}, format="multipart").status_code, 403)
 
+    def test_public_list_pages_twelve_until_filtered(self):
+        for index in range(13):
+            Perfume.objects.create(
+                name=f"Fragancia {index:02d}",
+                brand="Esencias",
+                description="Notas",
+                price="50.00",
+                catalog=Perfume.Catalog.DAMA if index < 3 else Perfume.Catalog.CABALLERO,
+            )
+
+        listed = self.client.get("/api/v1/perfumes/")
+        self.assertEqual(listed.status_code, 200)
+        body = listed.json()
+        self.assertEqual(body["count"], 13)
+        self.assertEqual(len(body["results"]), 12)
+
+        second = self.client.get("/api/v1/perfumes/", {"page": 2})
+        self.assertEqual(len(second.json()["results"]), 1)
+
+        filtered = self.client.get("/api/v1/perfumes/", {"catalog": "dama"})
+        self.assertIsInstance(filtered.json(), list)
+        self.assertEqual(len(filtered.json()), 3)
+
+        searched = self.client.get("/api/v1/perfumes/", {"search": "Fragancia 0"})
+        self.assertIsInstance(searched.json(), list)
+        self.assertEqual(len(searched.json()), 10)
+
 
 def workbook_file(workbook):
     buffer = BytesIO()

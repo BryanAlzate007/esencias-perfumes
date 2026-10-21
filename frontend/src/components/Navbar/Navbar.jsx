@@ -1,4 +1,5 @@
 import { Badge, Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { PiShoppingCartDuotone } from "react-icons/pi";
 import { useTranslation } from "react-i18next";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
@@ -139,9 +140,6 @@ export default function AppNavbar({ adminNavOpen = false, onToggleAdminNav }) {
             <div className="d-none d-lg-flex align-items-center gap-2 me-lg-2">
               <AppearanceControls {...appearance} menuId="language-switcher" />
             </div>
-            <Button variant="outline-secondary" size="sm" onClick={() => setOpen(true)}>
-              {t("nav.cart")} {count > 0 && <Badge bg="dark">{count}</Badge>}
-            </Button>
             {!isAuthenticated && (
               <>
                 <Button variant="outline-secondary" size="sm" className="navbar-shop-btn" onClick={() => openLogin("/")}>
@@ -160,6 +158,15 @@ export default function AppNavbar({ adminNavOpen = false, onToggleAdminNav }) {
                 </Button>
               </>
             )}
+            <button
+              type="button"
+              className="navbar-cart-btn"
+              onClick={() => setOpen(true)}
+              aria-label={t("nav.cart")}
+            >
+              <PiShoppingCartDuotone aria-hidden="true" />
+              {count > 0 && <Badge bg="dark" className="navbar-cart-count">{count}</Badge>}
+            </button>
           </Nav>
         </Navbar.Collapse>
       </Container>
