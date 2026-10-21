@@ -206,6 +206,7 @@
     "catalogCaballero": "Men",
     "catalogDama": "Women",
     "catalogArabe": "Arabian",
+    "image": "Image",
     "imageUrl": "Images",
     "dropzoneHint": "Drop images here or click to choose them",
     "primaryImage": "Primary",

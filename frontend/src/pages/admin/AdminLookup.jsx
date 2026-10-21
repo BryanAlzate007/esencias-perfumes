@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Alert, Button, Form, Modal, Table } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link, Navigate, useParams } from "react-router-dom";
-import RelationSelect from "../../components/RelationSelect/RelationSelect";
+import { mediaUrl } from "../../lib/media";
 import {
   createContainer,
   createMainChord,
@@ -51,7 +51,7 @@ const RESOURCES = {
       { name: "material", labelKey: "admin.material", required: true, col: "col-md-6" },
       { name: "color", labelKey: "admin.color", required: true, col: "col-md-6" },
       { name: "price", labelKey: "admin.price", type: "number", required: true, col: "col-md-4" },
-      { name: "main_chords", labelKey: "admin.mainChords", type: "chords" },
+      { name: "image", labelKey: "admin.image", type: "file" },
       { name: "description", labelKey: "admin.description", type: "textarea", required: true },
       { name: "is_active", labelKey: "admin.active", type: "checkbox" },
     ],
@@ -80,14 +80,14 @@ const RESOURCES = {
 function emptyForm(fields) {
   return Object.fromEntries(
     fields.map((field) => {
-      if (field.type === "chords") {
-        return [field.name, []];
-      }
       if (field.type === "checkbox") {
         return [field.name, true];
       }
       if (field.type === "number") {
         return [field.name, "0"];
+      }
+      if (field.type === "file") {
+        return [field.name, null];
       }
       return [field.name, ""];
     }),
@@ -98,8 +98,8 @@ function formFromItem(fields, item) {
   return Object.fromEntries(
     fields.map((field) => {
       const value = item[field.name];
-      if (field.type === "chords") {
-        return [field.name, value || []];
+      if (field.type === "file") {
+        return [field.name, null];
       }
       if (field.type === "checkbox") {
         return [field.name, Boolean(value)];
@@ -122,23 +122,14 @@ function LookupScreen({ resource }) {
   const { t } = useTranslation();
   const initialForm = emptyForm(resource.fields);
   const [rows, setRows] = useState([]);
-  const [chords, setChords] = useState([]);
   const [form, setForm] = useState(initialForm);
+  const [currentImage, setCurrentImage] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
-  const needsChords = resource.fields.some((field) => field.type === "chords");
 
   async function load() {
-    const requests = [resource.list()];
-    if (needsChords) {
-      requests.push(listMainChords());
-    }
-    const [data, chordData] = await Promise.all(requests);
-    setRows(data);
-    if (chordData) {
-      setChords(chordData.map((chord) => ({ value: chord.id, label: chord.name })));
-    }
+    setRows(await resource.list());
   }
 
   useEffect(() => {
@@ -146,13 +137,18 @@ function LookupScreen({ resource }) {
   }, [t]);
 
   function update(event) {
-    const { name, value, type, checked } = event.target;
+    const { name, value, type, checked, files } = event.target;
+    if (type === "file") {
+      setForm((current) => ({ ...current, [name]: files?.[0] || null }));
+      return;
+    }
     setForm((current) => ({ ...current, [name]: type === "checkbox" ? checked : value }));
   }
 
   function openCreate() {
     setEditingId(null);
     setForm(initialForm);
+    setCurrentImage("");
     setError("");
     setOpen(true);
   }
@@ -160,6 +156,7 @@ function LookupScreen({ resource }) {
   function openEdit(item) {
     setEditingId(item.id);
     setForm(formFromItem(resource.fields, item));
+    setCurrentImage(item.image_url || "");
     setError("");
     setOpen(true);
   }
@@ -168,16 +165,46 @@ function LookupScreen({ resource }) {
     setOpen(false);
     setEditingId(null);
     setForm(initialForm);
+    setCurrentImage("");
+  }
+
+  function requestBody() {
+    const hasFile = resource.fields.some((field) => field.type === "file" && form[field.name]);
+    if (!hasFile) {
+      const body = { ...form };
+      resource.fields
+        .filter((field) => field.type === "file")
+        .forEach((field) => {
+          delete body[field.name];
+        });
+      return body;
+    }
+    const payload = new FormData();
+    resource.fields.forEach((field) => {
+      if (field.type === "file") {
+        if (form[field.name]) {
+          payload.append(field.name, form[field.name]);
+        }
+        return;
+      }
+      if (field.type === "checkbox") {
+        payload.append(field.name, form[field.name] ? "true" : "false");
+        return;
+      }
+      payload.append(field.name, form[field.name] ?? "");
+    });
+    return payload;
   }
 
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");
     try {
+      const body = requestBody();
       if (editingId) {
-        await resource.update(editingId, form);
+        await resource.update(editingId, body);
       } else {
-        await resource.create(form);
+        await resource.create(body);
       }
       closeModal();
       await load();
@@ -253,14 +280,19 @@ function LookupScreen({ resource }) {
                   ) : (
                     <>
                       <Form.Label htmlFor={`lookup-${field.name}`}>{t(field.labelKey)}</Form.Label>
-                      {field.type === "chords" ? (
-                        <RelationSelect
-                          multiple
-                          inputId={`lookup-${field.name}`}
-                          options={chords}
-                          value={form[field.name]}
-                          onChange={(next) => setForm((current) => ({ ...current, [field.name]: next }))}
-                        />
+                      {field.type === "file" ? (
+                        <>
+                          {currentImage && (
+                            <img src={mediaUrl(currentImage)} alt="" className="d-block img-fluid rounded mb-2" />
+                          )}
+                          <Form.Control
+                            id={`lookup-${field.name}`}
+                            name={field.name}
+                            type="file"
+                            accept="image/*"
+                            onChange={update}
+                          />
+                        </>
                       ) : (
                         <Form.Control
                           id={`lookup-${field.name}`}

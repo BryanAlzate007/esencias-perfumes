@@ -90,4 +90,4 @@ class PerfumeViewSet(viewsets.ModelViewSet):
 
 class ContainerViewSet(AdminCatalogViewSet):
     serializer_class = ContainerSerializer
-    queryset = Container.objects.prefetch_related("main_chords", "images")
+    queryset = Container.objects.prefetch_related("images")

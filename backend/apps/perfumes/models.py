@@ -79,7 +79,6 @@ class Container(models.Model):
     material = models.CharField(max_length=200)
     color = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    main_chords = models.ManyToManyField('Main_chords', blank=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -93,6 +92,41 @@ class Container(models.Model):
     @property
     def image_url(self):
         return related_image_url(self.images)
+
+
+class PerfumeContainerPrice(models.Model):
+    perfume = models.ForeignKey(
+        Perfume,
+        on_delete=models.CASCADE,
+        related_name="container_prices",
+    )
+    container = models.ForeignKey(
+        Container,
+        on_delete=models.CASCADE,
+        related_name="perfume_prices",
+    )
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Precio (COP)")
+    price_usd = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        verbose_name="Precio (USD)",
+    )
+
+    class Meta:
+        ordering = ["perfume", "container"]
+        verbose_name = "precio por envase"
+        verbose_name_plural = "precios por envase"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["perfume", "container"],
+                name="unique_perfume_container_price",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.perfume} / {self.container}"
 
 
 class PerfumeImage(models.Model):
@@ -169,3 +203,9 @@ class EnvaseImage(models.Model):
 
     def __str__(self):
         return f"Imagen de {self.container}"
+
+
+@receiver(post_delete, sender=EnvaseImage)
+def remove_container_image_file(sender, instance, **kwargs):
+    if instance.image:
+        instance.image.delete(save=False)

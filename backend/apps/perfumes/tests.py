@@ -111,13 +111,32 @@ class PerfumeCatalogTests(TestCase):
                 "volume": "50 ml",
                 "material": "Vidrio",
                 "color": "Ámbar",
-                "main_chords": [self.chord.id],
                 "is_active": True,
             },
             format="json",
         )
         self.assertEqual(container.status_code, 201, container.content)
-        self.assertEqual(Container.objects.get(name="Frasco 50 ml").main_chords.count(), 1)
+        self.assertEqual(Container.objects.get(name="Frasco 50 ml").images.count(), 0)
+
+        pictured = self.client.post(
+            "/api/v1/containers/",
+            data={
+                "name": "Frasco 30 ml",
+                "description": "Vidrio",
+                "type": "Frasco",
+                "size": "30 ml",
+                "weight": "80 g",
+                "volume": "30 ml",
+                "material": "Vidrio",
+                "color": "Transparente",
+                "image": jpeg("frasco.jpg"),
+                "is_active": True,
+            },
+            format="multipart",
+        )
+        self.assertEqual(pictured.status_code, 201, pictured.content)
+        self.assertTrue(pictured.json()["image_url"])
+        self.assertEqual(Container.objects.get(name="Frasco 30 ml").images.count(), 1)
 
         person = self.client.post(
             "/api/v1/profile-persons/",

@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework.test import APIClient
 
-from apps.perfumes.models import Container, Perfume
+from apps.perfumes.models import Container, Perfume, PerfumeContainerPrice
 from apps.purchases.models import CartItem, Order
 
 User = get_user_model()
@@ -116,3 +116,18 @@ class DraftQuoteTests(TestCase):
         self.assertEqual(quoted.status_code, 200, quoted.content)
         self.assertEqual(quoted.json()["grams"], 100)
         self.assertEqual(quoted.json()["total"], "8.00")
+
+    def test_quote_uses_the_price_assigned_to_the_perfume_and_container(self):
+        PerfumeContainerPrice.objects.create(
+            perfume=self.perfume,
+            container=self.glass,
+            price="30.00",
+            price_usd="8.00",
+        )
+        response = self.client.post(
+            "/api/v1/quotes/",
+            {"perfume": self.perfume.id, "container": self.glass.id, "grams": 150},
+            format="json",
+        )
+        self.assertEqual(response.status_code, 200, response.content)
+        self.assertEqual(response.json()["total"], "40.00")

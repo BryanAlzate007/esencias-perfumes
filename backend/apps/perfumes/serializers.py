@@ -3,7 +3,7 @@ import json
 from django.db.models import Max
 from rest_framework import serializers
 
-from .models import Container, Main_chords, Perfume, PerfumeImage
+from .models import Container, EnvaseImage, Main_chords, Perfume, PerfumeImage
 
 PERFUME_FIELDS = (
     "id",
@@ -136,6 +136,7 @@ class PerfumeWriteSerializer(serializers.ModelSerializer):
 
 class ContainerSerializer(serializers.ModelSerializer):
     image_url = serializers.ReadOnlyField()
+    image = serializers.ImageField(write_only=True, required=False, allow_null=True)
 
     class Meta:
         model = Container
@@ -144,6 +145,7 @@ class ContainerSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "image_url",
+            "image",
             "type",
             "size",
             "weight",
@@ -151,8 +153,32 @@ class ContainerSerializer(serializers.ModelSerializer):
             "material",
             "color",
             "price",
-            "main_chords",
             "is_active",
+        )
+
+    def create(self, validated_data):
+        upload = validated_data.pop("image", None)
+        container = super().create(validated_data)
+        self._store_image(container, upload)
+        return container
+
+    def update(self, instance, validated_data):
+        upload = validated_data.pop("image", None)
+        container = super().update(instance, validated_data)
+        self._store_image(container, upload)
+        return container
+
+    def _store_image(self, container, upload):
+        if not upload:
+            return
+        for stored in list(container.images.all()):
+            stored.delete()
+        EnvaseImage.objects.create(
+            container=container,
+            image=upload,
+            alt_text=container.name,
+            is_primary=True,
+            order=0,
         )
 
 

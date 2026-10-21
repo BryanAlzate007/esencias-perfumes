@@ -13,6 +13,15 @@ def base_grams(perfume):
     return grams if grams > 0 else 1
 
 
+def container_amount(perfume, container):
+    from apps.perfumes.models import PerfumeContainerPrice
+
+    assigned = PerfumeContainerPrice.objects.filter(perfume=perfume, container=container).first()
+    if assigned is not None:
+        return Decimal(assigned.price)
+    return Decimal(container.price)
+
+
 def line_total(perfume, container, grams):
     base = base_grams(perfume)
     if container is None:
@@ -23,7 +32,7 @@ def line_total(perfume, container, grams):
         requested = base
     grams = max(requested, base)
     extra = grams - base
-    total = money(Decimal(container.price) + Decimal(extra) * Decimal(perfume.gram_price))
+    total = money(container_amount(perfume, container) + Decimal(extra) * Decimal(perfume.gram_price))
     return grams, total
 
 
