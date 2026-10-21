@@ -20,7 +20,10 @@ export default function PerfumeCard({ perfume, index = 0, onAddToCart, showCart 
         <div className="essence-card-body">
           <div className="essence-card-title-row">
             <h3 className="essence-card-name">{perfume.name}</h3>
-            <span className="essence-card-price">{formatMoney(perfume.price, i18n.language)}</span>
+            <span className="essence-card-price">
+              {perfume.price_from && <span className="essence-card-from">{t("home.from")}</span>}
+              {formatMoney(perfume.price_from || perfume.price, i18n.language)}
+            </span>
           </div>
           <p className="essence-card-notes">{notes}</p>
         </div>

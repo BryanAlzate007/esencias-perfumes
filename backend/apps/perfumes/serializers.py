@@ -137,11 +137,27 @@ class PerfumeSerializer(serializers.ModelSerializer):
     image_url = serializers.ReadOnlyField()
     last_review_at = serializers.DateTimeField(read_only=True, allow_null=True)
     container_prices = ContainerPriceField(read_only=True)
+    price_from = serializers.SerializerMethodField()
 
     class Meta:
         model = Perfume
-        fields = (*PERFUME_FIELDS, "images", "image_url", "container_prices", "last_review_at", "created_at", "updated_at")
+        fields = (
+            *PERFUME_FIELDS,
+            "images",
+            "image_url",
+            "container_prices",
+            "price_from",
+            "last_review_at",
+            "created_at",
+            "updated_at",
+        )
         read_only_fields = ("created_at", "updated_at", "last_review_at", "image_url", "container_prices")
+
+    def get_price_from(self, perfume):
+        amounts = [item.price for item in perfume.container_prices.all()]
+        if not amounts:
+            return None
+        return format(min(amounts), ".2f")
 
     def get_fields(self):
         fields = super().get_fields()

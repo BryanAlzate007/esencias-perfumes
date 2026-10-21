@@ -3,6 +3,7 @@ import { Alert, Button, Col, Form, Image, Row, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 import AddToCartModal from "../../components/AddToCardModal/AddToCardModal";
+import "../../components/PerfumeCard/PerfumeCard.css";
 import VotePanels from "../../components/VotePanels/VotePanels";
 import { useAuth } from "../../hooks/useAuth";
 import { mediaUrl } from "../../lib/media";
@@ -98,7 +99,10 @@ export default function PerfumeDetail() {
           <p className="text-body-secondary mb-1">{perfume.brand}</p>
           <h1 className="h2">{perfume.name}</h1>
           <p>{perfume.description}</p>
-          <p className="h4">{formatMoney(perfume.price, i18n.language)}</p>
+          <p className="h4">
+            {perfume.price_from && <span className="essence-card-from me-2">{t("home.from")}</span>}
+            {formatMoney(perfume.price_from || perfume.price, i18n.language)}
+          </p>
           <Button variant="dark" onClick={() => setCartOpen(true)}>
             {t("home.addToCart")}
           </Button>

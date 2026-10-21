@@ -7,6 +7,39 @@ import { previewQuote } from "../../services/orders";
 import { formatMoney } from "../../lib/money";
 import "./AddToCardModal.css";
 
+function Stars({ value }) {
+  const rounded = Math.round(Number(value) || 0);
+  return (
+    <p className="add-cart-stars" aria-label={`${rounded} / 5`}>
+      {[1, 2, 3, 4, 5].map((star) => (
+        <span key={star} className={star <= rounded ? "is-on" : "is-off"}>
+          ★
+        </span>
+      ))}
+    </p>
+  );
+}
+
+function OptionCard({ selected, image, name, content, stockLabel, disabled, onSelect }) {
+  return (
+    <label
+      className={selected ? "add-cart-option is-selected" : "add-cart-option"}
+      onClick={(event) => {
+        event.preventDefault();
+        if (!disabled) {
+          onSelect();
+        }
+      }}
+    >
+      {mediaUrl(image) && <img src={mediaUrl(image)} alt="" />}
+      <input type="radio" name="container" checked={selected} onChange={onSelect} disabled={disabled} />
+      <span className="add-cart-option-name">{name}</span>
+      {content && <span className="add-cart-option-content">{content}</span>}
+      <span className="add-cart-stock">{stockLabel}</span>
+    </label>
+  );
+}
+
 export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
   const { t, i18n } = useTranslation();
   const { saveQuote } = useCart();
@@ -127,7 +160,7 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
   }
 
   return (
-    <Modal show={show} onHide={onHide} centered className="add-cart-modal">
+    <Modal show={show} onHide={onHide} centered scrollable size="lg" className="add-cart-modal">
       <Modal.Header closeButton>
         <Modal.Title>
           {quote?.order_id ? t("cart.orderNumber", { id: quote.order_id }) : t("home.addToCart")}
@@ -142,51 +175,61 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
           </div>
         )}
         {quote && (
-          <>
+          <div className="add-cart-layout">
             {mediaUrl(quote.perfume.image_url) && (
               <img className="add-cart-lotion" src={mediaUrl(quote.perfume.image_url)} alt={quote.perfume.name} />
             )}
-            <div className="add-cart-price-row">
-              <p className="add-cart-total">
-                {formatMoney(quote.total, i18n.language)}
-                {pricing && <Spinner animation="border" size="sm" className="ms-2" />}
-              </p>
-              {quote.selected_container != null && (
-                <Form.Group className="add-cart-grams">
-                  <Form.Label htmlFor="cart-grams">{t("cart.grams")}</Form.Label>
-                  <Form.Control
-                    id="cart-grams"
-                    type="number"
-                    min={quote.base_grams}
-                    step={1}
-                    value={grams}
-                    onChange={(event) => changeGrams(event.target.value)}
-                    disabled={saving}
+            <div className="add-cart-detail">
+              <h2 className="add-cart-name">{quote.perfume.name}</h2>
+              <Stars value={quote.perfume.stars} />
+              <div className="add-cart-price-row">
+                <p className="add-cart-total">
+                  {formatMoney(quote.total, i18n.language)}
+                  {pricing && <Spinner animation="border" size="sm" className="ms-2" />}
+                </p>
+                {quote.selected_container != null && (
+                  <Form.Group className="add-cart-grams">
+                    <Form.Label htmlFor="cart-grams">{t("cart.grams")}</Form.Label>
+                    <p className="add-cart-grams-hint">{t("cart.gramsHint")}</p>
+                    <Form.Control
+                      id="cart-grams"
+                      type="number"
+                      min={quote.base_grams}
+                      step={1}
+                      value={grams}
+                      onChange={(event) => changeGrams(event.target.value)}
+                      disabled={saving}
+                    />
+                  </Form.Group>
+                )}
+              </div>
+              <div className="add-cart-options">
+                {quote.perfume_option && (
+                  <OptionCard
+                    selected={quote.selected_container == null}
+                    image={quote.perfume_option.image_url}
+                    name={quote.perfume_option.name}
+                    content={quote.perfume_option.content}
+                    stockLabel={t("cart.inStock")}
+                    disabled={pricing || saving}
+                    onSelect={() => selectContainer(null)}
                   />
-                </Form.Group>
-              )}
+                )}
+                {quote.containers.map((container) => (
+                  <OptionCard
+                    key={container.id}
+                    selected={quote.selected_container === container.id}
+                    image={container.image_url}
+                    name={container.name}
+                    content={container.content}
+                    stockLabel={t("cart.inStock")}
+                    disabled={pricing || saving}
+                    onSelect={() => selectContainer(container.id)}
+                  />
+                ))}
+              </div>
             </div>
-            <div className="add-cart-options">
-              {quote.containers.map((container) => {
-                const selected = quote.selected_container === container.id;
-                return (
-                  <label key={container.id} className={selected ? "add-cart-option is-selected" : "add-cart-option"}>
-                    {mediaUrl(container.image_url) && <img src={mediaUrl(container.image_url)} alt="" />}
-                    <span className="add-cart-option-copy">
-                      <input
-                        type="radio"
-                        name="container"
-                        checked={selected}
-                        onChange={() => selectContainer(container.id)}
-                        disabled={pricing || saving}
-                      />
-                      <span>{container.name}</span>
-                    </span>
-                  </label>
-                );
-              })}
-            </div>
-          </>
+          </div>
         )}
       </Modal.Body>
       <Modal.Footer>

@@ -59,6 +59,7 @@
     "empty": "Todavía no hay perfumes en el catálogo.",
     "lastReview": "Última reseña",
     "noReviews": "Sin reseñas todavía",
+    "from": "Desde",
     "addToCart": "Añadir al carrito",
     "added": "Añadido al carrito",
     "heroPhrase": "Cada esencia cuenta una historia.",
@@ -158,7 +159,9 @@
     "loginRequired": "Inicia sesión para comprar lo que tienes en el carrito.",
     "orderNumber": "Pedido #{{id}}",
     "grams": "Gramos",
+    "gramsHint": "Escoge la cantidad de fragancia que deseas",
     "noContainers": "No hay envases disponibles.",
+    "inStock": "En stock",
     "draftError": "No se pudo abrir el pedido.",
     "quoteError": "No se pudo actualizar el precio."
   },

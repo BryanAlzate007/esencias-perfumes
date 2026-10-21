@@ -1,8 +1,28 @@
 from decimal import Decimal
 
 
+STAR_VALUES = {
+    "love": 5,
+    "like": 4,
+    "neutral": 3,
+    "dislike": 2,
+    "hate": 1,
+}
+
+
 def money(value):
     return Decimal(value).quantize(Decimal("0.01"))
+
+
+def star_summary(perfume):
+    scores = [
+        STAR_VALUES[sentiment]
+        for sentiment in perfume.ratings.values_list("sentiment", flat=True)
+        if sentiment in STAR_VALUES
+    ]
+    if not scores:
+        return 0
+    return round(sum(scores) / len(scores), 1)
 
 
 def base_grams(perfume):
@@ -37,17 +57,25 @@ def line_total(perfume, container, grams):
 
 
 def build_quote(item):
-    from apps.perfumes.models import Container
+    from apps.perfumes.models import PerfumeContainerPrice
 
     perfume = item.perfume
     base = base_grams(perfume)
+    assigned = (
+        PerfumeContainerPrice.objects.filter(perfume=perfume, container__is_active=True)
+        .select_related("container")
+        .order_by("price", "container__name")
+    )
     options = [
         {
-            "id": container.id,
-            "name": container.name,
-            "image_url": container.image_url,
+            "id": row.container_id,
+            "name": row.container.name,
+            "image_url": row.container.image_url,
+            "content": row.container.volume or row.container.size,
+            "price": format(money(row.price), ".2f"),
+            "in_stock": True,
         }
-        for container in Container.objects.filter(is_active=True).order_by("name")
+        for row in assigned
     ]
     grams, selected_total = line_total(perfume, item.container, item.grams)
     return {
@@ -58,6 +86,14 @@ def build_quote(item):
             "brand": perfume.brand,
             "image_url": perfume.image_url,
             "price": format(money(perfume.price), ".2f"),
+            "stars": star_summary(perfume),
+        },
+        "perfume_option": {
+            "name": perfume.name,
+            "image_url": perfume.image_url,
+            "content": f"{base} g",
+            "price": format(money(perfume.price), ".2f"),
+            "in_stock": True,
         },
         "base_grams": base,
         "grams": grams,
