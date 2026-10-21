@@ -212,6 +212,7 @@
     "primaryImage": "Principal",
     "removeImage": "Quitar",
     "imagesRequired": "Agrega al menos una imagen.",
+    "containerPriceRequired": "Escribe el precio en pesos del envase.",
     "price": "Precio",
     "gramPrice": "Valor del gramo",
     "priceUsd": "Precio USD",

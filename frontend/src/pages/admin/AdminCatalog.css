@@ -59,11 +59,32 @@
   overflow-y: auto;
 }
 
+.catalog-container-prices {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.catalog-container-price {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(8rem, 1fr) minmax(8rem, 1fr);
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.catalog-container-price-head {
+  color: var(--bs-secondary-color);
+  font-size: 0.85rem;
+}
+
 @media (max-width: 575.98px) {
   .catalog-modal .modal-dialog,
   .catalog-modal .modal-content {
     height: 100dvh;
     max-height: 100dvh;
     margin: 0;
+  }
+
+  .catalog-container-price {
+    grid-template-columns: 1fr;
   }
 }

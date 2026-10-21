@@ -36,7 +36,9 @@ class PerfumeViewSet(viewsets.ModelViewSet):
     pagination_class = PerfumePagination
 
     def get_queryset(self):
-        queryset = with_last_review(Perfume.objects.prefetch_related("main_chords", "images")).order_by("name")
+        queryset = with_last_review(
+            Perfume.objects.prefetch_related("main_chords", "images", "container_prices")
+        ).order_by("name")
         if self.action in ("list", "retrieve") and not is_admin_user(self.request.user):
             queryset = queryset.filter(is_active=True)
         if self.action == "list":

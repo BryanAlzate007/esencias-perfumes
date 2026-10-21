@@ -11,7 +11,7 @@ from rest_framework.test import APIClient
 
 from apps.accounts.models import Profile
 from apps.accounts.models import Profile_person
-from apps.perfumes.models import Container, Main_chords, Perfume, PerfumeImage
+from apps.perfumes.models import Container, Main_chords, Perfume, PerfumeContainerPrice, PerfumeImage
 
 User = get_user_model()
 
@@ -53,6 +53,61 @@ class PerfumeCatalogTests(TestCase):
         self.assertEqual(list(perfume.main_chords.values_list("id", flat=True)), [self.chord.id])
         self.assertEqual(response.json()["main_chords"], [self.chord.id])
         self.assertEqual(response.json()["catalog"], "dama")
+
+    def test_admin_assigns_container_prices_and_the_public_catalog_hides_them(self):
+        glass = self._container("Vidrio")
+        metal = self._container("Metal")
+        self.client.force_login(self.admin)
+        created = self.client.post(
+            "/api/v1/perfumes/",
+            data={
+                "name": "Aurora",
+                "brand": "Esencias",
+                "description": "Cítrica",
+                "catalog": "dama",
+                "price": "70.00",
+                "container_prices": json.dumps(
+                    [
+                        {"container": glass.id, "price": "30.00", "price_usd": "8.00"},
+                        {"container": metal.id, "price": "", "price_usd": ""},
+                    ]
+                ),
+            },
+            format="multipart",
+        )
+        self.assertEqual(created.status_code, 201, created.content)
+        perfume = Perfume.objects.get(name="Aurora")
+        self.assertEqual(perfume.container_prices.count(), 1)
+        assigned = PerfumeContainerPrice.objects.get(perfume=perfume, container=glass)
+        self.assertEqual(assigned.price, Decimal("30.00"))
+        self.assertEqual(assigned.price_usd, Decimal("8.00"))
+        self.assertEqual(created.json()["container_prices"], [{"container": glass.id, "price": "30.00", "price_usd": "8.00"}])
+
+        updated = self.client.patch(
+            f"/api/v1/perfumes/{perfume.id}/",
+            data={"container_prices": json.dumps([{"container": metal.id, "price": "40.00", "price_usd": ""}])},
+            format="multipart",
+        )
+        self.assertEqual(updated.status_code, 200, updated.content)
+        self.assertFalse(PerfumeContainerPrice.objects.filter(perfume=perfume, container=glass).exists())
+        self.assertEqual(PerfumeContainerPrice.objects.get(perfume=perfume, container=metal).price, Decimal("40.00"))
+
+        public = APIClient().get(f"/api/v1/perfumes/{perfume.id}/")
+        self.assertEqual(public.status_code, 200, public.content)
+        self.assertNotIn("container_prices", public.json())
+
+    def _container(self, name):
+        return Container.objects.create(
+            name=name,
+            description=name,
+            type="Frasco",
+            size="50 ml",
+            weight="120 g",
+            volume="50 ml",
+            material="Vidrio",
+            color="Ámbar",
+            price="5.00",
+        )
 
     def test_admin_can_upload_several_perfume_images(self):
         self.client.force_login(self.admin)

@@ -212,6 +212,7 @@
     "primaryImage": "Primary",
     "removeImage": "Remove",
     "imagesRequired": "Add at least one image.",
+    "containerPriceRequired": "Enter the container price in pesos.",
     "price": "Price",
     "gramPrice": "Price per gram",
     "priceUsd": "Price USD",

@@ -3,6 +3,7 @@ import { Alert, Button, Form, Modal, Table } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import ImageDropzone from "../../components/ImageDropzone/ImageDropzone";
 import RelationSelect from "../../components/RelationSelect/RelationSelect";
+import { listContainers } from "../../services/lookups";
 import {
   listMainChords,
   createPerfume,
@@ -19,6 +20,22 @@ const CATALOGS = [
   { value: "dama", labelKey: "admin.catalogDama" },
   { value: "arabe", labelKey: "admin.catalogArabe" },
 ];
+
+function containerPriceRows(containers, assigned = []) {
+  const byId = new Map((assigned || []).map((item) => [Number(item.container), item]));
+  const assignedIds = new Set(byId.keys());
+  return containers
+    .filter((container) => container.is_active !== false || assignedIds.has(container.id))
+    .map((container) => {
+      const current = byId.get(container.id);
+      return {
+        container: container.id,
+        name: container.name,
+        price: current?.price ?? "",
+        price_usd: current?.price_usd ?? "",
+      };
+    });
+}
 
 const emptyForm = {
   name: "",
@@ -39,6 +56,8 @@ export default function AdminCatalog() {
   const { t } = useTranslation();
   const [perfumes, setPerfumes] = useState([]);
   const [chords, setChords] = useState([]);
+  const [containers, setContainers] = useState([]);
+  const [containerPrices, setContainerPrices] = useState([]);
   const [form, setForm] = useState(emptyForm);
   const [files, setFiles] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
@@ -64,9 +83,10 @@ export default function AdminCatalog() {
   }, [perfumes, query, catalogFilter]);
 
   async function load() {
-    const [data, chordData] = await Promise.all([listAllPerfumes(), listMainChords()]);
+    const [data, chordData, containerData] = await Promise.all([listAllPerfumes(), listMainChords(), listContainers()]);
     setPerfumes(data);
     setChords(chordData.map((chord) => ({ value: chord.id, label: chord.name })));
+    setContainers(containerData);
     setLoaded(true);
   }
 
@@ -85,6 +105,7 @@ export default function AdminCatalog() {
     setFiles([]);
     setExistingImages([]);
     setRemovedImageIds([]);
+    setContainerPrices(containerPriceRows(containers));
   }
 
   function openCreate() {
@@ -109,6 +130,7 @@ export default function AdminCatalog() {
       main_chords: perfume.main_chords || [],
       is_active: perfume.is_active,
     });
+    setContainerPrices(containerPriceRows(containers, perfume.container_prices));
     setFiles([]);
     setExistingImages(perfume.images || []);
     setRemovedImageIds([]);
@@ -135,6 +157,18 @@ export default function AdminCatalog() {
     payload.append("color", form.color);
     payload.append("is_active", form.is_active ? "true" : "false");
     payload.append("main_chords", JSON.stringify(form.main_chords));
+    payload.append(
+      "container_prices",
+      JSON.stringify(
+        containerPrices
+          .filter((item) => item.price !== "" || item.price_usd !== "")
+          .map((item) => ({
+            container: item.container,
+            price: item.price,
+            price_usd: item.price_usd,
+          })),
+      ),
+    );
     files.forEach((file) => payload.append("images", file));
     removedImageIds.forEach((id) => payload.append("remove_image_ids", String(id)));
     return payload;
@@ -147,6 +181,10 @@ export default function AdminCatalog() {
     }
     if (files.length + existingImages.length === 0) {
       setError(t("admin.imagesRequired"));
+      return;
+    }
+    if (containerPrices.some((item) => item.price === "" && item.price_usd !== "")) {
+      setError(t("admin.containerPriceRequired"));
       return;
     }
     setSaving(true);
@@ -354,6 +392,55 @@ export default function AdminCatalog() {
               <Form.Group className="col-md-4">
                 <Form.Label>{t("admin.priceUsd")}</Form.Label>
                 <Form.Control name="price_usd" type="number" min="0" step="0.01" value={form.price_usd} onChange={update} />
+              </Form.Group>
+              <Form.Group className="col-12">
+                <Form.Label>{t("admin.containers")}</Form.Label>
+                {containerPrices.length === 0 ? (
+                  <p className="text-body-secondary mb-0">{t("cart.noContainers")}</p>
+                ) : (
+                  <div className="catalog-container-prices">
+                    <div className="catalog-container-price catalog-container-price-head">
+                      <span>{t("auth.name")}</span>
+                      <span>{t("admin.price")}</span>
+                      <span>{t("admin.priceUsd")}</span>
+                    </div>
+                    {containerPrices.map((item) => (
+                      <div className="catalog-container-price" key={item.container}>
+                        <span>{item.name}</span>
+                        <Form.Control
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          value={item.price}
+                          placeholder={t("admin.price")}
+                          aria-label={`${item.name} ${t("admin.price")}`}
+                          onChange={(event) =>
+                            setContainerPrices((current) =>
+                              current.map((row) =>
+                                row.container === item.container ? { ...row, price: event.target.value } : row,
+                              ),
+                            )
+                          }
+                        />
+                        <Form.Control
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          value={item.price_usd}
+                          placeholder={t("admin.priceUsd")}
+                          aria-label={`${item.name} ${t("admin.priceUsd")}`}
+                          onChange={(event) =>
+                            setContainerPrices((current) =>
+                              current.map((row) =>
+                                row.container === item.container ? { ...row, price_usd: event.target.value } : row,
+                              ),
+                            )
+                          }
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
               </Form.Group>
               <Form.Group className="col-md-4">
                 <Form.Label>{t("admin.color")}</Form.Label>
