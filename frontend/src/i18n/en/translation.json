@@ -17,6 +17,8 @@
     "login": "Log in",
     "register": "Create account",
     "logout": "Log out",
+    "points": "{{count}} points",
+    "pointsLabel": "pts",
     "cart": "Cart",
     "language": "Language",
     "theme": "Theme",

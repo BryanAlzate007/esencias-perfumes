@@ -75,6 +75,8 @@ class AllauthAuthTests(TestCase):
         self.assertEqual(me.status_code, 200)
         self.assertEqual(me.json()["username"], "bryan")
         self.assertEqual(me.json()["role"], "customer")
+        self.assertEqual(me.json()["points"], 0)
+        self.assertFalse(me.json()["points_enabled"])
 
         logout = self.client.delete("/_allauth/browser/v1/auth/session")
         self.assertIn(logout.status_code, (200, 401), logout.content)

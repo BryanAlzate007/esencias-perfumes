@@ -152,7 +152,14 @@ export default function AppNavbar({ adminNavOpen = false, onToggleAdminNav }) {
             )}
             {isAuthenticated && (
               <>
-                <Navbar.Text className="px-lg-2">{user.first_name || user.username}</Navbar.Text>
+                <Nav.Link as="span" className="navbar-user">
+                  {user.username}
+                </Nav.Link>
+                <span className="navbar-points" aria-label={t("nav.points", { count: user.points ?? 0 })}>
+                  <span className="navbar-points-mark" aria-hidden="true">✦</span>
+                  <span className="navbar-points-value">{user.points ?? 0}</span>
+                  <span className="navbar-points-label">{t("nav.pointsLabel")}</span>
+                </span>
                 <Button variant="outline-secondary" size="sm" onClick={handleLogout}>
                   {t("nav.logout")}
                 </Button>

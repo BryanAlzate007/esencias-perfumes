@@ -20,6 +20,8 @@ class MeSerializer(serializers.ModelSerializer):
     phone = serializers.CharField(source="profile.phone", required=False, allow_blank=True)
     whatsapp = serializers.CharField(source="profile.whatsapp", required=False, allow_blank=True)
     is_admin = serializers.SerializerMethodField()
+    points = serializers.SerializerMethodField()
+    points_enabled = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -33,14 +35,24 @@ class MeSerializer(serializers.ModelSerializer):
             "whatsapp",
             "role",
             "is_admin",
+            "points",
+            "points_enabled",
         )
-        read_only_fields = ("id", "username", "email", "role", "is_admin")
+        read_only_fields = ("id", "username", "email", "role", "is_admin", "points", "points_enabled")
 
     def get_role(self, obj):
         return user_role(obj)
 
     def get_is_admin(self, obj):
         return is_admin_user(obj)
+
+    def get_points(self, obj):
+        account = getattr(obj, "points_account", None)
+        return account.balance if account else 0
+
+    def get_points_enabled(self, obj):
+        account = getattr(obj, "points_account", None)
+        return bool(account and account.enabled)
 
     def update(self, instance, validated_data):
         profile_data = validated_data.pop("profile", {})

@@ -47,7 +47,7 @@ class MeView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
-        return self.request.user
+        return User.objects.select_related("profile", "points_account").get(pk=self.request.user.pk)
 
 
 class AdminUserListView(generics.ListAPIView):

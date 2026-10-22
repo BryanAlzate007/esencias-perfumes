@@ -140,6 +140,46 @@ html[data-bs-theme="light"] .navbar-esencias.navbar-home {
   height: 1.1rem;
 }
 
+.navbar-esencias .navbar-user {
+  cursor: default;
+}
+
+.navbar-points {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  margin-inline: 0.15rem 0.35rem;
+  padding: 0.32rem 0.72rem 0.3rem 0.58rem;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #fff1d2 0%, #f0cb86 42%, #c9954a 100%);
+  color: #1a140c;
+  box-shadow:
+    0 0 0 1px rgba(255, 244, 220, 0.7),
+    0 0 18px rgba(212, 180, 131, 0.72);
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.navbar-points-mark {
+  font-size: 0.78rem;
+  line-height: 1;
+}
+
+.navbar-points-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.navbar-points-label {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
 .navbar-cart-btn {
   position: relative;
   display: inline-flex;
