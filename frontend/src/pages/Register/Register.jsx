@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Alert, Button, Card, Form } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { allauthErrors, signUp } from "../../lib/allauth";
 import { useAuth } from "../../hooks/useAuth";
 import { useAuthModal } from "../../hooks/useAuthModal";
@@ -9,6 +9,7 @@ import { useTheme } from "../../hooks/useTheme";
 import Recaptcha from "../../components/Recaptcha/Recaptcha";
 import SocialAuthButtons from "../../components/SocialAuthButtons/SocialAuthButtons";
 import { getCaptchaConfig } from "../../services/auth";
+import { claimReferral } from "../../services/referrals";
 import "../../components/LoginModal/LoginModal.css";
 
 export default function Register() {
@@ -17,6 +18,7 @@ export default function Register() {
   const { openLogin } = useAuthModal();
   const { theme } = useTheme();
   const navigate = useNavigate();
+  const [params] = useSearchParams();
   const captchaRef = useRef(null);
   const [form, setForm] = useState({
     username: "",
@@ -32,6 +34,13 @@ export default function Register() {
   const [captchaAction, setCaptchaAction] = useState("SIGNUP");
   const [captchaToken, setCaptchaToken] = useState("");
   const [captchaFailed, setCaptchaFailed] = useState(false);
+
+  useEffect(() => {
+    const code = params.get("ref");
+    if (code) {
+      sessionStorage.setItem("esencias-referral", code);
+    }
+  }, [params]);
 
   useEffect(() => {
     let cancelled = false;
@@ -73,6 +82,15 @@ export default function Register() {
       return;
     }
     await refreshUser();
+    const code = sessionStorage.getItem("esencias-referral");
+    if (code) {
+      try {
+        await claimReferral(code);
+      } catch {
+        // The account is already created; an invalid code should not block signup.
+      }
+      sessionStorage.removeItem("esencias-referral");
+    }
     navigate("/", { replace: true });
   }
 

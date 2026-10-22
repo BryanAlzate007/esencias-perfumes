@@ -166,3 +166,5 @@ class Migration(migrations.Migration):
         ),
         migrations.RunPython(create_points_accounts, migrations.RunPython.noop),
     ]
+
+

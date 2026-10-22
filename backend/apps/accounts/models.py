@@ -83,6 +83,7 @@ class PointsAccount(models.Model):
     enabled_at = models.DateTimeField(null=True, blank=True)
     balance = models.PositiveIntegerField(default=0)
     referral_code = models.CharField(max_length=8, unique=True, blank=True)
+    referral_qr = models.ImageField(upload_to="referrals/qr/", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -130,10 +131,13 @@ class PointsAccount(models.Model):
             account = PointsAccount.objects.select_for_update().get(pk=self.pk)
             if not account.enabled:
                 raise ValidationError("Los puntos se habilitan después de la primera compra.")
-            if order is not None and order.user_id != account.user_id:
-                raise ValidationError("El pedido no pertenece a esta cuenta.")
             if referral is not None and referral.referrer_id != account.user_id:
                 raise ValidationError("El referido no pertenece a esta cuenta.")
+            if order is not None and source == PointEntry.Source.REFERRAL:
+                if referral is None or order.user_id != referral.referred_id:
+                    raise ValidationError("El pedido no pertenece al referido.")
+            elif order is not None and order.user_id != account.user_id:
+                raise ValidationError("El pedido no pertenece a esta cuenta.")
             entry = PointEntry.objects.create(
                 account=account,
                 source=source,
@@ -147,22 +151,30 @@ class PointsAccount(models.Model):
         self.balance = account.balance
         return entry
 
-    def redeem(self):
+    def redeem(self, reward=None):
         """Redime el saldo completo. El historial de origen y estados se conserva."""
+        if reward is not None and not reward.active:
+            raise ValidationError("Este premio no está disponible.")
         now = timezone.now()
         with transaction.atomic():
             account = PointsAccount.objects.select_for_update().get(pk=self.pk)
+            if reward is not None:
+                reward = Reward.objects.select_for_update().get(pk=reward.pk)
+                if not reward.active:
+                    raise ValidationError("Este premio no está disponible.")
             available = list(
                 account.entries.select_for_update().filter(status=PointEntry.Status.AVAILABLE)
             )
             total = sum(entry.points for entry in available)
+            if reward is not None and total < reward.points_cost:
+                raise ValidationError("No tienes puntos suficientes para este premio.")
             if total == 0:
                 if account.balance != 0:
                     account.balance = 0
                     account.save(update_fields=["balance", "updated_at"])
                     self.balance = 0
                 return None
-            redemption = PointRedemption.objects.create(account=account, points=total)
+            redemption = PointRedemption.objects.create(account=account, points=total, reward=reward)
             for entry in available:
                 entry.status = PointEntry.Status.REDEEMED
                 entry.redeemed_at = now
@@ -257,10 +269,38 @@ class PointEntryEvent(models.Model):
         return f"{self.get_status_display()} · {self.created_at}"
 
 
+class Reward(models.Model):
+    name = models.CharField(max_length=120)
+    description = models.TextField(blank=True)
+    points_cost = models.PositiveIntegerField()
+    active = models.BooleanField(default=True)
+    sort_order = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Premio"
+        verbose_name_plural = "Premios"
+        ordering = ["sort_order", "points_cost", "name"]
+        constraints = [
+            models.CheckConstraint(check=models.Q(points_cost__gt=0), name="reward_points_cost_positive"),
+        ]
+
+    def __str__(self):
+        return f"{self.name} · {self.points_cost} pts"
+
+
 class PointRedemption(models.Model):
     """Momento en que el saldo volvió a cero."""
 
     account = models.ForeignKey(PointsAccount, related_name="redemptions", on_delete=models.CASCADE)
+    reward = models.ForeignKey(
+        Reward,
+        related_name="redemptions",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+    )
     points = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -296,6 +336,7 @@ class Referral(models.Model):
     code = models.CharField(max_length=8)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
     points_awarded = models.PositiveIntegerField(default=0)
+    purchased_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

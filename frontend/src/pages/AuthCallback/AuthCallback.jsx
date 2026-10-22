@@ -3,6 +3,7 @@ import { Alert, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { claimReferral } from "../../services/referrals";
 
 export default function AuthCallback() {
   const { t } = useTranslation();
@@ -17,9 +18,18 @@ export default function AuthCallback() {
     }
     let cancelled = false;
     refreshUser()
-      .then((me) => {
+      .then(async (me) => {
         if (cancelled) {
           return;
+        }
+        const code = sessionStorage.getItem("esencias-referral");
+        if (code) {
+          try {
+            await claimReferral(code);
+          } catch {
+            // Signup already succeeded.
+          }
+          sessionStorage.removeItem("esencias-referral");
         }
         const next = sessionStorage.getItem("esencias-auth-next") || "/";
         sessionStorage.removeItem("esencias-auth-next");

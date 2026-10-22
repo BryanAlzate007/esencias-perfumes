@@ -182,6 +182,14 @@ class OrderDetailView(generics.RetrieveUpdateAPIView):
             return [permissions.IsAuthenticated(), IsAdminRole()]
         return [permissions.IsAuthenticated()]
 
+    def perform_update(self, serializer):
+        was_confirmed = serializer.instance.status == Order.Status.CONFIRMED
+        order = serializer.save()
+        if not was_confirmed and order.status == Order.Status.CONFIRMED:
+            from apps.accounts.points import award_order_points
+
+            award_order_points(order)
+
 
 class MyPerfumesView(generics.ListAPIView):
     serializer_class = OwnedPerfumeSerializer

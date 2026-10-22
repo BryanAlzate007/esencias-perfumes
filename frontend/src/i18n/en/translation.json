@@ -8,6 +8,7 @@
     "yourPerfumes": "Your perfumes",
     "orders": "Orders",
     "comments": "Comments",
+    "referrals": "Referrals",
     "dashboard": "Dashboard",
     "adminMenu": "Admin menu",
     "closeAdminMenu": "Hide admin menu",
@@ -250,6 +251,33 @@
   },
   "profile": { 
     "saved": "Profile updated."
+  },
+  "referrals": {
+    "kicker": "First step",
+    "title": "Make a purchase to unlock your code",
+    "lead": "Make a purchase so your code is created and you can refer your friends. Each purchase they make gives you 20 points.",
+    "start": "Start",
+    "shareKicker": "Your code",
+    "qrAlt": "Referral QR code",
+    "listTitle": "Friends who purchased",
+    "empty": "Nobody has signed up and purchased with your code yet.",
+    "loadError": "Referrals could not be loaded."
+  },
+  "points": {
+    "kicker": "First step",
+    "title": "You need to buy to unlock points",
+    "lead": "Get 100 points on your first purchase, and every purchase adds more points.",
+    "start": "Start",
+    "rewardsKicker": "Rewards",
+    "rewardsTitle": "Redeem your points",
+    "balance": "You have {{count}} points",
+    "redeemNote": "Redeeming a reward sets your balance back to 0.",
+    "redeem": "Redeem",
+    "unavailable": "Not enough yet",
+    "cost": "{{count}} pts",
+    "emptyRewards": "There are no rewards available yet.",
+    "redeemed": "You redeemed {{name}}. Your balance is back to 0.",
+    "loadError": "Points could not be loaded."
   },
   "common": {
     "loading": "Loading...",

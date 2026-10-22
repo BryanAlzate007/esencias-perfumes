@@ -14,6 +14,8 @@ import Login from "../pages/Login/Login";
 import AuthCallback from "../pages/AuthCallback/AuthCallback";
 import MyPerfumes from "../pages/MyPerfumes/MyPerfumes";
 import Orders from "../pages/Orders/Orders";
+import Points from "../pages/Points/Points";
+import Referrals from "../pages/Referrals/Referrals";
 import PerfumeDetail from "../pages/PerfumeDetail/PerfumeDetail";
 import PrivacyPolicy from "../pages/PrivacyPolicy/PrivacyPolicy";
 import Register from "../pages/Register/Register";
@@ -34,6 +36,8 @@ export default function AppRoutes() {
         <Route path="/politica-de-privacidad" element={<PrivacyPolicy />} />
 
         <Route element={<ProtectedRoute />}>
+          <Route path="/puntos" element={<Points />} />
+          <Route path="/referidos" element={<Referrals />} />
           <Route path="/tus-perfumes" element={<MyPerfumes />} />
           <Route path="/pedidos" element={<Orders />} />
           <Route path="/comentarios" element={<Comments />} />

@@ -144,6 +144,13 @@ html[data-bs-theme="light"] .navbar-esencias.navbar-home {
   cursor: default;
 }
 
+a.navbar-points,
+a.navbar-points:hover,
+a.navbar-points:focus-visible {
+  color: #1a140c;
+  text-decoration: none;
+}
+
 .navbar-points {
   display: inline-flex;
   align-items: center;
@@ -159,6 +166,12 @@ html[data-bs-theme="light"] .navbar-esencias.navbar-home {
     0 0 18px rgba(212, 180, 131, 0.72);
   line-height: 1;
   flex: 0 0 auto;
+  cursor: pointer;
+}
+
+.navbar-points:hover,
+.navbar-points:focus-visible {
+  transform: translateY(-1px);
 }
 
 .navbar-points-mark {

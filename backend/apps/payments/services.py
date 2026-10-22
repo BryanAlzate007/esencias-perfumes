@@ -240,6 +240,9 @@ def apply_verified_transaction(payment, transaction):
         )
         if updated:
             locked.order.status = Order.Status.CONFIRMED
+            from apps.accounts.points import award_order_points
+
+            award_order_points(locked.order)
     return locked
 
 

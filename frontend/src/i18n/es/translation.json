@@ -8,6 +8,7 @@
     "yourPerfumes": "Tus perfumes",
     "orders": "Pedidos",
     "comments": "Comentarios",
+    "referrals": "Referidos",
     "dashboard": "Dashboard",
     "adminMenu": "Menú de administración",
     "closeAdminMenu": "Ocultar menú de administración",
@@ -250,6 +251,33 @@
   },
   "profile": {
     "saved": "Perfil actualizado."
+  },
+  "referrals": {
+    "kicker": "Primer paso",
+    "title": "Realiza una compra para habilitar tu código",
+    "lead": "Realiza una compra para que se habilite y se cree tu código para referir a tus amigos. Cada compra que hagan te dará 20 puntos.",
+    "start": "Iniciar",
+    "shareKicker": "Tu código",
+    "qrAlt": "Código QR de referido",
+    "listTitle": "Amigos que compraron",
+    "empty": "Todavía nadie se ha registrado y comprado con tu código.",
+    "loadError": "No se pudieron cargar los referidos."
+  },
+  "points": {
+    "kicker": "Primer paso",
+    "title": "Debes comprar para habilitar los puntos",
+    "lead": "Obtén 100 puntos en la primera compra y cada vez que compres se sumarán más puntos.",
+    "start": "Iniciar",
+    "rewardsKicker": "Premios",
+    "rewardsTitle": "Redime tus puntos",
+    "balance": "Tienes {{count}} puntos",
+    "redeemNote": "Al redimir un premio, el saldo vuelve a 0.",
+    "redeem": "Redimir",
+    "unavailable": "Aún no alcanza",
+    "cost": "{{count}} pts",
+    "emptyRewards": "Todavía no hay premios disponibles.",
+    "redeemed": "Redimiste {{name}}. Tu saldo volvió a 0.",
+    "loadError": "No se pudieron cargar los puntos."
   },
   "common": {
     "loading": "Cargando...",

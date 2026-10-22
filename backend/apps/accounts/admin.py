@@ -12,6 +12,7 @@ from .models import (
     Profile,
     Referral,
     ReferralEvent,
+    Reward,
 )
 
 
@@ -83,7 +84,7 @@ class PointsAccountAdmin(admin.ModelAdmin):
     list_display = ("user", "balance", "enabled", "referral_code", "enabled_at")
     list_filter = ("enabled",)
     search_fields = ("user__username", "user__email", "referral_code")
-    readonly_fields = ("balance", "referral_code", "enabled_at", "created_at", "updated_at")
+    readonly_fields = ("balance", "referral_code", "referral_qr", "enabled_at", "created_at", "updated_at")
     inlines = [PointEntryInline]
 
     def save_model(self, request, obj, form, change):
@@ -117,11 +118,19 @@ class PointEntryAdmin(admin.ModelAdmin):
         return False
 
 
+@admin.register(Reward)
+class RewardAdmin(admin.ModelAdmin):
+    list_display = ("name", "points_cost", "active", "sort_order")
+    list_filter = ("active",)
+    search_fields = ("name", "description")
+    ordering = ("sort_order", "points_cost")
+
+
 @admin.register(PointRedemption)
 class PointRedemptionAdmin(admin.ModelAdmin):
-    list_display = ("account", "points", "created_at")
-    search_fields = ("account__user__username", "account__referral_code")
-    readonly_fields = ("account", "points", "created_at")
+    list_display = ("account", "reward", "points", "created_at")
+    search_fields = ("account__user__username", "account__referral_code", "reward__name")
+    readonly_fields = ("account", "reward", "points", "created_at")
     inlines = [RedeemedEntryInline]
 
     def has_add_permission(self, request):
@@ -133,7 +142,7 @@ class PointRedemptionAdmin(admin.ModelAdmin):
 
 @admin.register(Referral)
 class ReferralAdmin(admin.ModelAdmin):
-    list_display = ("referrer", "referred", "code", "status", "points_awarded", "created_at")
+    list_display = ("referrer", "referred", "code", "status", "points_awarded", "purchased_at", "created_at")
     list_filter = ("status",)
     search_fields = ("referrer__username", "referred__username", "code")
     readonly_fields = ("code", "status", "points_awarded", "created_at", "updated_at")

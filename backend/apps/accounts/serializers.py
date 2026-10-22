@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from apps.core.permissions import is_admin_user, user_role
 
-from .models import Profile, Profile_person
+from .models import Profile, Profile_person, Reward
 
 User = get_user_model()
 
@@ -67,6 +67,17 @@ class MeSerializer(serializers.ModelSerializer):
         if updated:
             profile.save(update_fields=updated)
         return instance
+
+
+class RewardSerializer(serializers.ModelSerializer):
+    can_redeem = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Reward
+        fields = ("id", "name", "description", "points_cost", "can_redeem")
+
+    def get_can_redeem(self, obj):
+        return obj.points_cost <= self.context.get("balance", 0)
 
 
 class AdminUserSerializer(serializers.ModelSerializer):

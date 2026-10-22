@@ -2,7 +2,9 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from apps.accounts.models import PointEntry, PointsAccount, Referral
+from rest_framework.test import APIClient
+
+from apps.accounts.models import PointEntry, PointsAccount, Referral, Reward
 from apps.purchases.models import Order
 
 User = get_user_model()
@@ -63,3 +65,34 @@ class PointsAndReferralTests(TestCase):
         self.account.refresh_from_db()
         self.assertEqual(self.account.balance, 0)
         self.assertEqual(self.account.entries.count(), 2)
+
+
+class PointsViewTests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(username="cliente", password="StrongPass123!")
+        self.client.force_login(self.user)
+        self.reward = Reward.objects.create(name="Muestra", description="5 g", points_cost=100, sort_order=1)
+
+    def test_first_step_before_a_purchase(self):
+        response = self.client.get("/api/v1/points/")
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.json()["has_purchase"])
+        self.assertEqual(response.json()["points"], 0)
+        self.assertEqual(response.json()["rewards"], [])
+
+    def test_purchase_unlocks_rewards_and_redeems_back_to_zero(self):
+        Order.objects.create(user=self.user, status=Order.Status.CONFIRMED)
+        overview = self.client.get("/api/v1/points/")
+        self.assertTrue(overview.json()["has_purchase"])
+        self.assertEqual(overview.json()["points"], 100)
+        self.assertTrue(overview.json()["rewards"][0]["can_redeem"])
+
+        redeemed = self.client.post("/api/v1/points/redeem/", {"reward": self.reward.id}, format="json")
+        self.assertEqual(redeemed.status_code, 200, redeemed.content)
+        self.user.points_account.refresh_from_db()
+        self.assertEqual(self.user.points_account.balance, 0)
+        self.assertEqual(self.user.points_account.redemptions.get().reward_id, self.reward.id)
+
+        again = self.client.post("/api/v1/points/redeem/", {"reward": self.reward.id}, format="json")
+        self.assertEqual(again.status_code, 400)

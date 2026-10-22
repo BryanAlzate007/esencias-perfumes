@@ -1,0 +1,134 @@
+.referrals-page {
+  max-width: 40rem;
+  margin-inline: auto;
+}
+
+.referrals-loading {
+  display: flex;
+  justify-content: center;
+  padding: 4rem 0;
+}
+
+.referrals-kicker {
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: #a67c45;
+}
+
+.referrals-title {
+  max-width: 16ch;
+  margin-bottom: 1rem;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(2.3rem, 5vw, 3.6rem);
+  line-height: 0.98;
+}
+
+.referrals-lead {
+  max-width: 36rem;
+  margin-bottom: 0.4rem;
+  font-size: 1.05rem;
+  color: var(--bs-secondary-color);
+}
+
+.referrals-start {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 10.5rem;
+  margin-top: 1.25rem;
+  padding: 0.85rem 1.4rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #fff1d2 0%, #f0cb86 42%, #c9954a 100%);
+  box-shadow: 0 0 0 1px rgba(255, 244, 220, 0.7), 0 10px 24px rgba(201, 149, 74, 0.28);
+  color: #1a140c;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.referrals-start:hover,
+.referrals-start:focus-visible {
+  color: #1a140c;
+}
+
+.referrals-share {
+  display: flex;
+  justify-content: center;
+}
+
+.referrals-card {
+  width: min(100%, 22rem);
+  padding: 1.75rem 1.5rem 1.4rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 1.25rem;
+  background: var(--bs-tertiary-bg);
+  box-shadow: var(--float-shadow);
+  text-align: center;
+}
+
+.referrals-user {
+  margin-bottom: 1rem;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.referrals-card img {
+  width: 220px;
+  max-width: 100%;
+  height: auto;
+  padding: 0.7rem;
+  border-radius: 0.9rem;
+  background: #fff;
+}
+
+.referrals-code {
+  margin: 0.9rem 0 0;
+  letter-spacing: 0.28em;
+  font-weight: 700;
+}
+
+.referrals-list-title {
+  margin: 2.4rem 0 0.9rem;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 2rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.referrals-empty {
+  text-align: center;
+  color: var(--bs-secondary-color);
+}
+
+.referrals-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.referrals-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1.1rem;
+  border-bottom: 1px solid var(--bs-border-color);
+}
+
+.referrals-list li:last-child {
+  border-bottom: 0;
+}
+
+.referrals-list time {
+  color: var(--bs-secondary-color);
+}

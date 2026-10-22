@@ -1,7 +1,7 @@
 import { Badge, Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { PiShoppingCartDuotone } from "react-icons/pi";
 import { useTranslation } from "react-i18next";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { useAuthModal } from "../../hooks/useAuthModal";
 import { useCart } from "../../hooks/useCart";
@@ -84,7 +84,10 @@ export default function AppNavbar({ adminNavOpen = false, onToggleAdminNav }) {
     { to: "/#historia", label: t("home.storyCta"), hash: "historia" },
     { to: "/#contacto", label: t("home.contactTitle"), hash: "contacto" },
   ];
-  const links = isAuthenticated && !isAdmin ? customerLinks : guestLinks;
+  const links = isAuthenticated && !isAdmin && pathname !== "/" ? customerLinks : guestLinks;
+  const navLinks = isAuthenticated
+    ? [...links, { to: "/referidos", label: t("nav.referrals") }]
+    : links;
 
   const appearance = {
     language,
@@ -119,7 +122,7 @@ export default function AppNavbar({ adminNavOpen = false, onToggleAdminNav }) {
         <Navbar.Toggle aria-controls="main-navigation" />
         <Navbar.Collapse id="main-navigation">
           <Nav className="mx-lg-auto">
-            {links.map((link) => (
+            {navLinks.map((link) => (
               <Nav.Link
                 as={NavLink}
                 to={link.to}
@@ -155,11 +158,11 @@ export default function AppNavbar({ adminNavOpen = false, onToggleAdminNav }) {
                 <Nav.Link as="span" className="navbar-user">
                   {user.username}
                 </Nav.Link>
-                <span className="navbar-points" aria-label={t("nav.points", { count: user.points ?? 0 })}>
+                <Link to="/puntos" className="navbar-points" aria-label={t("nav.points", { count: user.points ?? 0 })}>
                   <span className="navbar-points-mark" aria-hidden="true">✦</span>
                   <span className="navbar-points-value">{user.points ?? 0}</span>
                   <span className="navbar-points-label">{t("nav.pointsLabel")}</span>
-                </span>
+                </Link>
                 <Button variant="outline-secondary" size="sm" onClick={handleLogout}>
                   {t("nav.logout")}
                 </Button>
