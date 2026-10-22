@@ -44,19 +44,15 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
   const { t, i18n } = useTranslation();
   const { saveQuote } = useCart();
   const [quote, setQuote] = useState(null);
-  const [grams, setGrams] = useState(100);
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
   const [pricing, setPricing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const quoteRef = useRef(null);
-  const gramsRef = useRef(grams);
-  const timer = useRef(null);
   const requestSeq = useRef(0);
 
   quoteRef.current = quote;
-  gramsRef.current = grams;
 
   useEffect(() => {
     if (!show || !perfumeId) {
@@ -73,7 +69,6 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
           return;
         }
         setQuote(data);
-        setGrams(data.grams);
       })
       .catch(() => {
         if (active) {
@@ -87,7 +82,6 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
       });
     return () => {
       active = false;
-      clearTimeout(timer.current);
     };
   }, [show, perfumeId, t]);
 
@@ -101,7 +95,6 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
         return;
       }
       setQuote(data);
-      setGrams(data.grams);
     } catch {
       if (seq === requestSeq.current) {
         setError(t("cart.quoteError"));
@@ -118,29 +111,7 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
     if (!current) {
       return;
     }
-    clearTimeout(timer.current);
-    const base = current.base_grams;
-    const nextGrams = Number(gramsRef.current);
-    applyQuote({
-      container: containerId,
-      grams: Number.isFinite(nextGrams) && nextGrams >= base ? nextGrams : base,
-    });
-  }
-
-  function changeGrams(nextValue) {
-    setGrams(nextValue);
-    const current = quoteRef.current;
-    const parsed = Number(nextValue);
-    if (!current?.selected_container || !Number.isFinite(parsed) || parsed < 1) {
-      return;
-    }
-    clearTimeout(timer.current);
-    timer.current = setTimeout(() => {
-      applyQuote({
-        container: current.selected_container,
-        grams: parsed,
-      });
-    }, 400);
+    applyQuote({ container: containerId });
   }
 
   async function handleConfirm() {
@@ -149,7 +120,6 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
     }
     setSaving(true);
     setError("");
-    clearTimeout(timer.current);
     try {
       const units = Math.max(1, Math.floor(Number(quantity) || 1));
       await saveQuote({ ...quote, quantity: units });
@@ -211,21 +181,6 @@ export default function AddToCartModal({ perfumeId, show, onHide, onAdded }) {
                     disabled={saving || pricing}
                   />
                 </Form.Group>
-                {quote.selected_container != null && (
-                  <Form.Group className="add-cart-grams">
-                    <Form.Label htmlFor="cart-grams">{t("cart.grams")}</Form.Label>
-                    <p className="add-cart-grams-hint">{t("cart.gramsHint")}</p>
-                    <Form.Control
-                      id="cart-grams"
-                      type="number"
-                      min={quote.base_grams}
-                      step={1}
-                      value={grams}
-                      onChange={(event) => changeGrams(event.target.value)}
-                      disabled={saving}
-                    />
-                  </Form.Group>
-                )}
               </div>
               <div className="add-cart-options">
                 {quote.perfume_option && (
