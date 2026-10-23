@@ -100,7 +100,7 @@ export default function PerfumeDetail() {
           <h1 className="h2">{perfume.name}</h1>
           <p>{perfume.description}</p>
           <p className="h4">
-            {perfume.price_from && <span className="essence-card-from me-2">{t("home.from")}</span>}
+            <span className="essence-card-from me-2">{t("home.from")}</span>
             {formatMoney(perfume.price_from || perfume.price, i18n.language)}
           </p>
           <Button variant="dark" onClick={() => setCartOpen(true)}>
