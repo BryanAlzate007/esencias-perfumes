@@ -15,6 +15,7 @@ PERFUME_FIELDS = (
     "description",
     "notes",
     "catalog",
+    "kind",
     "price",
     "price_usd",
     "color",

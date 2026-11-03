@@ -13,6 +13,60 @@
   justify-content: flex-end;
 }
 
+.home-hero-candles {
+  background:
+    radial-gradient(circle at 72% 18%, rgba(244, 196, 120, 0.42), transparent 26%),
+    radial-gradient(circle at 28% 78%, rgba(120, 62, 24, 0.55), transparent 34%),
+    linear-gradient(165deg, #24160f 0%, #070605 58%, #3a2414 100%);
+}
+
+.landing-gates {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+  width: min(100%, 42rem);
+}
+
+.landing-gate {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid rgba(212, 180, 131, 0.55);
+  background: rgba(7, 6, 5, 0.42);
+  padding: 1.25rem 1.2rem 1.35rem;
+  border-radius: var(--bs-border-radius);
+}
+
+.landing-gate h2 {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  line-height: 1;
+  margin: 0 0 0.45rem;
+  color: #f7edd9;
+}
+
+.landing-gate p {
+  margin: 0;
+  color: #e7d7b8;
+}
+
+.landing-gate:hover,
+.landing-gate:focus-visible {
+  background: #d4b483;
+  border-color: #d4b483;
+  color: #1a140c;
+}
+
+.landing-gate:hover h2,
+.landing-gate:hover p,
+.landing-gate:hover .home-kicker,
+.landing-gate:focus-visible h2,
+.landing-gate:focus-visible p,
+.landing-gate:focus-visible .home-kicker {
+  color: #1a140c;
+}
+
 .home-hero-overlay {
   flex: 1;
   display: flex;
@@ -294,6 +348,10 @@
 }
 
 @media (min-width: 768px) {
+  .landing-gates {
+    grid-template-columns: 1fr 1fr;
+  }
+
   .home-hero-overlay {
     padding-left: clamp(3rem, 6vw, 5.5rem);
     padding-right: 4rem;
@@ -326,6 +384,12 @@
 [data-bs-theme="light"] .home-page {
   color: #1a140c;
   background: #ffffff;
+}
+
+.home-hero-candles .home-hero-overlay {
+  background:
+    linear-gradient(90deg, rgba(7, 6, 5, 0.28) 0%, rgba(7, 6, 5, 0.05) 48%, rgba(7, 6, 5, 0.18) 100%),
+    linear-gradient(180deg, rgba(7, 6, 5, 0.08) 0%, rgba(7, 6, 5, 0.2) 58%, rgba(7, 6, 5, 0.9) 100%);
 }
 
 [data-bs-theme="light"] .home-hero-overlay {

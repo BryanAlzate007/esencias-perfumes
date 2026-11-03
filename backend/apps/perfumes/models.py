@@ -23,6 +23,10 @@ def related_image_url(images):
 
 
 class Perfume(models.Model):
+    class Kind(models.TextChoices):
+        PERFUME = "perfume", "Perfume"
+        CANDLE = "candle", "Vela"
+
     class Catalog(models.TextChoices):
         CABALLERO = "caballero", "Caballero"
         DAMA = "dama", "Dama"
@@ -36,6 +40,7 @@ class Perfume(models.Model):
     price_usd = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     color = models.CharField(max_length=200, blank=True)
     catalog = models.CharField(max_length=20, choices=Catalog.choices, default=Catalog.CABALLERO)
+    kind = models.CharField(max_length=20, choices=Kind.choices, default=Kind.PERFUME)
     main_chords = models.ManyToManyField('Main_chords', blank=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)

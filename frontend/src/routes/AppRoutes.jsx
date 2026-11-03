@@ -10,6 +10,7 @@ import AdminUsers from "../pages/admin/AdminUsers";
 import Comments from "../pages/Comments/Comments";
 import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
 import Home from "../pages/Home/Home";
+import Landing from "../pages/Landing/Landing";
 import Login from "../pages/Login/Login";
 import AuthCallback from "../pages/AuthCallback/AuthCallback";
 import MyPerfumes from "../pages/MyPerfumes/MyPerfumes";
@@ -25,9 +26,12 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route element={<MainLayout />}>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Landing />} />
+        <Route path="/perfumes" element={<Home line="perfume" />} />
+        <Route path="/candles" element={<Home line="candle" />} />
         <Route path="/asesoria" element={<ChatIA />} />
         <Route path="/perfumes/:id" element={<PerfumeDetail />} />
+        <Route path="/candles/:id" element={<PerfumeDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Register />} />
         <Route path="/auth/callback" element={<AuthCallback />} />

@@ -55,8 +55,12 @@ class PerfumeViewSet(viewsets.ModelViewSet):
         return bool(params.get("catalog", "").strip() or params.get("search", "").strip())
 
     def _filter_list(self, queryset):
+        kind = self.request.query_params.get("kind", "").strip().lower()
         catalog = self.request.query_params.get("catalog", "").strip().lower()
         search = self.request.query_params.get("search", "").strip()
+        if kind:
+            allowed_kinds = {choice.value for choice in Perfume.Kind}
+            queryset = queryset.filter(kind=kind) if kind in allowed_kinds else queryset.none()
         if catalog:
             allowed = {choice.value for choice in Perfume.Catalog}
             queryset = queryset.filter(catalog=catalog) if catalog in allowed else queryset.none()

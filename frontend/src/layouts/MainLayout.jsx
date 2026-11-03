@@ -26,7 +26,7 @@ export default function MainLayout() {
   const { t } = useTranslation();
   const { isAdmin, ready } = useAuth();
   const isDesktop = useDesktopNav();
-  const isHome = pathname === "/";
+  const isHome = pathname === "/" || pathname === "/perfumes" || pathname === "/candles";
   const isChat = pathname === "/asesoria";
   const isAdminRoute = pathname.startsWith("/admin");
   const [sidebarOpen, setSidebarOpen] = useState(false);

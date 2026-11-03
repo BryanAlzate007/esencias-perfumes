@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import AddToCartModal from "../../components/AddToCardModal/AddToCardModal";
 import AdvisorModal from "../../components/AdvisorModal/AdvisorModal";
+import ContactSection from "../../components/ContactSection/ContactSection";
 import PerfumeCard from "../../components/PerfumeCard/PerfumeCard";
-import { sendContact } from "../../services/contact";
 import { listPerfumePage, PERFUME_PAGE_SIZE } from "../../services/perfumes";
 import heroImage from "../../assets/hero-perfume.jpg";
 import "./Home.css";
@@ -42,9 +42,12 @@ function pageItems(current, total) {
   return items;
 }
 
-export default function Home() {
+export default function Home({ line = "perfume" }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const isCandle = line === "candle";
+  const copy = isCandle ? "candles" : "home";
+  const kind = isCandle ? "candle" : "perfume";
   const [draftPerfumeId, setDraftPerfumeId] = useState(null);
   const [perfumes, setPerfumes] = useState([]);
   const [total, setTotal] = useState(0);
@@ -54,10 +57,17 @@ export default function Home() {
   const [message, setMessage] = useState("");
   const [query, setQuery] = useState("");
   const [catalogFilter, setCatalogFilter] = useState("");
-  const [contact, setContact] = useState({ name: "", email: "", phone: "", message: "" });
-  const [contactSent, setContactSent] = useState(false);
-  const [contactSending, setContactSending] = useState(false);
-  const [contactError, setContactError] = useState("");
+  const [seenKind, setSeenKind] = useState(kind);
+
+  if (seenKind !== kind) {
+    setSeenKind(kind);
+    setPage(1);
+    setQuery("");
+    setCatalogFilter("");
+    setMessage("");
+    setPerfumes([]);
+    setStatus("loading");
+  }
 
   const pageCount = filtered ? 1 : Math.max(1, Math.ceil(total / PERFUME_PAGE_SIZE));
 
@@ -67,7 +77,7 @@ export default function Home() {
     let cancelled = false;
     const timer = window.setTimeout(() => {
       setStatus("loading");
-      listPerfumePage({ page, catalog: catalogFilter, search: term })
+      listPerfumePage({ page, catalog: catalogFilter, search: term, kind })
         .then((data) => {
           if (cancelled) {
             return;
@@ -87,7 +97,7 @@ export default function Home() {
       cancelled = true;
       window.clearTimeout(timer);
     };
-  }, [page, catalogFilter, query]);
+  }, [page, catalogFilter, query, kind]);
 
   useEffect(() => {
     const hash = window.location.hash.replace("#", "");
@@ -120,36 +130,22 @@ export default function Home() {
   const brands = [...new Set([...(perfumes.map((item) => item.brand) || []), ...FALLBACK_BRANDS])];
   const marqueeBrands = [...brands, ...brands];
 
-  async function handleContact(event) {
-    event.preventDefault();
-    setContactError("");
-    setContactSending(true);
-    try {
-      await sendContact(contact);
-      setContactSent(true);
-    } catch (requestError) {
-      setContactError(requestError?.response?.data?.detail || t("home.contactError"));
-    } finally {
-      setContactSending(false);
-    }
-  }
-
   return (
     <div className="home-page">
-      <AdvisorModal onWeb={() => navigate("/asesoria")} />
+      {!isCandle && <AdvisorModal onWeb={() => navigate("/asesoria")} />}
       <AddToCartModal
         perfumeId={draftPerfumeId}
         show={draftPerfumeId != null}
         onHide={() => setDraftPerfumeId(null)}
         onAdded={() => setMessage(t("home.added"))}
       />
-      <section className="home-hero" style={{ backgroundImage: `url(${heroImage})` }}>
+      <section className={`home-hero${isCandle ? " home-hero-candles" : ""}`} style={isCandle ? undefined : { backgroundImage: `url(${heroImage})` }}>
         <div className="home-hero-overlay">
           <h1 className="home-hero-brand">{t("app.name")}</h1>
-          <p className="home-hero-title">{t("home.heroPhrase")}</p>
+          <p className="home-hero-title">{t(`${copy}.heroPhrase`)}</p>
           <div className="home-hero-actions">
             <button type="button" className="home-ghost-button home-ghost-button-solid" onClick={() => scrollToId("coleccion")}>
-              {t("home.collectionCta")}
+              {t(`${copy}.collectionCta`)}
             </button>
             <button type="button" className="home-ghost-button" onClick={() => scrollToId("historia")}>
               {t("home.storyCta")}
@@ -169,30 +165,32 @@ export default function Home() {
 
       <section id="coleccion" className="home-section home-collection">
         <Container>
-          <p className="home-kicker">{t("home.collectionKicker")}</p>
-          <h2 className="home-section-title">{t("home.collectionTitle")}</h2>
+          <p className="home-kicker">{t(`${copy}.collectionKicker`)}</p>
+          <h2 className="home-section-title">{t(`${copy}.collectionTitle`)}</h2>
           <div className="home-catalog-toolbar">
             <input
               type="search"
               className="home-catalog-search"
               value={query}
               onChange={handleQuery}
-              placeholder={t("admin.searchPerfumes")}
-              aria-label={t("admin.searchPerfumes")}
+              placeholder={t(isCandle ? "candles.search" : "admin.searchPerfumes")}
+              aria-label={t(isCandle ? "candles.search" : "admin.searchPerfumes")}
             />
-            <div className="home-catalog-filters" role="group" aria-label={t("admin.perfumeCatalog")}>
-              {CATALOGS.map((item) => (
-                <button
-                  key={item.value}
-                  type="button"
-                  className={`home-catalog-filter${catalogFilter === item.value ? " is-active" : ""}`}
-                  aria-pressed={catalogFilter === item.value}
-                  onClick={() => handleCatalog(item.value)}
-                >
-                  {t(item.labelKey)}
-                </button>
-              ))}
-            </div>
+            {!isCandle && (
+              <div className="home-catalog-filters" role="group" aria-label={t("admin.perfumeCatalog")}>
+                {CATALOGS.map((item) => (
+                  <button
+                    key={item.value}
+                    type="button"
+                    className={`home-catalog-filter${catalogFilter === item.value ? " is-active" : ""}`}
+                    aria-pressed={catalogFilter === item.value}
+                    onClick={() => handleCatalog(item.value)}
+                  >
+                    {t(item.labelKey)}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
           {message && <Alert variant="dark" className="mt-3">{message}</Alert>}
           {status === "loading" && (
@@ -203,7 +201,7 @@ export default function Home() {
           )}
           {status === "error" && <Alert variant="warning" className="mt-3">{t("common.error")}</Alert>}
           {status === "ready" && perfumes.length === 0 && (
-            <Alert variant="dark" className="mt-3">{filtered ? t("admin.noMatches") : t("home.empty")}</Alert>
+            <Alert variant="dark" className="mt-3">{filtered ? t("admin.noMatches") : t(isCandle ? "candles.empty" : "home.empty")}</Alert>
           )}
           <div className="essence-grid">
             {status === "ready" && perfumes.map((perfume, index) => (
@@ -258,67 +256,14 @@ export default function Home() {
 
       <section id="historia" className="home-section home-story">
         <Container className="home-story-inner">
-          <p className="home-kicker">{t("home.storyKicker")}</p>
-          <h2 className="home-section-title">{t("home.storyTitle")}</h2>
-          <p className="home-story-text">{t("home.storyLead")}</p>
-          <p className="home-story-copy">{t("home.storyBody")}</p>
+          <p className="home-kicker">{t(`${copy}.storyKicker`)}</p>
+          <h2 className="home-section-title">{t(`${copy}.storyTitle`)}</h2>
+          <p className="home-story-text">{t(`${copy}.storyLead`)}</p>
+          <p className="home-story-copy">{t(`${copy}.storyBody`)}</p>
         </Container>
       </section>
 
-      <section id="contacto" className="home-section home-contact">
-        <Container>
-          <p className="home-kicker">{t("home.contactKicker")}</p>
-          <h2 className="home-section-title">{t("home.contactTitle")}</h2>
-          <p className="home-contact-copy">{t("home.contactLead")}</p>
-          {contactSent ? (
-            <Alert variant="success" className="mt-4">{t("home.contactSent")}</Alert>
-          ) : (
-            <form className="home-contact-form" onSubmit={handleContact}>
-              {contactError && <Alert variant="danger">{contactError}</Alert>}
-              <label>
-                {t("auth.name")}
-                <input
-                  required
-                  value={contact.name}
-                  onChange={(event) => setContact((current) => ({ ...current, name: event.target.value }))}
-                />
-              </label>
-              <label>
-                {t("auth.email")}
-                <input
-                  type="email"
-                  required
-                  value={contact.email}
-                  onChange={(event) => setContact((current) => ({ ...current, email: event.target.value }))}
-                />
-              </label>
-              <label>
-                {t("home.contactPhone")}
-                <input
-                  type="tel"
-                  required
-                  autoComplete="tel"
-                  placeholder={t("home.contactPhonePlaceholder")}
-                  value={contact.phone}
-                  onChange={(event) => setContact((current) => ({ ...current, phone: event.target.value }))}
-                />
-              </label>
-              <label>
-                {t("home.contactMessage")}
-                <textarea
-                  rows={4}
-                  required
-                  value={contact.message}
-                  onChange={(event) => setContact((current) => ({ ...current, message: event.target.value }))}
-                />
-              </label>
-              <button type="submit" className="home-ghost-button home-ghost-button-solid" disabled={contactSending}>
-                {contactSending ? t("home.contactSending") : t("home.contactSend")}
-              </button>
-            </form>
-          )}
-        </Container>
-      </section>
+      <ContactSection />
     </div>
   );
 }

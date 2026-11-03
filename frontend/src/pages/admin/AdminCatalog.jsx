@@ -21,6 +21,11 @@ const CATALOGS = [
   { value: "arabe", labelKey: "admin.catalogArabe" },
 ];
 
+const KINDS = [
+  { value: "perfume", labelKey: "admin.kindPerfume" },
+  { value: "candle", labelKey: "admin.kindCandle" },
+];
+
 function containerPriceRows(containers, assigned = []) {
   const byId = new Map((assigned || []).map((item) => [Number(item.container), item]));
   const assignedIds = new Set(byId.keys());
@@ -43,6 +48,7 @@ const emptyForm = {
   description: "",
   notes: "",
   catalog: "",
+  kind: "perfume",
   price: "",
   price_usd: "",
   grams: 100,
@@ -68,6 +74,7 @@ export default function AdminCatalog() {
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [catalogFilter, setCatalogFilter] = useState("");
+  const [kindFilter, setKindFilter] = useState("");
   const [loaded, setLoaded] = useState(false);
   const [notice, setNotice] = useState("");
   const [excelBusy, setExcelBusy] = useState(false);
@@ -77,10 +84,11 @@ export default function AdminCatalog() {
     const term = query.trim().toLocaleLowerCase();
     return perfumes.filter((perfume) => {
       const matchesCatalog = !catalogFilter || perfume.catalog === catalogFilter;
+      const matchesKind = !kindFilter || (perfume.kind || "perfume") === kindFilter;
       const matchesName = !term || perfume.name.toLocaleLowerCase().includes(term);
-      return matchesCatalog && matchesName;
+      return matchesCatalog && matchesKind && matchesName;
     });
-  }, [perfumes, query, catalogFilter]);
+  }, [perfumes, query, catalogFilter, kindFilter]);
 
   async function load() {
     const [data, chordData, containerData] = await Promise.all([listAllPerfumes(), listMainChords(), listContainers()]);
@@ -122,6 +130,7 @@ export default function AdminCatalog() {
       description: perfume.description,
       notes: perfume.notes || "",
       catalog: perfume.catalog || "",
+      kind: perfume.kind || "perfume",
       price: perfume.price,
       price_usd: perfume.price_usd ?? "",
       grams: perfume.grams ?? 100,
@@ -150,6 +159,7 @@ export default function AdminCatalog() {
     payload.append("description", form.description);
     payload.append("notes", form.notes);
     payload.append("catalog", form.catalog);
+    payload.append("kind", form.kind || "perfume");
     payload.append("price", form.price);
     payload.append("price_usd", form.price_usd);
     payload.append("grams", form.grams);
@@ -267,7 +277,7 @@ export default function AdminCatalog() {
             onChange={handleUpload}
           />
           <Button variant="dark" onClick={openCreate}>
-            {t("admin.newPerfume")}
+            {t("admin.newProduct")}
           </Button>
         </div>
       </div>
@@ -289,6 +299,19 @@ export default function AdminCatalog() {
           placeholder={t("admin.searchPerfumes")}
           aria-label={t("admin.searchPerfumes")}
         />
+        <div className="catalog-filters" role="group" aria-label={t("admin.productKind")}>
+          {KINDS.map((item) => (
+            <button
+              key={item.value}
+              type="button"
+              className={`catalog-filter${kindFilter === item.value ? " is-active" : ""}`}
+              aria-pressed={kindFilter === item.value}
+              onClick={() => setKindFilter((current) => (current === item.value ? "" : item.value))}
+            >
+              {t(item.labelKey)}
+            </button>
+          ))}
+        </div>
         <div className="catalog-filters" role="group" aria-label={t("admin.perfumeCatalog")}>
           {CATALOGS.map((item) => (
             <button
@@ -308,6 +331,7 @@ export default function AdminCatalog() {
           <tr>
             <th>{t("auth.name")}</th>
             <th>{t("admin.brand")}</th>
+            <th>{t("admin.productKind")}</th>
             <th>{t("admin.perfumeCatalog")}</th>
             <th>{t("admin.price")}</th>
             <th></th>
@@ -316,7 +340,7 @@ export default function AdminCatalog() {
         <tbody>
           {loaded && visiblePerfumes.length === 0 && (
             <tr>
-              <td colSpan={5} className="text-body-secondary">
+              <td colSpan={6} className="text-body-secondary">
                 {t("admin.noMatches")}
               </td>
             </tr>
@@ -325,6 +349,7 @@ export default function AdminCatalog() {
             <tr key={perfume.id}>
               <td>{perfume.name}</td>
               <td>{perfume.brand}</td>
+              <td>{t(KINDS.find((item) => item.value === (perfume.kind || "perfume"))?.labelKey || "admin.kindPerfume")}</td>
               <td>{t(CATALOGS.find((item) => item.value === perfume.catalog)?.labelKey || "admin.catalogPlaceholder")}</td>
               <td>${Number(perfume.price).toFixed(2)}</td>
               <td className="text-end">
@@ -342,7 +367,7 @@ export default function AdminCatalog() {
 
       <Modal show={open} onHide={closeModal} centered scrollable size="lg" fullscreen="sm-down" className="catalog-modal">
         <Modal.Header closeButton>
-          <Modal.Title>{editingId ? t("admin.edit") : t("admin.newPerfume")}</Modal.Title>
+          <Modal.Title>{editingId ? t("admin.edit") : t("admin.newProduct")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form id="catalog-perfume-form" onSubmit={handleSubmit}>
@@ -355,6 +380,16 @@ export default function AdminCatalog() {
               <Form.Group className="col-md-4">
                 <Form.Label>{t("admin.brand")}</Form.Label>
                 <Form.Control name="brand" value={form.brand} onChange={update} required />
+              </Form.Group>
+              <Form.Group className="col-md-4">
+                <Form.Label>{t("admin.productKind")}</Form.Label>
+                <Form.Select name="kind" value={form.kind} onChange={update} required>
+                  {KINDS.map((item) => (
+                    <option key={item.value} value={item.value}>
+                      {t(item.labelKey)}
+                    </option>
+                  ))}
+                </Form.Select>
               </Form.Group>
               <Form.Group className="col-md-4">
                 <Form.Label>{t("admin.perfumeCatalog")}</Form.Label>

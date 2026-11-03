@@ -71,23 +71,32 @@ export default function AppNavbar({ adminNavOpen = false, onToggleAdminNav }) {
     document.documentElement.lang = next;
   }
 
-  const customerLinks = [
-    { to: "/", label: t("nav.home") },
+  const immersive = pathname === "/" || pathname === "/perfumes" || pathname === "/candles";
+  const productLinks = [
+    { to: "/perfumes", label: t("nav.perfumes") },
+    { to: "/candles", label: t("nav.candles") },
+  ];
+  const sectionBase = pathname === "/candles" ? "/candles" : pathname === "/perfumes" ? "/perfumes" : "/";
+  const sectionLinks = pathname === "/"
+    ? [
+        { to: "/#historia", label: t("home.storyCta"), hash: "historia" },
+        { to: "/#contacto", label: t("home.contactTitle"), hash: "contacto" },
+      ]
+    : [
+        { to: `${sectionBase}#coleccion`, label: t("nav.collection"), hash: "coleccion" },
+        { to: `${sectionBase}#historia`, label: t("home.storyCta"), hash: "historia" },
+        { to: `${sectionBase}#contacto`, label: t("home.contactTitle"), hash: "contacto" },
+      ];
+  const accountLinks = [
     { to: "/tus-perfumes", label: t("nav.yourPerfumes") },
     { to: "/pedidos", label: t("nav.orders") },
     { to: "/comentarios", label: t("nav.comments") },
   ];
-
-  const guestLinks = [
-    { to: "/", label: t("nav.home") },
-    { to: "/#coleccion", label: t("home.collectionCta"), hash: "coleccion" },
-    { to: "/#historia", label: t("home.storyCta"), hash: "historia" },
-    { to: "/#contacto", label: t("home.contactTitle"), hash: "contacto" },
+  const links = [
+    ...productLinks,
+    ...(immersive ? sectionLinks : isAuthenticated && !isAdmin ? accountLinks : []),
+    ...(isAuthenticated ? [{ to: "/referidos", label: t("nav.referrals") }] : []),
   ];
-  const links = isAuthenticated && !isAdmin && pathname !== "/" ? customerLinks : guestLinks;
-  const navLinks = isAuthenticated
-    ? [...links, { to: "/referidos", label: t("nav.referrals") }]
-    : links;
 
   const appearance = {
     language,
@@ -98,7 +107,7 @@ export default function AppNavbar({ adminNavOpen = false, onToggleAdminNav }) {
   };
 
   return (
-    <Navbar expand="lg" sticky="top" className={`navbar-esencias border-bottom bg-body${pathname === "/" ? " navbar-home" : ""}${adminNavOpen && pathname === "/" ? " navbar-admin-open" : ""}`}>
+    <Navbar expand="lg" sticky="top" className={`navbar-esencias border-bottom bg-body${immersive ? " navbar-home" : ""}${adminNavOpen && immersive ? " navbar-admin-open" : ""}`}>
       <Container>
         {onToggleAdminNav && (
           <button
@@ -122,14 +131,15 @@ export default function AppNavbar({ adminNavOpen = false, onToggleAdminNav }) {
         <Navbar.Toggle aria-controls="main-navigation" />
         <Navbar.Collapse id="main-navigation">
           <Nav className="mx-lg-auto">
-            {navLinks.map((link) => (
+            {links.map((link) => (
               <Nav.Link
-                as={NavLink}
+                as={link.hash ? Link : NavLink}
                 to={link.to}
-                end={link.to === "/"}
+                {...(link.hash ? {} : { end: link.to === "/perfumes" || link.to === "/candles" })}
                 key={link.to}
                 onClick={(event) => {
-                  if (link.hash && pathname === "/") {
+                  const path = link.to.split("#")[0] || "/";
+                  if (link.hash && path === pathname) {
                     event.preventDefault();
                     document.getElementById(link.hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
                   }

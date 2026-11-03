@@ -295,6 +295,29 @@ class PerfumeCatalogTests(TestCase):
         self.assertIsInstance(searched.json(), list)
         self.assertEqual(len(searched.json()), 10)
 
+    def test_public_list_filters_by_product_kind(self):
+        Perfume.objects.create(
+            name="Rosa",
+            brand="Esencias",
+            description="Notas",
+            price="50.00",
+            kind=Perfume.Kind.PERFUME,
+        )
+        Perfume.objects.create(
+            name="Ambar",
+            brand="Esencias",
+            description="Cera",
+            price="40.00",
+            kind=Perfume.Kind.CANDLE,
+        )
+
+        perfumes = self.client.get("/api/v1/perfumes/", {"kind": "perfume"})
+        candles = self.client.get("/api/v1/perfumes/", {"kind": "candle"})
+
+        self.assertEqual([item["name"] for item in perfumes.json()["results"]], ["Rosa"])
+        self.assertEqual([item["name"] for item in candles.json()["results"]], ["Ambar"])
+        self.assertEqual(candles.json()["results"][0]["kind"], "candle")
+
 
 def workbook_file(workbook):
     buffer = BytesIO()

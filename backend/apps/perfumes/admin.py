@@ -10,7 +10,8 @@ class PerfumeContainerPriceInline(admin.TabularInline):
 
 @admin.register(Perfume)
 class PerfumeAdmin(admin.ModelAdmin):
-    list_display = ("name", "brand", "price", "is_active")
+    list_display = ("name", "brand", "kind", "price", "is_active")
+    list_filter = ("kind", "catalog", "is_active")
     search_fields = ("name", "brand")
     inlines = [PerfumeContainerPriceInline]
 

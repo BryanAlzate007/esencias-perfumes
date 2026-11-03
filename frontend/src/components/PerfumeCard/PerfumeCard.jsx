@@ -12,7 +12,7 @@ export default function PerfumeCard({ perfume, index = 0, onAddToCart, showCart 
 
   return (
     <article className="essence-card">
-      <Link to={`/perfumes/${perfume.id}`} className="essence-card-link">
+      <Link to={perfume.kind === "candle" ? `/candles/${perfume.id}` : `/perfumes/${perfume.id}`} className="essence-card-link">
         <div className="essence-card-media">
           {cover && <img src={cover} alt={perfume.name} />}
           <span className="essence-card-index">No. {number}</span>

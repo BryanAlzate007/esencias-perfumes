@@ -13,9 +13,13 @@ export async function listPerfumePage({
   page = 1,
   catalog = "",
   search = "",
+  kind = "",
 } = {}) {
   const params = {};
   const term = search.trim();
+  if (kind) {
+    params.kind = kind;
+  }
   if (catalog) {
     params.catalog = catalog;
   }

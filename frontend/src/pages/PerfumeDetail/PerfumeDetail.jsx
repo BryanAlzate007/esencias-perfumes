@@ -77,8 +77,8 @@ export default function PerfumeDetail() {
 
   return (
     <>
-      <Link to="/" className="d-inline-block mb-3">
-        ← {t("nav.home")}
+      <Link to={perfume.kind === "candle" ? "/candles" : "/perfumes"} className="d-inline-block mb-3">
+        ← {perfume.kind === "candle" ? t("nav.candles") : t("nav.perfumes")}
       </Link>
       {message && <Alert variant="warning">{message}</Alert>}
       <Row className="g-4 mb-5">

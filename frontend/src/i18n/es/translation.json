@@ -4,7 +4,10 @@
     "tagline": "Descubre, registra y comparte tus fragancias."
   },
   "nav": {
-    "home": "Home",
+    "home": "Inicio",
+    "perfumes": "Perfumes",
+    "candles": "Velas",
+    "collection": "Colección",
     "yourPerfumes": "Tus perfumes",
     "orders": "Pedidos",
     "comments": "Comentarios",
@@ -92,6 +95,31 @@
     "pagePrev": "Anterior",
     "pageNext": "Siguiente",
     "pages": "Páginas"
+  },
+  "landing": {
+    "heroPhrase": "Perfumes para llevar y velas para quedarse.",
+    "perfumesKicker": "Fragancias",
+    "perfumesTitle": "Perfumes",
+    "perfumesLead": "Esencias que se quedan en la memoria.",
+    "candlesKicker": "Luz",
+    "candlesTitle": "Velas",
+    "candlesLead": "Aromas que llenan el espacio.",
+    "storyKicker": "Maison",
+    "storyTitle": "Nuestra casa",
+    "storyLead": "Una casa para perfumes y velas, hecha con la misma calma.",
+    "storyBody": "Trabajamos fragancias para llevar puestas y velas para quedarse en casa. Dos formas de la misma esencia."
+  },
+  "candles": {
+    "heroPhrase": "Luz, aroma y un rato que se queda.",
+    "collectionCta": "Velas",
+    "collectionKicker": "Atelier",
+    "collectionTitle": "Velas",
+    "storyKicker": "Llama",
+    "storyTitle": "Hechas para el espacio",
+    "storyLead": "Velas que perfuman la casa sin apurarse.",
+    "storyBody": "Elegimos ceras y aromas para que la luz dure y el ambiente se sienta propio: mesas, noches y regalos.",
+    "empty": "Todavía no hay velas en el catálogo.",
+    "search": "Buscar velas"
   },
   "chat": {
     "kicker": "Asesoría",
@@ -204,6 +232,10 @@
     "excelImported": "Catálogo actualizado: {{created}} nuevos y {{updated}} actualizados.",
     "excelRowError": "Fila {{row}}: {{message}}",
     "newPerfume": "Nuevo perfume",
+    "newProduct": "Nuevo producto",
+    "productKind": "Tipo",
+    "kindPerfume": "Perfume",
+    "kindCandle": "Vela",
     "edit": "Editar",
     "save": "Guardar",
     "cancel": "Cancelar",

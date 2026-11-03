@@ -5,6 +5,9 @@
   },
   "nav": {
     "home": "Home",
+    "perfumes": "Perfumes",
+    "candles": "Candles",
+    "collection": "Collection",
     "yourPerfumes": "Your perfumes",
     "orders": "Orders",
     "comments": "Comments",
@@ -92,6 +95,31 @@
     "pagePrev": "Previous",
     "pageNext": "Next",
     "pages": "Pages"
+  },
+  "landing": {
+    "heroPhrase": "Perfumes to wear and candles to stay with.",
+    "perfumesKicker": "Fragrances",
+    "perfumesTitle": "Perfumes",
+    "perfumesLead": "Essences that stay in memory.",
+    "candlesKicker": "Light",
+    "candlesTitle": "Candles",
+    "candlesLead": "Scents that fill the room.",
+    "storyKicker": "Maison",
+    "storyTitle": "Our house",
+    "storyLead": "A house for perfumes and candles, made with the same calm.",
+    "storyBody": "We make fragrances to wear and candles to keep at home. Two forms of the same essence."
+  },
+  "candles": {
+    "heroPhrase": "Light, scent, and a while that lingers.",
+    "collectionCta": "Candles",
+    "collectionKicker": "Atelier",
+    "collectionTitle": "Candles",
+    "storyKicker": "Flame",
+    "storyTitle": "Made for the room",
+    "storyLead": "Candles that scent the house without rushing.",
+    "storyBody": "We choose waxes and scents so the light lasts and the room feels like yours: tables, evenings, and gifts.",
+    "empty": "There are no candles in the catalog yet.",
+    "search": "Search candles"
   },
   "chat": {
     "kicker": "Advice",
@@ -204,6 +232,10 @@
     "excelImported": "Catalog updated: {{created}} created and {{updated}} updated.",
     "excelRowError": "Row {{row}}: {{message}}",
     "newPerfume": "New perfume",
+    "newProduct": "New product",
+    "productKind": "Type",
+    "kindPerfume": "Perfume",
+    "kindCandle": "Candle",
     "edit": "Edit",
     "save": "Save",
     "cancel": "Cancel",

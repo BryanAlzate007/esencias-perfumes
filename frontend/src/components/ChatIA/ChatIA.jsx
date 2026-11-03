@@ -72,7 +72,7 @@ export default function ChatIA() {
   return (
     <section className="chat-ia" aria-label={t("chat.title")}>
       <header className="chat-ia-header">
-        <Link className="chat-ia-back" to="/">
+        <Link className="chat-ia-back" to="/perfumes">
           {t("chat.back")}
         </Link>
         <div>
