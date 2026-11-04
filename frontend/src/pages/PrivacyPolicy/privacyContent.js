@@ -1,7 +1,7 @@
 export const privacyContent = {
   es: {
     title: "Política de privacidad",
-    updated: "Vigente desde el 16 de octubre de 2026.",
+    updated: "Vigente desde el 3 de noviembre de 2026.",
     intro:
       "Esencias trata datos personales de quienes visitan el sitio, crean una cuenta, arman un pedido o piden asesoría. Esta política explica qué datos usamos, para qué y cómo puedes ejercer tus derechos.",
     sections: [
@@ -19,7 +19,7 @@ export const privacyContent = {
           "Pedidos y carrito: perfume, envase, gramos, cantidad y el valor que calcula el servidor. Si aún no has iniciado sesión, el carrito se guarda en tu navegador hasta que compres o lo borres.",
           "Pagos: referencia del cobro, valor, moneda, estado e identificador de la transacción que nos informa Wompi. No guardamos el número de la tarjeta ni los datos que escribes dentro de la pasarela.",
           "Opiniones: comentarios, valoraciones y ocasiones que marques sobre un perfume.",
-          "Asesoría: el mensaje que escribes en el chat, para generar una respuesta.",
+          "Asesoría: los mensajes del chat, las respuestas del test olfativo y el correo que dejas al final para guardar y recibir tu perfil. La asesoría no exige una cuenta.",
           "Datos técnicos: una cookie de sesión y una cookie de seguridad para mantener tu ingreso y proteger los formularios. El idioma y el tema se guardan en tu navegador.",
           "Al crear una cuenta con correo, el captcha de Google comprueba que el formulario lo envía una persona. No guardamos el resultado de esa comprobación.",
         ],
@@ -29,14 +29,14 @@ export const privacyContent = {
         paragraphs: [
           "Crear y administrar tu cuenta, mostrar el catálogo, cotizar, guardar el carrito y confirmar el pedido solo cuando el pago coincide con el valor calculado en el servidor.",
           "Atender solicitudes sobre tus pedidos y responder cuando ejerces tus derechos.",
-          "Publicar los comentarios que decides dejar y personalizar la asesoría del chat.",
+          "Publicar los comentarios que decides dejar, personalizar la asesoría y enviarte el resultado del test olfativo al correo que nos indiques.",
           "Proteger la cuenta y el sitio frente a accesos no autorizados.",
         ],
       },
       {
         title: "Autorización",
         paragraphs: [
-          "Al crear una cuenta, entrar con Google o Facebook, o pagar un pedido, autorizas el tratamiento descrito en esta página. Puedes revocar esa autorización cuando quieras. La revocatoria no deshace los tratamientos ya hechos ni los que debamos conservar por ley.",
+          "Al crear una cuenta, entrar con Google o Facebook, pagar un pedido o dejar tu correo al final de la asesoría, autorizas el tratamiento descrito en esta página. Puedes revocar esa autorización cuando quieras. La revocatoria no deshace los tratamientos ya hechos ni los que debamos conservar por ley.",
         ],
       },
       {
@@ -56,6 +56,7 @@ export const privacyContent = {
           "La cuenta y los pedidos se conservan mientras la cuenta esté activa y durante el tiempo en que la ley comercial o tributaria exija guardar el soporte de una venta.",
           "El carrito guardado en el navegador permanece en tu dispositivo hasta que pagues, lo vacíes o borres los datos del sitio.",
           "Puedes pedir la supresión de tu cuenta cuando ya no exista un deber legal de conservar la información.",
+          "El perfil olfativo y el correo de la asesoría se conservan para enviarte el resultado y recomendarte lociones. Puedes pedir que los borremos por el contacto del sitio.",
         ],
       },
       {
@@ -88,7 +89,7 @@ export const privacyContent = {
   },
   en: {
     title: "Privacy policy",
-    updated: "Effective 16 October 2026.",
+    updated: "Effective 3 November 2026.",
     intro:
       "Esencias processes personal data from people who visit the site, create an account, place an order, or ask for advice. This policy explains which data we use, why, and how you can exercise your rights.",
     sections: [
@@ -106,7 +107,7 @@ export const privacyContent = {
           "Orders and cart: perfume, bottle, grams, quantity, and the price calculated on the server. Before you sign in, the cart stays in your browser until you check out or delete it.",
           "Payments: the charge reference, amount, currency, status, and the transaction id reported by Wompi. We do not store the card number or the details you type inside the payment gateway.",
           "Reviews: comments, ratings, and occasions you mark for a perfume.",
-          "Advice: the message you type in the chat, so a reply can be generated.",
+          "Advice: the chat messages, the olfactory test answers, and the email you leave at the end so we can save and send your profile. The advice chat does not require an account.",
           "Technical data: a session cookie and a security cookie to keep you signed in and protect forms. Language and theme stay in your browser.",
           "When you create an account with email, Google's captcha checks that a person submitted the form. We do not store the result of that check.",
         ],
@@ -116,14 +117,14 @@ export const privacyContent = {
         paragraphs: [
           "To create and manage your account, show the catalog, quote a price, keep the cart, and confirm an order only when the payment matches the amount calculated on the server.",
           "To answer questions about your orders and respond when you exercise your rights.",
-          "To publish comments you choose to leave and to answer the advice chat.",
+          "To publish comments you choose to leave, personalize the advice, and email you the olfactory test result at the address you give us.",
           "To protect the account and the site from unauthorized access.",
         ],
       },
       {
         title: "Authorization",
         paragraphs: [
-          "By creating an account, signing in with Google or Facebook, or paying for an order, you authorize the processing described on this page. You can withdraw that authorization at any time. Withdrawal does not undo processing already carried out, or processing we must keep by law.",
+          "By creating an account, signing in with Google or Facebook, paying for an order, or leaving your email at the end of the advice chat, you authorize the processing described on this page. You can withdraw that authorization at any time. Withdrawal does not undo processing already carried out, or processing we must keep by law.",
         ],
       },
       {
@@ -143,6 +144,7 @@ export const privacyContent = {
           "The account and orders stay while the account is active and for as long as commercial or tax law requires us to keep a record of a sale.",
           "A cart stored in the browser remains on your device until you pay, empty it, or clear the site data.",
           "You can ask us to delete your account when there is no legal duty left to keep the information.",
+          "The olfactory profile and the advice email are kept so we can send your result and recommend lotions. You can ask us to delete them through the contact section.",
         ],
       },
       {

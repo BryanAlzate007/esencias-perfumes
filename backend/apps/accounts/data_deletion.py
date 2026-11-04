@@ -19,7 +19,7 @@ from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.chatia.models import ChatIA
+from apps.chatia.models import ChatIA, OlfactoryTest, PerfumeOlfactoryProfile
 from apps.payments.models import Payment
 from apps.purchases.models import Order
 
@@ -86,7 +86,14 @@ def erase_linked_user(user):
     user.reviews.all().delete()
     user.ratings.all().delete()
     user.occasion_votes.all().delete()
+    email = (user.email or "").strip()
     ChatIA.objects.filter(user=user).delete()
+    if email:
+        ChatIA.objects.filter(email__iexact=email).delete()
+        OlfactoryTest.objects.filter(email__iexact=email).delete()
+        PerfumeOlfactoryProfile.objects.filter(email__iexact=email).delete()
+    PerfumeOlfactoryProfile.objects.filter(user=user).delete()
+    OlfactoryTest.objects.filter(user=user).delete()
 
     orders = Order.objects.filter(user=user)
     Payment.objects.filter(order__in=orders).exclude(status=Payment.Status.APPROVED).delete()

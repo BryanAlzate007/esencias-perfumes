@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { sendChatMessage } from "../../services/chat";
 import "./ChatIA.css";
 
+const STORAGE_KEY = "esencias-advisor-chat";
+
 let messageSeq = 0;
 
 function nextMessageId() {
@@ -12,21 +14,71 @@ function nextMessageId() {
   return `msg-${messageSeq}`;
 }
 
+function chatLanguage() {
+  const code = (i18n.resolvedLanguage || i18n.language || "es").toLowerCase();
+  return code.startsWith("en") ? "en" : "es";
+}
+
+function readSession() {
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      return null;
+    }
+    const data = JSON.parse(raw);
+    if (!data || typeof data !== "object") {
+      return null;
+    }
+    return data;
+  } catch {
+    return null;
+  }
+}
+
 export default function ChatIA() {
   const { t } = useTranslation();
+  const [session] = useState(readSession);
+  const [language] = useState(() => session?.language || chatLanguage());
+  const fixed = i18n.getFixedT(language);
   const [greetingIndex] = useState(() => {
-    const options = i18n.t("chat.greetings", { returnObjects: true });
-    const count = Array.isArray(options) ? options.length : 1;
-    return Math.floor(Math.random() * count);
+    const options = fixed("chat.greetings", { returnObjects: true });
+    const list = Array.isArray(options) ? options : [];
+    if (session?.advisor) {
+      const found = list.findIndex((item) => item.advisor === session.advisor);
+      if (found >= 0) {
+        return found;
+      }
+    }
+    return list.length ? Math.floor(Math.random() * list.length) : 0;
   });
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(() => (Array.isArray(session?.messages) ? session.messages : []));
+  const [chatId, setChatId] = useState(session?.chatId || "");
+  const [phase, setPhase] = useState(session?.phase || "question");
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
   const threadRef = useRef(null);
-  const greetings = t("chat.greetings", { returnObjects: true });
+  const greetings = fixed("chat.greetings", { returnObjects: true });
   const greeting = Array.isArray(greetings) ? greetings[greetingIndex] : null;
-  const advisorName = greeting?.advisor || "";
-  const thread = [{ id: "welcome", role: "assistant", text: greeting?.welcome || "" }, ...messages];
+  const advisorName = greeting?.advisor || "Sofía";
+  const welcome = fixed("chat.welcome", {
+    name: advisorName,
+    role: greeting?.role || "asesora",
+  });
+  const thread = [{ id: "welcome", role: "assistant", text: welcome }, ...messages];
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
+        chatId,
+        advisor: advisorName,
+        language,
+        phase,
+        messages,
+      }));
+    } catch {
+      // The conversation still works if the browser blocks storage.
+    }
+  }, [advisorName, chatId, language, messages, phase]);
 
   useEffect(() => {
     const node = threadRef.current;
@@ -46,13 +98,28 @@ export default function ChatIA() {
     setDraft("");
     setSending(true);
     try {
-      const data = await sendChatMessage(text);
+      const data = await sendChatMessage({
+        message: text,
+        chatId,
+        advisor: advisorName,
+        language,
+      });
+      if (data?.chat_id) {
+        setChatId(data.chat_id);
+      }
+      if (data?.phase) {
+        setPhase(data.phase);
+      }
       const reply = typeof data?.response === "string" ? data.response.trim() : "";
       setMessages((current) => [
         ...current,
         { id: nextMessageId(), role: "assistant", text: reply || t("chat.error") },
       ]);
     } catch (error) {
+      if (error?.response?.status === 404) {
+        setChatId("");
+        setPhase("question");
+      }
       const apiError = error?.response?.data?.error;
       const fieldError = error?.response?.data?.message;
       const detail = typeof apiError === "string"
@@ -68,6 +135,8 @@ export default function ChatIA() {
       setSending(false);
     }
   }
+
+  const placeholder = phase === "email" ? fixed("chat.emailPlaceholder") : fixed("chat.placeholder");
 
   return (
     <section className="chat-ia" aria-label={t("chat.title")}>
@@ -102,13 +171,13 @@ export default function ChatIA() {
 
       <form className="chat-ia-composer" onSubmit={handleSubmit}>
         <label className="visually-hidden" htmlFor="chat-ia-input">
-          {t("chat.placeholder")}
+          {placeholder}
         </label>
         <textarea
           id="chat-ia-input"
           rows={1}
           value={draft}
-          placeholder={t("chat.placeholder")}
+          placeholder={placeholder}
           disabled={sending}
           onChange={(event) => setDraft(event.target.value)}
           onKeyDown={(event) => {
