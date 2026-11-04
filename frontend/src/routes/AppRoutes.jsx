@@ -9,6 +9,7 @@ import AdminSettings from "../pages/admin/AdminSettings";
 import AdminUsers from "../pages/admin/AdminUsers";
 import Comments from "../pages/Comments/Comments";
 import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
+import CandlesPage from "../pages/Candles/CandlesPage";
 import Home from "../pages/Home/Home";
 import Landing from "../pages/Landing/Landing";
 import Login from "../pages/Login/Login";
@@ -28,7 +29,7 @@ export default function AppRoutes() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<Landing />} />
         <Route path="/perfumes" element={<Home line="perfume" />} />
-        <Route path="/candles" element={<Home line="candle" />} />
+        <Route path="/candles" element={<CandlesPage />} />
         <Route path="/asesoria" element={<ChatIA />} />
         <Route path="/perfumes/:id" element={<PerfumeDetail />} />
         <Route path="/candles/:id" element={<PerfumeDetail />} />

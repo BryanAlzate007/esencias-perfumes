@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import AddToCartModal from "../../components/AddToCardModal/AddToCardModal";
 import AdvisorModal from "../../components/AdvisorModal/AdvisorModal";
-import ContactSection from "../../components/ContactSection/ContactSection";
+import CandlesFooter from "../Candles/CandlesFooter";
 import PerfumeCard from "../../components/PerfumeCard/PerfumeCard";
 import { listPerfumePage, PERFUME_PAGE_SIZE } from "../../services/perfumes";
 import heroImage from "../../assets/hero-perfume.jpg";
@@ -263,7 +263,7 @@ export default function Home({ line = "perfume" }) {
         </Container>
       </section>
 
-      <ContactSection />
+      <CandlesFooter />
     </div>
   );
 }

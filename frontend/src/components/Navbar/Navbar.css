@@ -107,6 +107,48 @@
   background: rgba(7, 6, 5, 0.94) !important;
 }
 
+.navbar-esencias.navbar-candles.sticky-top {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 30;
+  background: rgba(9, 8, 7, 0.46) !important;
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(201, 168, 117, 0.2) !important;
+  transition: background 0.35s ease, border-color 0.35s ease;
+  --bs-navbar-color: #f2e9d8;
+  --bs-navbar-hover-color: #c9a875;
+  --bs-navbar-active-color: #c9a875;
+  --bs-navbar-brand-color: #f2e9d8;
+  --bs-navbar-brand-hover-color: #c9a875;
+}
+
+.navbar-esencias.navbar-candles.is-scrolled,
+.navbar-esencias.navbar-candles.navbar-admin-open {
+  background: rgba(5, 5, 5, 0.92) !important;
+  border-bottom-color: rgba(201, 168, 117, 0.35) !important;
+}
+
+.navbar-esencias.navbar-candles .navbar-collapse.show,
+.navbar-esencias.navbar-candles .navbar-collapse.collapsing {
+  background: rgba(5, 5, 5, 0.96);
+  margin-top: 0.65rem;
+  padding: 0.75rem 1rem 1rem;
+}
+
+.navbar-esencias.navbar-candles .navbar-toggler-icon {
+  filter: invert(1);
+}
+
+html[data-bs-theme="light"] .navbar-esencias.navbar-candles {
+  --bs-navbar-color: #f2e9d8;
+  --bs-navbar-hover-color: #c9a875;
+  --bs-navbar-active-color: #c9a875;
+  --bs-navbar-brand-color: #f2e9d8;
+  --bs-navbar-brand-hover-color: #c9a875;
+}
+
 html[data-bs-theme="light"] .navbar-esencias.navbar-home {
   --bs-navbar-color: #f4ead7;
   --bs-navbar-hover-color: #d4b483;

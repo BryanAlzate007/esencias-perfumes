@@ -27,6 +27,7 @@ export default function MainLayout() {
   const { isAdmin, ready } = useAuth();
   const isDesktop = useDesktopNav();
   const isHome = pathname === "/" || pathname === "/perfumes" || pathname === "/candles";
+  const hasSiteFooter = pathname === "/" || pathname === "/perfumes" || pathname === "/candles";
   const isChat = pathname === "/asesoria";
   const isAdminRoute = pathname.startsWith("/admin");
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -58,7 +59,7 @@ export default function MainLayout() {
           </Container>
         )}
       </div>
-      {!isChat && (
+      {!isChat && !hasSiteFooter && (
         <footer className="text-center small py-4">
           <Link to="/politica-de-privacidad" className="text-body-secondary">
             {t("nav.privacy")}

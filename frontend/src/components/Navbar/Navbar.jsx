@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Badge, Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { PiShoppingCartDuotone } from "react-icons/pi";
 import { useTranslation } from "react-i18next";
@@ -60,6 +61,19 @@ export default function AppNavbar({ adminNavOpen = false, onToggleAdminNav }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const language = (i18n.resolvedLanguage || i18n.language || "es").startsWith("en") ? "en" : "es";
+  const isCandles = pathname === "/candles";
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    if (!isCandles) {
+      setScrolled(false);
+      return undefined;
+    }
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isCandles]);
 
   async function handleLogout() {
     await logout();
@@ -71,7 +85,8 @@ export default function AppNavbar({ adminNavOpen = false, onToggleAdminNav }) {
     document.documentElement.lang = next;
   }
 
-  const immersive = pathname === "/" || pathname === "/perfumes" || pathname === "/candles";
+  const overlayHome = pathname === "/" || pathname === "/perfumes";
+  const immersive = overlayHome || isCandles;
   const productLinks = [
     { to: "/perfumes", label: t("nav.perfumes") },
     { to: "/candles", label: t("nav.candles") },
@@ -107,7 +122,7 @@ export default function AppNavbar({ adminNavOpen = false, onToggleAdminNav }) {
   };
 
   return (
-    <Navbar expand="lg" sticky="top" className={`navbar-esencias border-bottom bg-body${immersive ? " navbar-home" : ""}${adminNavOpen && immersive ? " navbar-admin-open" : ""}`}>
+    <Navbar expand="lg" sticky="top" className={`navbar-esencias border-bottom bg-body${overlayHome ? " navbar-home" : ""}${isCandles ? ` navbar-candles${scrolled ? " is-scrolled" : ""}` : ""}${adminNavOpen && immersive ? " navbar-admin-open" : ""}`}>
       <Container>
         {onToggleAdminNav && (
           <button

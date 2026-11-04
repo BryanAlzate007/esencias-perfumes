@@ -1,7 +1,7 @@
 import { Container } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import ContactSection from "../../components/ContactSection/ContactSection";
+import CandlesFooter from "../Candles/CandlesFooter";
 import heroImage from "../../assets/hero-perfume.jpg";
 import "../Home/Home.css";
 
@@ -50,7 +50,7 @@ export default function Landing() {
         </Container>
       </section>
 
-      <ContactSection />
+      <CandlesFooter />
     </div>
   );
 }
