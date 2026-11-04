@@ -147,19 +147,26 @@
     "filterNote": "Este estilo filtra solo la colección de demostración. El catálogo publicado no tiene un campo de estilo.",
     "clearFilter": "Ver todas",
     "stylesTitle": "Encuentra tu forma de expresión.",
+    "styleEmpty": "Esta línea todavía no tiene piezas de demostración.",
     "styles": {
+      "seasonal": "Velas de temporada",
+      "pet": "Tu mascota en una vela",
       "sculptural": "Escultóricas",
       "organic": "Orgánicas",
       "decorative": "Decorativas",
       "aromatic": "Aromáticas"
     },
     "styleCopy": {
+      "seasonal": "Ediciones para una fecha y una mesa.",
+      "pet": "Una pieza con la forma de quien te acompaña.",
       "sculptural": "Objetos que desafían lo convencional.",
       "organic": "La belleza de las formas naturales.",
       "decorative": "Diseño que habita tus espacios.",
       "aromatic": "Aromas para cada atmósfera."
     },
     "categories": {
+      "seasonal": "Vela de temporada",
+      "pet": "Vela de mascota",
       "sculptural": "Vela escultórica",
       "organic": "Vela orgánica",
       "decorative": "Vela decorativa",

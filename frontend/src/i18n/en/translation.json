@@ -147,19 +147,26 @@
     "filterNote": "This style filters only the demonstration collection. The published catalog has no style field.",
     "clearFilter": "View all",
     "stylesTitle": "Find your form of expression.",
+    "styleEmpty": "This line has no demonstration pieces yet.",
     "styles": {
+      "seasonal": "Seasonal candles",
+      "pet": "Your pet in a candle",
       "sculptural": "Sculptural",
       "organic": "Organic",
       "decorative": "Decorative",
       "aromatic": "Scented"
     },
     "styleCopy": {
+      "seasonal": "Editions for a date and a table.",
+      "pet": "A piece shaped like the one who stays with you.",
       "sculptural": "Objects that challenge the conventional.",
       "organic": "The beauty of natural forms.",
       "decorative": "Design that inhabits your rooms.",
       "aromatic": "Scents for every atmosphere."
     },
     "categories": {
+      "seasonal": "Seasonal candle",
+      "pet": "Pet candle",
       "sculptural": "Sculptural candle",
       "organic": "Organic candle",
       "decorative": "Decorative candle",

@@ -59,6 +59,7 @@ export default function CandlesCollection({ style, notice, onOpen, onDemo, onCle
         {notice && <p className="candles-status" role="status">{notice}</p>}
       </div>
       <div className="candles-grid">
+        {pieces.length === 0 && <p className="candles-demo-note">{t("candlesPage.styleEmpty")}</p>}
         {pieces.map((piece, index) => (
           <article className={`candles-piece candles-piece-${index + 1}`} key={`${style || "all"}-${piece.id}`}>
             <button type="button" className="candles-piece-media" onClick={() => onOpen(piece)}>

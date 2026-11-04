@@ -6,6 +6,8 @@ import forma from "../../assets/candles/vela-marea.jpg";
 import nube from "../../assets/candles/vela-orbe.jpg";
 import aurea from "../../assets/candles/vela-espiral.jpg";
 import ritual from "../../assets/candles/vela-ambar.jpg";
+import seasonal from "../../assets/candles/velas-regalo.jpg";
+import pet from "../../assets/candles/velas-manifiesto.jpg";
 import sculptural from "../../assets/candles/cat-escultoricas.jpg";
 import organic from "../../assets/candles/cat-organicas.jpg";
 import decorative from "../../assets/candles/cat-decorativas.jpg";
@@ -24,6 +26,8 @@ export const DEMO_CANDLES = [
 ];
 
 export const CANDLE_STYLES = [
+  { id: "seasonal", image: seasonal },
+  { id: "pet", image: pet },
   { id: "sculptural", image: sculptural },
   { id: "organic", image: organic },
   { id: "decorative", image: decorative },
