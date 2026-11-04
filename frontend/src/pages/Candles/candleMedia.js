@@ -7,7 +7,7 @@ import nube from "../../assets/candles/vela-orbe.jpg";
 import aurea from "../../assets/candles/vela-espiral.jpg";
 import ritual from "../../assets/candles/vela-ambar.jpg";
 import seasonal from "../../assets/candles/velas-regalo.jpg";
-import pet from "../../assets/candles/velas-manifiesto.jpg";
+import pet from "../../assets/candles/cat-mascota.jpg";
 import sculptural from "../../assets/candles/cat-escultoricas.jpg";
 import organic from "../../assets/candles/cat-organicas.jpg";
 import decorative from "../../assets/candles/cat-decorativas.jpg";
